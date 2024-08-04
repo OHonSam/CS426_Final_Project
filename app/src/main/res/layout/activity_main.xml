@@ -8,12 +8,29 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textSize="56sp" />
+
+    <Button
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="+@id/time_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:onClick="onClickStart"
+        android:text="@string/start" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
