@@ -13,7 +13,7 @@
         android:theme="@style/Theme.CS426_Final_Project"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
