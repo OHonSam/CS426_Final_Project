@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainScreenActivity">
 
     <TextView
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +21,7 @@
 
     <Button
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="+@id/time_view"
+        app:layout_constraintTop_toBottomOf="@+id/time_view"
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/start_button"
         android:layout_width="wrap_content"
@@ -30,6 +30,19 @@
         android:layout_marginTop="20dp"
         android:onClick="onClickStart"
         android:text="@string/start" />
+
+    <Button
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/stop_button"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:onClick="onClickStop"
+        android:text="@string/stop" />
 
 
 
