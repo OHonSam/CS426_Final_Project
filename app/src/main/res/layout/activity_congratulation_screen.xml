@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="300dp"
+        android:layout_height="360dp"
+        android:layout_marginTop="166dp"
+        android:layout_gravity="center_horizontal"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation" />
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="120dp">
+        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:id="@+id/back_to_home_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/secondary_50"
+            android:text="@string/back_to_home"
+            android:textColor="@color/white"
+            style="@style/ButtonText"
+            />
+
+        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:id="@+id/view_report_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/secondary_50"
+            android:text="@string/view_report"
+            android:textColor="@color/white"
+            style="@style/ButtonText"
+            />
+    </LinearLayout>
+</LinearLayout>
