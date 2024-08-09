@@ -47,18 +47,25 @@ public class MyButton extends AppCompatButton {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        int color;
         switch (event.getAction()) {
+            //case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_DOWN:
                 // Change tint color when the button is pressed
                 //DrawableCompat.setTint(originalDrawable, ContextCompat.getColor(getContext(), R.color.ripple_effect));
                 this.getBackground().setAlpha(128);
+                color = getCurrentTextColor();
+                this.setTextColor(Color.argb(128, Color.red(color),Color.green(color),Color.blue(color)));
                 break;
 
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+            //case MotionEvent.ACTION_UP:
+            //case MotionEvent.ACTION_CANCEL:
+            default:
                 // Reset to the original tint color when the button is released
                 //DrawableCompat.setTintList(originalDrawable, null); // Reset to the original tint
                 this.getBackground().setAlpha(255);
+                color = getCurrentTextColor();
+                this.setTextColor(Color.argb(255, Color.red(color),Color.green(color),Color.blue(color)));
                 break;
         }
         return super.onTouchEvent(event);
