@@ -42,5 +42,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="ButtonText">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
 </resources>
