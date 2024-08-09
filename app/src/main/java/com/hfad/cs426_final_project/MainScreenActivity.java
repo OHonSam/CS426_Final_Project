@@ -19,12 +19,36 @@ public class MainScreenActivity extends AppCompatActivity {
     TextView timeView;
     Button startButton;
     Button stopButton;
+    ClickableImageView dropdownMenu, timer, stopwatch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
+        dropdownMenu = findViewById(R.id.dropdown_menu);
+        dropdownMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        timer = findViewById(R.id.timer);
+        timer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        stopwatch = findViewById(R.id.stopwatch);
+        stopwatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         getUIReferences();
         runTimer();
     }

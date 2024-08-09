@@ -1,8 +1,8 @@
-package com.hfad.cs426_final_project.CustomUIComponent;
+package com.hfad.cs426_final_project;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -15,6 +15,8 @@ public class ClickableImageView extends AppCompatImageView {
 
     public ClickableImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        Log.d("debug","Enter constructor");
+
     }
 
     public ClickableImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -22,17 +24,20 @@ public class ClickableImageView extends AppCompatImageView {
     }
 
     @Override
-    public void setPressed(boolean pressed) {
+        public void setPressed(boolean pressed) {
+
         super.setPressed(pressed);
 
         if (getDrawable() == null)
             return;
 
         if (pressed) {
-            getDrawable().setColorFilter(0x44000000, PorterDuff.Mode.SRC_ATOP);
+            int d = Log.d("debug", "Enter function setPressed");
+            getDrawable().setTint(0x44000000);
             invalidate();
         } else {
-            getDrawable().clearColorFilter();
+            Log.d("debug","Else function setPressed");
+            getDrawable().setTintList(null);
             invalidate();
         }
     }
