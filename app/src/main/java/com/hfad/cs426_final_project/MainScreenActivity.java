@@ -97,7 +97,33 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
+        music.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                musicButton.onTouchEvent(event);
+                boolean isPressed = false;
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    isPressed = true;
+                }
+                music.setPressed(isPressed);
+                return true;
+            }
+        });
+
         todoButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                todoButton.onTouchEvent(event);
+                boolean isPressed = false;
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    isPressed = true;
+                }
+                todo.setPressed(isPressed);
+                return true;
+            }
+        });
+
+        todo.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 todoButton.onTouchEvent(event);
