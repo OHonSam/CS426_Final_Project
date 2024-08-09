@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
+import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+
 import java.util.Locale;
 
 public class MainScreenActivity extends AppCompatActivity {
@@ -17,8 +20,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private boolean running;
 
     TextView timeView;
-    Button startButton;
-    Button stopButton;
+    MyButton startButton;
     ClickableImageView dropdownMenu, timer, stopwatch;
 
     @Override
@@ -55,21 +57,14 @@ public class MainScreenActivity extends AppCompatActivity {
 
     private void getUIReferences() {
         timeView = findViewById(R.id.time_view);
-        startButton = findViewById(R.id.start_button);
-        stopButton = findViewById(R.id.stop_button);
-    }
+        startButton = findViewById(R.id.plant_button);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    //Start the stopwatch running when the Start button is clicked.
-    public void onClickStart(View view) {
-        running = true;
-        startButton.setVisibility(View.GONE);
-        stopButton.setVisibility(View.VISIBLE);
-    }
-    //Stop the stopwatch running when the Stop button is clicked.
-    public void onClickStop(View view) {
-        running = false;
-        stopButton.setVisibility(View.GONE);
-        startButton.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     private void runTimer() {

@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.CustomUIComponent;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -32,11 +32,9 @@ public class ClickableImageView extends AppCompatImageView {
             return;
 
         if (pressed) {
-            int d = Log.d("debug", "Enter function setPressed");
             getDrawable().setTint(0x44000000);
             invalidate();
         } else {
-            Log.d("debug","Else function setPressed");
             getDrawable().setTintList(null);
             invalidate();
         }
