@@ -8,4 +8,6 @@
 
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
+    <string name="congratulation">Congratulations!</string>
+    <string name="congratulation_message">You have successfully completed the task</string>
 </resources>
