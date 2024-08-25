@@ -16,12 +16,14 @@ import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -127,8 +129,17 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 toolbar,
                 R.string.nav_open_drawer,
                 R.string.nav_close_drawer);
+
+        // Set the color of the drawer toggle icon
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.black));
+
+        // Add the toggle to the DrawerLayout
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        ViewGroup.LayoutParams params = navigationView.getLayoutParams();
+        params.width = (int) (getResources().getDisplayMetrics().widthPixels / 2);
+        navigationView.setLayoutParams(params);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -206,6 +217,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         if (id == R.id.nav_store_screen)
             intent = new Intent(this, StoreScreenActivity.class);
+        else
+            intent = new Intent(this, MainScreenActivity.class);
 
         startActivity(intent);
         drawer.closeDrawer(GravityCompat.START);
