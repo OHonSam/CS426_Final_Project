@@ -16,6 +16,9 @@
             android:name=".WelcomeScreenActivity"
             android:exported="false"/>
         <activity
+            android:name=".StoreScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainScreenActivity"
             android:exported="false"/>
         <activity
