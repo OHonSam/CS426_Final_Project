@@ -48,6 +48,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     MyButton startButton, todoButton, musicButton;
     ClickableImageView todoImage, musicImage;
     LinearLayout todoContainer, musicContainer;
+    Clock clock;
 
     ConstraintLayout popupMusicContainer;
 
@@ -263,7 +264,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void setupClock() {
         clockState = false;
         //
-        clock = new Clock(timeView, clockState, 0, 3600);
+        clock = new Clock(timeView, startButton, clockState, 0, 3600);
         clock.run();
     }
 
