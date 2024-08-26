@@ -100,6 +100,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
+
+        setupClock();
+        setupStartButton();
         setupTree();
     }
 
@@ -385,6 +388,29 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
     }
+    private void setupClock() {
+        clockState = false;
+        //
+        clock = new Clock(timeView, clockState, 0, 3600);
+        clock.run();
+    }
+
+    private void setupStartButton() {
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // If the stopwatch is not running then start it
+                if (!clock.isRunning()) {
+                    clock.start();
+                }
+                else {
+                    clock.stop();
+                }
+            }
+        });
+
+    }
+
 
     private void setupNewTagListener() {
         View.OnTouchListener newTagTouchListener = new View.OnTouchListener() {
