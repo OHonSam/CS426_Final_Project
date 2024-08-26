@@ -18,7 +18,7 @@ public class Clock {
     public Clock(TextView timeView, boolean clockState, int initialTime, int timeLimit) {
         this.timeView = timeView;
         this.clockState = clockState;
-        this.seconds = initialTime;
+        this.seconds = (!this.clockState) ? initialTime : timeLimit ;
         this.timeLimit = timeLimit;
         this.handler = new Handler();
     }
@@ -39,11 +39,17 @@ public class Clock {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                int hours = seconds / 3600;
-                int minutes = (seconds % 3600) / 60;
+                int minutes = seconds / 60;
                 int secs = seconds % 60;
+
+                // Ensure that the maximum time is 120:00 (7200 seconds)
+                if (minutes > 120) {
+                    minutes = 120;
+                    secs = 0;
+                }
+
                 String time = String.format(Locale.getDefault(),
-                        "%d:%02d:%02d", hours, minutes, secs);
+                        "%02d:%02d", minutes, secs);
                 timeView.setText(time);
 
                 if (running) {
