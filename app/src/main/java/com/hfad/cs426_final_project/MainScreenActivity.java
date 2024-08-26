@@ -1,31 +1,34 @@
 package com.hfad.cs426_final_project;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroupOverlay;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 
-import java.util.Locale;
-
 public class MainScreenActivity extends AppCompatActivity {
-    //Number of seconds displayed on the stopwatch.
-    private int seconds = 0;
-    //Is the stopwatch running?
-    private boolean running;
-
     TextView timeView;
     MyButton startButton, todoButton, musicButton;
-    ClickableImageView dropdownMenu, timer, stopwatch, todoImage, musicImage;
+    ClickableImageView todoImage, musicImage;
     LinearLayout todoContainer, musicContainer;
+
+    ConstraintLayout popupMusicContainer;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -33,36 +36,72 @@ public class MainScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
         getUIReferences();
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
+        setupMusicListener();
+        setupTodoListener();
+    }
+
+    private void showMusicSelectionPopup() {
+        // Inflate the popup layout
+        View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
+
+        // Calculate portion of the screen to show the popup
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels / 2);
+        int height = (int) (displayMetrics.heightPixels / 2);
+
+        // Create the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(popupView,
+                width,
+                height,
+                true);
+
+        // Dim the background for the rest except the popup window
+        applyDim(popupMusicContainer, 0.5f);
+
+        // Return to the normal background for the rest if the popup window is dismissed
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                clearDim(popupMusicContainer);
             }
         });
 
-        dropdownMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        // Show the popup at the center of the container view
+        popupWindow.showAtLocation(musicContainer, Gravity.CENTER, 0, 0);
 
-            }
-        });
+        // Selecting music and play it
+    }
 
+    public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
+        Drawable dim = new ColorDrawable(Color.BLACK);
+        dim.setBounds(0, 0, parent.getWidth(), parent.getHeight());
+        dim.setAlpha((int) (255 * dimAmount));
 
-        timer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        ViewGroupOverlay overlay = parent.getOverlay();
+        overlay.add(dim);
+    }
 
-            }
-        });
+    public static void clearDim(@NonNull ViewGroup parent) {
+        ViewGroupOverlay overlay = parent.getOverlay();
+        overlay.clear();
+    }
 
-        stopwatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void getUIReferences() {
+        timeView = findViewById(R.id.time_view);
+        startButton = findViewById(R.id.plant_button);
+        todoImage = findViewById(R.id.todo_image);
+        todoButton = findViewById(R.id.todo_button);
+        todoContainer = findViewById(R.id.to_do_container);
+        musicContainer = findViewById(R.id.music_container);
+        musicImage =findViewById(R.id.music_image);
+        musicButton=findViewById(R.id.music_button);
+        popupMusicContainer = findViewById(R.id.main);
+    }
 
-            }
-        });
-
-
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupMusicListener() {
         View.OnTouchListener musicTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -76,11 +115,21 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         };
 
+        View.OnClickListener musicClickListener = v -> showMusicSelectionPopup();
+
         // Set the listener to the views
         musicContainer.setOnTouchListener(musicTouchListener);
         musicButton.setOnTouchListener(musicTouchListener);
         musicImage.setOnTouchListener(musicTouchListener);
 
+        // Set the click listener to open the music selection popup
+        musicContainer.setOnClickListener(musicClickListener);
+        musicButton.setOnClickListener(musicClickListener);
+        musicImage.setOnClickListener(musicClickListener);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupTodoListener() {
         View.OnTouchListener todoTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -98,43 +147,6 @@ public class MainScreenActivity extends AppCompatActivity {
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
-
-        runTimer();
     }
-
-    private void getUIReferences() {
-        timeView = findViewById(R.id.time_view);
-        startButton = findViewById(R.id.plant_button);
-        dropdownMenu = findViewById(R.id.dropdown_menu);
-        todoImage = findViewById(R.id.todo_image);
-        todoButton = findViewById(R.id.todo_button);
-        stopwatch = findViewById(R.id.stopwatch);
-        timer = findViewById(R.id.timer);
-        musicContainer = findViewById(R.id.music_container);
-        todoContainer = findViewById(R.id.to_do_container);
-        musicImage =findViewById(R.id.music_image);
-        musicButton=findViewById(R.id.music_button);
-    }
-
-    private void runTimer() {
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                int hours = seconds/3600;
-                int minutes = (seconds%3600)/60;
-                int secs = seconds%60;
-                String time = String.format(Locale.getDefault(),
-                        "%d:%02d:%02d", hours, minutes, secs);
-                timeView.setText(time);
-                if (running) {
-                    seconds++;
-                }
-                // 1 second = 1000 milliseconds
-                handler.postDelayed(this, 1000);
-            }
-        });
-    }
-
 
 }
