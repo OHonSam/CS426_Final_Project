@@ -1,13 +1,11 @@
 package com.hfad.cs426_final_project;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +15,6 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 
 import java.util.Locale;
-import java.util.Objects;
 
 public class MainScreenActivity extends AppCompatActivity {
     //Number of seconds displayed on the stopwatch.
@@ -27,7 +24,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     TextView timeView;
     MyButton startButton, todoButton, musicButton;
-    ClickableImageView dropdownMenu, timer, stopwatch, todo, music ;
+    ClickableImageView dropdownMenu, timer, stopwatch, todoImage, musicImage;
     LinearLayout todoContainer, musicContainer;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -50,14 +47,6 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        todoContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("debug","todoContainer");
-                todo.setPressed(true);
-
-            }
-        });
 
         timer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +55,6 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-
         stopwatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,69 +62,42 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        musicContainer.setOnTouchListener(new View.OnTouchListener() {
+
+        View.OnTouchListener musicTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                v.performClick();
-                // Pass the MotionEvent to the MyButton
+                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
 
-                return true; // Return true to indicate the touch was handled
+                // Handle pressed state for musicImage if it's the musicButton or musicImage
+                musicImage.setPressed(isPressed);
+                musicButton.onTouchEvent(event); // Pass the event to musicButton
+
+                return true; // Indicate the touch was handled
             }
-        });
+        };
 
-        musicButton.setOnTouchListener(new View.OnTouchListener() {
+        // Set the listener to the views
+        musicContainer.setOnTouchListener(musicTouchListener);
+        musicButton.setOnTouchListener(musicTouchListener);
+        musicImage.setOnTouchListener(musicTouchListener);
+
+        View.OnTouchListener todoTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                musicButton.onTouchEvent(event);
-                boolean isPressed = false;
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    isPressed = true;
-                }
-                music.setPressed(isPressed);
-                return true;
+                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
+
+                // Handle pressed state for musicImage if it's the musicButton or musicImage
+                todoImage.setPressed(isPressed);
+                todoButton.onTouchEvent(event); // Pass the event to musicButton
+
+                return true; // Indicate the touch was handled
             }
-        });
+        };
 
-        music.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                musicButton.onTouchEvent(event);
-                boolean isPressed = false;
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    isPressed = true;
-                }
-                music.setPressed(isPressed);
-                return true;
-            }
-        });
-
-        todoButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                todoButton.onTouchEvent(event);
-                boolean isPressed = false;
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    isPressed = true;
-                }
-                todo.setPressed(isPressed);
-                return true;
-            }
-        });
-
-        todo.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                todoButton.onTouchEvent(event);
-                boolean isPressed = false;
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    isPressed = true;
-                }
-                todo.setPressed(isPressed);
-                return true;
-            }
-        });
-
-
+        // Set the listener to the views
+        todoContainer.setOnTouchListener(todoTouchListener);
+        todoButton.setOnTouchListener(todoTouchListener);
+        todoImage.setOnTouchListener(todoTouchListener);
 
         runTimer();
     }
@@ -145,13 +106,13 @@ public class MainScreenActivity extends AppCompatActivity {
         timeView = findViewById(R.id.time_view);
         startButton = findViewById(R.id.plant_button);
         dropdownMenu = findViewById(R.id.dropdown_menu);
-        todo = findViewById(R.id.todo_image);
+        todoImage = findViewById(R.id.todo_image);
         todoButton = findViewById(R.id.todo_button);
         stopwatch = findViewById(R.id.stopwatch);
         timer = findViewById(R.id.timer);
         musicContainer = findViewById(R.id.music_container);
         todoContainer = findViewById(R.id.to_do_container);
-        music=findViewById(R.id.music_image);
+        musicImage =findViewById(R.id.music_image);
         musicButton=findViewById(R.id.music_button);
     }
 
