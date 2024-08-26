@@ -24,6 +24,7 @@
 
     <color name="transparent">#00FFFFFF</color>
     <color name="background">#FFF0F0F0</color>
+    <color name="blue_deep_sea">#FF006769</color>
     <color name="Blue_Deep_Sea">#006769</color>
 
     <color name="ripple_effect">#44000000</color>
