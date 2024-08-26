@@ -26,7 +26,7 @@
     </style>
     <style name="SubTitle">
         <item name="android:fontFamily">@font/poppins_medium</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>
