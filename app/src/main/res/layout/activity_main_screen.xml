@@ -23,10 +23,10 @@
             android:layout_gravity="center_horizontal"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textSize="56sp"
-            android:text="60:00:00"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tree_container" />
+            android:text="00:60:00"
 
         <com.hfad.cs426_final_project.CustomUIComponent.MyButton
             android:id="@+id/plant_button"
