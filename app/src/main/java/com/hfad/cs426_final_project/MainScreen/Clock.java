@@ -1,7 +1,13 @@
 package com.hfad.cs426_final_project.MainScreen;
 
+import android.content.res.ColorStateList;
 import android.os.Handler;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
+import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.R;
 
 import java.util.Locale;
 
@@ -14,9 +20,11 @@ public class Clock {
     private final Handler handler;
     private TextView timeView;
     private int timeLimit;
+    private MyButton startButton;
 
-    public Clock(TextView timeView, boolean clockState, int initialTime, int timeLimit) {
+    public Clock(TextView timeView, MyButton startButton, boolean clockState, int initialTime, int timeLimit) {
         this.timeView = timeView;
+        this.startButton = startButton;
         this.clockState = clockState;
         this.seconds = (!this.clockState) ? initialTime : timeLimit ;
         this.timeLimit = timeLimit;
@@ -29,10 +37,14 @@ public class Clock {
 
     public void start() {
         running = true;
+        startButton.setText("Give up");
+        startButton.setBackgroundTintList(ContextCompat.getColorStateList (startButton.getContext(), R.color.secondary_50));
     }
 
     public void stop() {
         running = false;
+        startButton.setText("Plant");
+        startButton.setBackgroundTintList(ContextCompat.getColorStateList (startButton.getContext(), R.color.primary_20));
     }
 
     public void run() {

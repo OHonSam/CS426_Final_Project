@@ -64,9 +64,10 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private AppContext appContext;
     private ImageView imgTree;
     TextView timeView;
-    MyButton startButton, todoButton, musicButton, newTagButton;
+    MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
     ClickableImageView todoImage, musicImage, newTagImage;
     LinearLayout todoContainer, musicContainer, newTagContainer;
+    Clock clock;
 
     ModePickerDialog modePickerDialog;
 
@@ -391,7 +392,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void setupClock() {
         clockState = false;
         //
-        clock = new Clock(timeView, clockState, 0, 3600);
+        clock = new Clock(timeView, startButton, clockState, 0, 3600);
         clock.run();
     }
 
