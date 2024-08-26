@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout_main_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainScreenActivity">
+    tools:context=".MainScreen.MainScreenActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -39,7 +39,6 @@
             android:text="@string/start"
             style="@style/SubTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/time_view" />
 
