@@ -1,7 +1,10 @@
 package com.hfad.cs426_final_project.MainScreen.Music;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -57,8 +60,26 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
         }
 
         // assign values to each UI components
+        @SuppressLint("ClickableViewAccessibility")
         public void bind(final MusicItem musicItem, final OnMusicItemClickListener listener) {
             titleView.setText(musicItem.getTitle());
+
+            // Set a listener to handle press state
+            itemView.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Change background or apply a color filter when pressed
+                        itemView.setBackgroundColor(Color.LTGRAY); // Example: change background color
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // Revert to the original state when released
+                        itemView.setBackgroundColor(Color.TRANSPARENT); // Reset background color
+                        break;
+                }
+                return false; // Return false to allow click event to be handled
+            });
+
             itemView.setOnClickListener(v -> listener.onMusicItemClick(musicItem));
         }
     }
