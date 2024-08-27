@@ -262,9 +262,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoImage.setOnTouchListener(todoTouchListener);
     }
     private void setupClock() {
-        clockState = false;
+        clockState = true;
         //
-        clock = new Clock(timeView, startButton, clockState, 0, 3600);
+        clock = new Clock(this, timeView, startButton, clockState, 0, 10);
         clock.run();
     }
 
