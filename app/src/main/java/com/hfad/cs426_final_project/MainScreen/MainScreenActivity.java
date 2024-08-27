@@ -1,9 +1,10 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -25,10 +26,15 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
+import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
+import com.hfad.cs426_final_project.R;
 
 import java.util.Objects;
 
@@ -44,6 +50,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     NavigationView navigationView;
     DrawerLayout drawer;
 
+    private MediaPlayer mediaPlayer;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,10 +136,20 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         // Inflate the popup layout
         View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
 
+        // RecyclerView from the inflated popupView
+        RecyclerView recyclerView = popupView.findViewById(R.id.recycler_view_music);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<MusicItem> musicList = MusicItem.getMusicList();
+        MusicAdapter adapter = new MusicAdapter(this, musicList, musicItem -> {
+            // Handle music item click (e.g., play music)
+            playMusic(musicItem.getFileResourceId());
+        });
+        recyclerView.setAdapter(adapter);
+
         // Calculate portion of the screen to show the popup
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels / 2);
+        int width = (int) (displayMetrics.widthPixels / 1.5);
         int height = (int) (displayMetrics.heightPixels / 2);
 
         // Create the PopupWindow
@@ -152,8 +171,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         // Show the popup at the center of the container view
         popupWindow.showAtLocation(musicContainer, Gravity.CENTER, 0, 0);
-
-        // Selecting music and play it
     }
 
     public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
@@ -170,32 +187,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         overlay.clear();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupMusicListener() {
-        View.OnTouchListener musicTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
-
-                // Handle pressed state for musicImage if it's the musicButton or musicImage
-                musicImage.setPressed(isPressed);
-                musicButton.onTouchEvent(event); // Pass the event to musicButton
-
-                return true; // Indicate the touch was handled
-            }
-        };
-
-        View.OnClickListener musicClickListener = v -> showMusicSelectionPopup();
-
-        // Set the listener to the views
-        musicContainer.setOnTouchListener(musicTouchListener);
-        musicButton.setOnTouchListener(musicTouchListener);
-        musicImage.setOnTouchListener(musicTouchListener);
-
-        // Set the click listener to open the music selection popup
-        musicContainer.setOnClickListener(musicClickListener);
-        musicButton.setOnClickListener(musicClickListener);
-        musicImage.setOnClickListener(musicClickListener);
+    private void playMusic(int musicResId) {
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer.start();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -218,5 +212,4 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
     }
-
 }

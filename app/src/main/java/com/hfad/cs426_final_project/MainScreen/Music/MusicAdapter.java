@@ -1,0 +1,65 @@
+package com.hfad.cs426_final_project.MainScreen.Music;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.hfad.cs426_final_project.R;
+
+import java.util.List;
+
+public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHolder>{
+    private List<MusicItem> musicList;
+    private Context context;
+    private OnMusicItemClickListener listener;
+
+    public interface OnMusicItemClickListener {
+        void onMusicItemClick(MusicItem musicItem);
+    }
+
+    public MusicAdapter(Context context, List<MusicItem> musicList, OnMusicItemClickListener listener) {
+        this.context = context;
+        this.musicList = musicList;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public MusicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.music_item_layout, parent, false);
+        return new MusicViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(MusicViewHolder holder, int position) {
+        MusicItem musicItem = musicList.get(position);
+        holder.bind(musicItem, listener);
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return musicList.size();
+    }
+
+    public static class MusicViewHolder extends RecyclerView.ViewHolder {
+        private TextView titleView;
+
+        // get UI components references
+        public MusicViewHolder(View itemView) {
+            super(itemView);
+            titleView = itemView.findViewById(R.id.music_item_title);
+        }
+
+        // assign values to each UI components
+        public void bind(final MusicItem musicItem, final OnMusicItemClickListener listener) {
+            titleView.setText(musicItem.getTitle());
+            itemView.setOnClickListener(v -> listener.onMusicItemClick(musicItem));
+        }
+    }
+}
