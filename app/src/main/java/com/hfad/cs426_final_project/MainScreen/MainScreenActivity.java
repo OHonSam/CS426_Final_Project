@@ -49,6 +49,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     ClickableImageView todoImage, musicImage;
     LinearLayout todoContainer, musicContainer;
     Clock clock;
+    boolean clockState;
 
     ConstraintLayout popupMusicContainer;
 
