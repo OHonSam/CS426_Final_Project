@@ -34,6 +34,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
+import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.R;
 
 import java.util.Objects;
@@ -46,11 +47,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     ConstraintLayout popupMusicContainer;
 
-    Toolbar toolbar;
-    NavigationView navigationView;
-    DrawerLayout drawer;
-
-    private MediaPlayer mediaPlayer;
+    private MusicManager musicManager;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -61,6 +58,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         setupToolbar();
         setupNavigationDrawer();
+
+        musicManager = new MusicManager(this);
 
         setupMusicListener();
         setupTodoListener();
@@ -167,9 +166,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
             return true; // Return true to indicate that the long click event was handled
         };
 
-        View.OnClickListener musicClickListener = v -> {
-            toggleOnOff();
-        };
+        View.OnClickListener musicClickListener = v -> toggleOnOff();
 
         // Set the listener to the views
         musicContainer.setOnTouchListener(musicTouchListener);
@@ -188,12 +185,12 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void toggleOnOff() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            releaseMusic();
+        if (musicManager.isPlaying()) {
+            musicManager.releaseMusic();
             musicImage.setImageResource(R.drawable.ic_music_off);
         } else {
             // TODO: process latest music selection
-            playMusic(R.raw.forest_rain);
+            musicManager.playMusic(R.raw.forest_rain);
             musicImage.setImageResource(R.drawable.ic_music_on);
         }
     }
@@ -208,7 +205,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         List<MusicItem> musicList = MusicItem.getMusicList();
         MusicAdapter adapter = new MusicAdapter(this, musicList, musicItem -> {
             // Handle music item click (e.g., switch music)
-            switchMusic(musicItem.getFileResourceId());
+            musicManager.switchMusic(musicItem.getFileResourceId());
         });
         recyclerView.setAdapter(adapter);
 
@@ -251,24 +248,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     public static void clearDim(@NonNull ViewGroup parent) {
         ViewGroupOverlay overlay = parent.getOverlay();
         overlay.clear();
-    }
-
-    private void playMusic(int musicResId) {
-        mediaPlayer = MediaPlayer.create(this, musicResId);
-        mediaPlayer.start();
-    }
-
-    private void releaseMusic() {
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        mediaPlayer = null;
-    }
-
-    private void switchMusic(int fileResourceId) {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            releaseMusic();
-        }
-        playMusic(fileResourceId);
     }
 
     @SuppressLint("ClickableViewAccessibility")
