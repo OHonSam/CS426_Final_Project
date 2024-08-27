@@ -132,6 +132,60 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         }
     }
 
+    private void toggleOnOff() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+
+            musicImage.setImageResource(R.drawable.ic_music_off);
+        } else {
+            // TODO: process latest music selection
+            playMusic(R.raw.forest_rain);
+
+            musicImage.setImageResource(R.drawable.ic_music_on);
+        }
+    }
+
+@SuppressLint("ClickableViewAccessibility")
+    private void setupMusicListener() {
+        View.OnTouchListener musicTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
+
+                // Handle pressed state for musicImage if it's the musicButton or musicImage
+                musicImage.setPressed(isPressed);
+                musicButton.onTouchEvent(event); // Pass the event to musicButton
+
+                return true; // Indicate the touch was handled
+            }
+        };
+
+        View.OnLongClickListener musicLongClickListener = v -> {
+            showMusicSelectionPopup(); // Call your method to show the popup
+            return true; // Return true to indicate that the long click event was handled
+        };
+
+        View.OnClickListener musicClickListener = v -> {
+            toggleOnOff();
+        };
+
+        // Set the listener to the views
+        musicContainer.setOnTouchListener(musicTouchListener);
+        musicButton.setOnTouchListener(musicTouchListener);
+        musicImage.setOnTouchListener(musicTouchListener);
+
+        // Set the long click listener to open the music selection popup
+        musicContainer.setOnLongClickListener(musicLongClickListener);
+        musicButton.setOnLongClickListener(musicLongClickListener);
+        musicImage.setOnLongClickListener(musicLongClickListener);
+
+        // Set the click listener to toggle the music on/off
+        musicContainer.setOnClickListener(musicClickListener);
+        musicButton.setOnClickListener(musicClickListener);
+        musicImage.setOnClickListener(musicClickListener);
+    }
     private void showMusicSelectionPopup() {
         // Inflate the popup layout
         View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
@@ -188,7 +242,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void playMusic(int musicResId) {
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer = MediaPlayer.create(this, musicResId);
         mediaPlayer.start();
     }
 

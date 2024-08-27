@@ -241,6 +241,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:gravity="center">
+               
 
                 <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
                     android:id="@+id/todo_image"
@@ -269,7 +270,7 @@
                     android:id="@+id/music_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/music"/>
+                    android:src="@drawable/ic_music_off" />
 
                 <com.hfad.cs426_final_project.CustomUIComponent.MyButton
                     android:id="@+id/music_button"
