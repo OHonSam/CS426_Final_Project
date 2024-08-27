@@ -73,6 +73,10 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         return R.layout.activity_main_screen;
     }
 
+    CircularSeekBar progressBar;
+    private final int interval = 5;
+    private final int totalInterval = 24;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
