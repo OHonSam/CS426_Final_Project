@@ -1,11 +1,19 @@
 package com.hfad.cs426_final_project.MainScreen;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.media.AudioManager;
+import android.os.Build;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
@@ -78,6 +86,9 @@ public class Clock {
                         seconds++;
                         if (timeLimit > 0 && seconds > timeLimit) {
                             stop();
+                            // Notify or vibrate when the timer reaches the limit
+                            notifyOrVibrate(context);
+
                             // handle limit reached (e.g., navigate to CongratulationScreen)
                             Intent intent = new Intent(context, CongratulationScreenActivity.class);
                             context.startActivity(intent);
@@ -87,6 +98,8 @@ public class Clock {
                         seconds--;
                         if (seconds < 0) {
                             stop();
+                            // Notify or vibrate when the timer reaches the limit
+                            notifyOrVibrate(context);
                             // handle timer end (e.g., navigate to CongratulationScreen)
                             Intent intent = new Intent(context, CongratulationScreenActivity.class);
                             context.startActivity(intent);
@@ -98,6 +111,41 @@ public class Clock {
                 handler.postDelayed(this, 1000);
             }
         });
+    }
+
+    private void notifyOrVibrate(Context context) {
+        // Check if the phone is in silent mode
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null && audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+            // Vibrate the phone for 1 second
+            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) {
+                vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE)); // Vibrate for 1 second
+            }
+
+            // Show a short notification
+
+
+        } else {
+            // Show a notification
+            String channelId = "clock_channel_id";
+            String channelName = "Clock Notifications";
+
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+
+            Notification notification = new NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle("Focus Session Finished")
+                    .setContentText("The focus session has reached its end.")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true)
+                    .build();
+
+            notificationManager.notify(1, notification);
+        }
     }
 
 }
