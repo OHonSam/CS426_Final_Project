@@ -68,6 +68,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     ClickableImageView todoImage, musicImage, newTagImage;
     LinearLayout todoContainer, musicContainer, newTagContainer;
     Clock clock;
+    boolean clockState;
 
     ModePickerDialog modePickerDialog;
 
