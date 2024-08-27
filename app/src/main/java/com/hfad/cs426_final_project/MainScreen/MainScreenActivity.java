@@ -218,6 +218,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onDismiss() {
                 clearDim(popupMusicContainer);
+                musicManager.saveMusicSelection();
             }
         });
 

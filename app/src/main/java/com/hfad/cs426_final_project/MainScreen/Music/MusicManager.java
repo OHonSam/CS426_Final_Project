@@ -13,10 +13,12 @@ public class MusicManager {
     private static final String PREFS_NAME = "MusicPrefs";
     private static final String KEY_SELECTED_MUSIC = "SelectedMusic";
     private final ClickableImageView musicImage;
+    private int curSavedMusicResId;
 
     public MusicManager(Context context, ClickableImageView musicImage) {
         this.context = context;
         this.musicImage = musicImage;
+        this.curSavedMusicResId = -1;
     }
 
     public void playMusic(int musicResId) {
@@ -38,19 +40,20 @@ public class MusicManager {
             releaseMusic();
         }
         playMusic(fileResourceId);
-        saveMusicSelection(fileResourceId);
+        curSavedMusicResId = fileResourceId;
     }
 
     // Save the selected music in SharedPreferences
-    private void saveMusicSelection(int musicResId) {
+    public void saveMusicSelection() {
+        if (curSavedMusicResId == -1) return; // No music was selected, so don't save
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(KEY_SELECTED_MUSIC, musicResId);
+        editor.putInt(KEY_SELECTED_MUSIC, curSavedMusicResId);
         editor.apply();
     }
 
     // Load the saved music selection from SharedPreferences
-    public int loadMusicSelection() {
+    public int loadSavedMusicSelection() {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getInt(KEY_SELECTED_MUSIC, -1);  // Return -1 if no music was saved
     }
@@ -59,7 +62,7 @@ public class MusicManager {
         if (isPlaying()) {
             releaseMusic();
         } else {
-            int savedMusicResId = loadMusicSelection();
+            int savedMusicResId = loadSavedMusicSelection();
             playMusic(savedMusicResId == -1 ? R.raw.forest_rain : savedMusicResId);
         }
     }
