@@ -59,12 +59,14 @@ import com.hfad.cs426_final_project.WelcomeScreenActivity;
 import java.util.List;
 import java.util.Objects;
 
+import me.tankery.lib.circularseekbar.CircularSeekBar;
+
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private AppContext appContext;
     private ImageView imgTree;
     TextView timeView;
     MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
-    ClickableImageView todoImage, musicImage, newTagImage;
+    ClickableImageView todoImage, musicImage, newTagImage, progressBarButton;
     LinearLayout todoContainer, musicContainer, newTagContainer;
     Clock clock;
 
@@ -80,6 +82,10 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     Toolbar toolbar;
     NavigationView navigationView;
     DrawerLayout drawer;
+
+    CircularSeekBar progressBar;
+    private final int interval = 5;
+    private final int totalInterval = 24;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -104,6 +110,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupClock();
 
         setupStartButton();
+        setupCircularSeekBar();
         setupTree();
         setupBottomSheet();
     }
@@ -175,6 +182,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         newTagContainer = findViewById(R.id.new_tag_container);
 
         popupMusicContainer = findViewById(R.id.main);
+        progressBar = findViewById(R.id.progress_bar);
         modePickerDialog = new ModePickerDialog();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
@@ -489,4 +497,44 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     public void navigateBottomSheetSelectionFragment() {
         bottomSheet.navigateSelectionFragment();
     }
+
+    private void setupCircularSeekBar() {
+        progressBar.setMax(totalInterval);
+        progressBar.setProgress(0);
+
+        updateTimeText(0);
+        progressBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(CircularSeekBar circularSeekBar, float progress, boolean fromUser) {
+                if (fromUser) {
+                    int roundedProgress = Math.round(progress);
+
+                    roundedProgress = Math.min(Math.max(roundedProgress, 0), totalInterval);
+                    circularSeekBar.setProgress(roundedProgress);
+                    updateTimeText(roundedProgress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(CircularSeekBar seekBar) {
+                // Not needed for this implementation
+            }
+
+            @Override
+            public void onStopTrackingTouch(CircularSeekBar seekBar) {
+                // Not needed for this implementation
+            }
+        });
+    }
+
+    private void updateTimeText(int progress) {
+        int totalMinutes = progress * interval;
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+
+        String timeString = String.format("%02d:%02d:00", hours, minutes);
+
+        timeView.setText(timeString);
+    }
+
 }
