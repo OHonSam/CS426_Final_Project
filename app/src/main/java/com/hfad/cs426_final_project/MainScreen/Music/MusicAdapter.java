@@ -62,7 +62,7 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
 
         // assign values to each UI components
         @SuppressLint("ClickableViewAccessibility")
-        public void bind(final MusicItem musicItem, final OnMusicItemClickListener listener) {
+        private void bind(final MusicItem musicItem, final OnMusicItemClickListener listener) {
             titleView.setText(musicItem.getTitle());
 
             // Set a listener to handle press state
