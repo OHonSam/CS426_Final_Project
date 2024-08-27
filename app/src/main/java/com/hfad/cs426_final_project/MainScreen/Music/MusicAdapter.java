@@ -3,6 +3,7 @@ package com.hfad.cs426_final_project.MainScreen.Music;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,9 +18,9 @@ import com.hfad.cs426_final_project.R;
 import java.util.List;
 
 public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHolder>{
-    private List<MusicItem> musicList;
-    private Context context;
-    private OnMusicItemClickListener listener;
+    private final List<MusicItem> musicList;
+    private final Context context;
+    private final OnMusicItemClickListener listener;
 
     public interface OnMusicItemClickListener {
         void onMusicItemClick(MusicItem musicItem);
@@ -51,7 +52,7 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
     }
 
     public static class MusicViewHolder extends RecyclerView.ViewHolder {
-        private TextView titleView;
+        private final TextView titleView;
 
         // get UI components references
         public MusicViewHolder(View itemView) {

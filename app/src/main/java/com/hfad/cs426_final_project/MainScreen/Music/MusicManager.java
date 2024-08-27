@@ -13,6 +13,7 @@ public class MusicManager {
 
     public void playMusic(int musicResId) {
         mediaPlayer = MediaPlayer.create(context, musicResId);
+        mediaPlayer.setLooping(true);
         mediaPlayer.start();
     }
 
