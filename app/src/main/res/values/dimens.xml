@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="progress_bar_radius">90dp</dimen> <!-- Adjust this value to match your progress bar size -->
+    <dimen name="progress_bar_radius">93dp</dimen> <!-- Adjust this value to match your progress bar size -->
 </resources>
