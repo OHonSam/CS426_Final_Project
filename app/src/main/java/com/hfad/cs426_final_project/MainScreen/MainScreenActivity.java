@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.MenuItem;
@@ -60,7 +59,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupToolbar();
         setupNavigationDrawer();
 
-        musicManager = new MusicManager(this);
+        musicManager = new MusicManager(this, musicImage);
 
         setupMusicListener();
         setupTodoListener();
@@ -167,7 +166,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
             return true; // Return true to indicate that the long click event was handled
         };
 
-        View.OnClickListener musicClickListener = v -> toggleOnOff();
+        View.OnClickListener musicClickListener = v -> musicManager.toggleOnOff();
 
         // Set the listener to the views
         musicContainer.setOnTouchListener(musicTouchListener);
@@ -183,17 +182,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         musicContainer.setOnClickListener(musicClickListener);
         musicButton.setOnClickListener(musicClickListener);
         musicImage.setOnClickListener(musicClickListener);
-    }
-
-    private void toggleOnOff() {
-        if (musicManager.isPlaying()) {
-            musicManager.releaseMusic();
-            musicImage.setImageResource(R.drawable.ic_music_off);
-        } else {
-            // TODO: process latest music selection
-            musicManager.playMusic(R.raw.forest_rain);
-            musicImage.setImageResource(R.drawable.ic_music_on);
-        }
     }
 
     private void showMusicSelectionPopup() {
