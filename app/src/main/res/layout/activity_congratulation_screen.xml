@@ -39,17 +39,18 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="60dp">
+        android:layout_marginTop="20dp"
+        >
         <com.hfad.cs426_final_project.CustomUIComponent.MyButton
             android:id="@+id/back_to_home_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/button_border"
             android:backgroundTint="@color/secondary_50"
-            android:text="@string/back_to_home"
+            android:text="@string/return_home"
             android:textColor="@color/white"
             style="@style/ButtonText"
             />
@@ -59,8 +60,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/button_border"
             android:backgroundTint="@color/secondary_50"
             android:text="@string/view_report"

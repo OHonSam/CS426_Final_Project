@@ -2,7 +2,7 @@
     <string name="app_name">Forest</string>
     <string name="start">Plant</string>
     <string name="stop">Stop</string>
-    <string name="back_to_home">Back to home</string>
+    <string name="return_home">Return home</string>
     <string name="view_report">View report</string>
     <string name="intro_to_app">Focus for your future</string>
 
