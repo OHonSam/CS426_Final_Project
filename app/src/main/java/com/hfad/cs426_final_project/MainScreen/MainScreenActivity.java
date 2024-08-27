@@ -186,6 +186,18 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         musicButton.setOnClickListener(musicClickListener);
         musicImage.setOnClickListener(musicClickListener);
     }
+
+    private void toggleOnOff() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            releaseMusic();
+            musicImage.setImageResource(R.drawable.ic_music_off);
+        } else {
+            // TODO: process latest music selection
+            playMusic(R.raw.forest_rain);
+            musicImage.setImageResource(R.drawable.ic_music_on);
+        }
+    }
+
     private void showMusicSelectionPopup() {
         // Inflate the popup layout
         View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
@@ -195,8 +207,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<MusicItem> musicList = MusicItem.getMusicList();
         MusicAdapter adapter = new MusicAdapter(this, musicList, musicItem -> {
-            // Handle music item click (e.g., play music)
-            playMusic(musicItem.getFileResourceId());
+            // Handle music item click (e.g., switch music)
+            switchMusic(musicItem.getFileResourceId());
         });
         recyclerView.setAdapter(adapter);
 
@@ -244,6 +256,19 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void playMusic(int musicResId) {
         mediaPlayer = MediaPlayer.create(this, musicResId);
         mediaPlayer.start();
+    }
+
+    private void releaseMusic() {
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }
+
+    private void switchMusic(int fileResourceId) {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            releaseMusic();
+        }
+        playMusic(fileResourceId);
     }
 
     @SuppressLint("ClickableViewAccessibility")
