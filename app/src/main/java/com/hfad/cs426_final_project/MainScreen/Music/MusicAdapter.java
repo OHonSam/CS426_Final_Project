@@ -3,9 +3,7 @@ package com.hfad.cs426_final_project.MainScreen.Music;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,14 +20,17 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
     private final Context context;
     private final OnMusicItemClickListener listener;
 
+    private int selectedPosition = -1;
+
     public interface OnMusicItemClickListener {
         void onMusicItemClick(MusicItem musicItem);
     }
 
-    public MusicAdapter(Context context, List<MusicItem> musicList, OnMusicItemClickListener listener) {
+    public MusicAdapter(Context context, List<MusicItem> musicList, int savedMusicResId,OnMusicItemClickListener listener) {
         this.context = context;
         this.musicList = musicList;
         this.listener = listener;
+        this.selectedPosition = getPositionByMusicResId(savedMusicResId);
     }
 
     @NonNull
@@ -42,7 +43,7 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
     @Override
     public void onBindViewHolder(MusicViewHolder holder, int position) {
         MusicItem musicItem = musicList.get(position);
-        holder.bind(musicItem, listener);
+        holder.bind(musicItem, listener, position);
     }
 
 
@@ -51,7 +52,17 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
         return musicList.size();
     }
 
-    public static class MusicViewHolder extends RecyclerView.ViewHolder {
+    public int getPositionByMusicResId(int musicResId) {
+        for (int i = 0; i < musicList.size(); i++) {
+            if (musicList.get(i).getFileResourceId() == musicResId) {
+                return i;  // Return the position if a match is found
+            }
+        }
+        return 0;  // Return 0 (forest_rain) if no match is found
+    }
+
+
+    public class MusicViewHolder extends RecyclerView.ViewHolder {
         private final TextView titleView;
 
         // get UI components references
@@ -62,26 +73,38 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
 
         // assign values to each UI components
         @SuppressLint("ClickableViewAccessibility")
-        private void bind(final MusicItem musicItem, final OnMusicItemClickListener listener) {
+        private void bind(final MusicItem musicItem, final OnMusicItemClickListener listener, int adapterPosition) {
             titleView.setText(musicItem.getTitle());
 
-            // Set a listener to handle press state
-            itemView.setOnTouchListener((v, event) -> {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Change background or apply a color filter when pressed
-                        itemView.setBackgroundColor(Color.LTGRAY); // Example: change background color
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        // Revert to the original state when released
-                        itemView.setBackgroundColor(Color.TRANSPARENT); // Reset background color
-                        break;
-                }
-                return false; // Return false to allow click event to be handled
-            });
+            if (selectedPosition == adapterPosition) {
+                itemView.setBackgroundColor(Color.LTGRAY);
+                titleView.setTextAppearance(R.style.SubHead);
+            } else {
+                itemView.setBackgroundColor(Color.TRANSPARENT);
+            }
 
-            itemView.setOnClickListener(v -> listener.onMusicItemClick(musicItem));
+//            // Set a listener to handle press state
+//            itemView.setOnTouchListener((v, event) -> {
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        // Change background or apply a color filter when pressed
+//                        itemView.setBackgroundColor(Color.LTGRAY); // Example: change background color
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                    case MotionEvent.ACTION_CANCEL:
+//                        // Revert to the original state when released
+//                        itemView.setBackgroundColor(Color.TRANSPARENT); // Reset background color
+//                        break;
+//                }
+//                return false; // Return false to allow click event to be handled
+//            });
+
+            itemView.setOnClickListener(v -> {
+                listener.onMusicItemClick(musicItem);
+                notifyItemChanged(selectedPosition);
+                selectedPosition = adapterPosition;
+                notifyItemChanged(selectedPosition);
+            });
         }
     }
 }
