@@ -194,13 +194,15 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         RecyclerView recyclerView = popupView.findViewById(R.id.recycler_view_music);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<MusicItem> musicList = MusicItem.getMusicList();
-        MusicAdapter adapter = new MusicAdapter(this, musicList, musicItem -> {
+        MusicAdapter adapter = new MusicAdapter(this, musicList, musicManager.loadSavedMusicSelection(), musicItem -> {
             // Handle music item click (e.g., switch music)
             musicManager.switchMusic(musicItem.getFileResourceId());
         });
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
+        recyclerView.setClickable(true);
+        recyclerView.scrollToPosition(adapter.getPositionByMusicResId(musicManager.loadSavedMusicSelection()));
 
         // Calculate portion of the screen to show the popup
         DisplayMetrics displayMetrics = new DisplayMetrics();
