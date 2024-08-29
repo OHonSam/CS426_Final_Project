@@ -1,91 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="32dp">
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+            android:id="@+id/backButton_loginScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_back"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Hello,\n\nWelcome"
+                style="@style/SubHeadline"
+                android:textColor="@color/primary_80"
+                android:layout_gravity="bottom"/>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:src="@drawable/planting_login_screen"/>
+        </LinearLayout>
+        <EditText
+            android:id="@+id/emailEditText_loginScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone Number or Email"
+            android:paddingStart="16dp"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/white"
+            android:layout_marginTop="32dp"/>
+
+        <EditText
+            android:id="@+id/passwordEditText_loginScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:paddingStart="16dp"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/white"
+            android:layout_marginTop="32dp"/>
+
         <TextView
+            android:id="@+id/forgottenPasswordTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="Forgotten password?"
+            android:layout_marginTop="8dp"
+            style="@style/SmallText"
+            android:textColor="@color/primary_100"/>
+
+        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:id="@+id/loginButton_loginScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="Hello,\n\nWelcome"
-            style="@style/SubHeadline"
-            android:textColor="@color/primary_80"
-            android:layout_gravity="bottom"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/planting_login_screen"/>
+            android:layout_marginTop="64dp"
+            android:text="Sign in"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/primary_30"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            style="@style/ButtonText"
+            android:textAllCaps="false"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal">
+            <TextView
+                android:id="@+id/signInWith"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="4dp"
+                android:text="or Sign in with"
+                android:gravity="center_horizontal"
+                style="@style/SubTitle"
+                android:textColor="@color/primary_30"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="-32dp"
+                android:src="@drawable/google"
+                android:layout_alignEnd="@+id/signInWith"/>
+        </RelativeLayout>
     </LinearLayout>
-    <EditText
-        android:id="@+id/emailEditText_loginScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone Number or Email"
-        android:layout_marginTop="32dp"/>
-
-    <EditText
-        android:id="@+id/passwordEditText_loginScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:layout_marginTop="32dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="Forgotten password?"
-        style="@style/SmallText"
-        android:textColor="@color/primary_100"/>
-
-    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-        android:id="@+id/loginButton_loginScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="Sign in"
-        android:background="@drawable/button_border"
-        android:backgroundTint="@color/primary_30"
-        android:textColor="@color/white"
-        android:layout_gravity="center"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp"
-        style="@style/ButtonText"
-        android:textAllCaps="false"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal">
-        <TextView
-            android:id="@+id/signInWith"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="4dp"
-            android:text="or Sign in with"
-            android:gravity="center_horizontal"
-            style="@style/SubTitle"
-            android:textColor="@color/primary_30"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="-32dp"
-            android:src="@drawable/google"
-            android:layout_alignEnd="@+id/signInWith"/>
-    </RelativeLayout>
-</LinearLayout>
+</ScrollView>
