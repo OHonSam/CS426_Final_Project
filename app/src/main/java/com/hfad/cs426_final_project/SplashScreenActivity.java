@@ -26,13 +26,24 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
     private void nextActivity() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        Intent intent;
-        if (currentUser == null) {
-            intent = new Intent(this, WelcomeScreenActivity.class);
+        if (currentUser != null) {
+            currentUser.getIdToken(true).addOnCompleteListener(task -> {
+                Intent intent;
+                if (task.isSuccessful()) {
+                    // Token is valid, proceed to the Main Screen
+                    intent = new Intent(this, MainScreenActivity.class);
+                } else {
+                    // Token is invalid, user might have been deleted, redirect to Welcome Screen
+                    intent = new Intent(this, WelcomeScreenActivity.class);
+                }
+                startActivity(intent);
+                finish(); // Prevent the user from returning to this screen
+            });
+        } else {
+            // No user is signed in, redirect to Welcome Screen
+            Intent intent = new Intent(this, WelcomeScreenActivity.class);
+            startActivity(intent);
+            finish(); // Prevent the user from returning to this screen
         }
-        else {
-            intent = new Intent(this, MainScreenActivity.class);
-        }
-        startActivity(intent);
     }
 }
