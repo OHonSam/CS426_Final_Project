@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/tree_welcome_screen"
+        android:layout_marginTop="128dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Welcome to Forest"
+        android:gravity="center"
+        style="@style/SubHeadline"
+        android:textColor="@color/primary_30"/>
+
+    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+        android:id="@+id/signUpButton_welcomeScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:text="Sign Up"
+        android:paddingStart="128dp"
+        android:paddingEnd="128sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        style="@style/ButtonText"
+        android:textColor="@color/white"
+        android:background="@drawable/button_border"
+        android:backgroundTint="@color/primary_30"
+        />
+
+    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+        android:id="@+id/loginButton_welcomeScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:text="Login"
+        android:paddingStart="128dp"
+        android:paddingEnd="128sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        style="@style/ButtonText"
+        android:textColor="@color/primary_30"
+        android:background="@drawable/button_border"
+        android:backgroundTint="@color/white"
+        />
+</LinearLayout>

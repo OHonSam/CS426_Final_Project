@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "407986014166",
+    "project_id": "focus-da00f",
+    "storage_bucket": "focus-da00f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407986014166:android:ac218cb3ed8daa40ea4677",
+        "android_client_info": {
+          "package_name": "com.hfad.cs426_final_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB86u-AcffbFRIAGCQW4x-cUwdS51Uiu9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
