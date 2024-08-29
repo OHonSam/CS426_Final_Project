@@ -19,7 +19,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_screen);
+        setContentView(R.layout.activity_sign_up_screen);
 
         initUI();
         initListener();
@@ -27,8 +27,8 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
     private void initUI() {
         edtFullName = findViewById(R.id.fullNameEditText_signUpScreen);
-        edtEmail = findViewById(R.id.emailEditText_loginScreen);
-        edtPassword = findViewById(R.id.passwordEditText_loginScreen);
+        edtEmail = findViewById(R.id.emailEditText_signUpScreen);
+        edtPassword = findViewById(R.id.passwordEditText_signUpScreen);
         edtConfirmPassword = findViewById(R.id.confirmEditText_signUpScreen);
         btnSignUp = findViewById(R.id.signUpButton_signUpScreen);
     }

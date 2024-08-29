@@ -15,7 +15,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome_screen);
+        setContentView(R.layout.activity_welcome_screen);
 
         initUI();
         initListener();
@@ -37,9 +37,10 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), SignUpScreenActivity.class);
+                Intent intent = new Intent(v.getContext(), LoginScreenActivity.class);
                 startActivity(intent);
             }
         });
     }
+
 }
