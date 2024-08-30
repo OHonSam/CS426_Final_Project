@@ -52,6 +52,7 @@ import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
+import com.hfad.cs426_final_project.ModePickerDialog;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 import com.hfad.cs426_final_project.WelcomeScreenActivity;
@@ -66,6 +67,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     MyButton startButton, todoButton, musicButton, newTagButton;
     ClickableImageView todoImage, musicImage, newTagImage;
     LinearLayout todoContainer, musicContainer, newTagContainer;
+
+    ModePickerDialog modePickerDialog;
 
     ConstraintLayout popupMusicContainer;
 
@@ -91,11 +94,25 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         musicManager = new MusicManager(this, musicImage);
 
+        setupClockMode();
+
         setupSearchTag();
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
         setupTree();
+    }
+
+    private void setupClockMode() {
+        clockMode = findViewById(R.id.clockMode);
+        clockMode.setOnClickListener(v -> {
+            //showClockModePopupWindow();
+            showModePickerDialog();
+        });
+    }
+
+    private void showModePickerDialog() {
+        modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
     @Override
@@ -123,6 +140,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         newTagContainer = findViewById(R.id.new_tag_container);
 
         popupMusicContainer = findViewById(R.id.main);
+        modePickerDialog = new ModePickerDialog();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
