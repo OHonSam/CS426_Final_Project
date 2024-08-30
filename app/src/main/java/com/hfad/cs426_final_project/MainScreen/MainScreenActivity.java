@@ -112,7 +112,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showModePickerDialog() {
-        modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
+        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
+            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
     @Override
