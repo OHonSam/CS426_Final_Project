@@ -41,6 +41,16 @@ public class User {
         ownTasks = new ArrayList<>();
     }
 
+    public User(long id, String email, String password, String name, Date lastAccessDate, int musicSelectedID, int streak) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.lastAccessDate = lastAccessDate;
+        this.musicSelectedID = musicSelectedID;
+        this.streak = streak;
+    }
+
     public long getId() {
         return id;
     }

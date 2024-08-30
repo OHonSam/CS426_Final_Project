@@ -238,6 +238,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         RecyclerView recyclerView = popupView.findViewById(R.id.recycler_view_music);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<MusicItem> musicList = MusicItem.getMusicList();
+
         MusicAdapter adapter = new MusicAdapter(this, musicList, musicManager.loadSavedMusicSelection(), musicItem -> {
             // Handle music item click (e.g., switch music)
             musicManager.switchMusic(musicItem.getFileResourceId());

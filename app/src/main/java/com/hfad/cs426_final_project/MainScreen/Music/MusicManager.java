@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.R;
 
@@ -15,10 +20,13 @@ public class MusicManager {
     private final ClickableImageView musicImage;
     private int curSavedMusicResId;
 
+    private final AppContext appContext;
+
     public MusicManager(Context context, ClickableImageView musicImage) {
         this.context = context;
         this.musicImage = musicImage;
         this.curSavedMusicResId = -1;
+        appContext = AppContext.getInstance();
     }
 
     public void playMusic(int musicResId) {
@@ -26,6 +34,10 @@ public class MusicManager {
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
         musicImage.setImageResource(R.drawable.ic_music_on);
+    }
+
+    public void playMusicUrl(Url musicUrl) {
+
     }
 
     public void releaseMusic() {
@@ -46,16 +58,23 @@ public class MusicManager {
     // Save the selected music in SharedPreferences
     public void saveMusicSelection() {
         if (curSavedMusicResId == -1) return; // No music was selected, so don't save
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(KEY_SELECTED_MUSIC, curSavedMusicResId);
-        editor.apply();
+//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putInt(KEY_SELECTED_MUSIC, curSavedMusicResId);
+//        editor.apply();
+
+        // set music_selected_id in Users in firebase to curSavedMusicResId
+        AppContext appContext = AppContext.getInstance();
+        String userId = "User" + appContext.getCurrentUser().getId(); // Get the current user's UID
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        userRef.child("musicSelectedID").setValue(curSavedMusicResId); // curSavedMusicResId is the problem!!
     }
 
     // Load the saved music selection from SharedPreferences
     public int loadSavedMusicSelection() {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getInt(KEY_SELECTED_MUSIC, -1);  // Return -1 if no music was saved
+//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//        return prefs.getInt(KEY_SELECTED_MUSIC, -1);  // Return -1 if no music was saved
+        return appContext.getCurrentUser().getMusicSelectedID();
     }
 
     public void toggleOnOff() {

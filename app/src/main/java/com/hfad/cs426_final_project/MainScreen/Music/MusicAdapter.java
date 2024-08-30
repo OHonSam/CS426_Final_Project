@@ -30,7 +30,7 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
         this.context = context;
         this.musicList = musicList;
         this.listener = listener;
-        this.selectedPosition = getPositionByMusicResId(savedMusicResId);
+        this.selectedPosition = savedMusicResId;
     }
 
     @NonNull
@@ -82,22 +82,6 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
             } else {
                 itemView.setBackgroundColor(Color.TRANSPARENT);
             }
-
-//            // Set a listener to handle press state
-//            itemView.setOnTouchListener((v, event) -> {
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        // Change background or apply a color filter when pressed
-//                        itemView.setBackgroundColor(Color.LTGRAY); // Example: change background color
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                    case MotionEvent.ACTION_CANCEL:
-//                        // Revert to the original state when released
-//                        itemView.setBackgroundColor(Color.TRANSPARENT); // Reset background color
-//                        break;
-//                }
-//                return false; // Return false to allow click event to be handled
-//            });
 
             itemView.setOnClickListener(v -> {
                 listener.onMusicItemClick(musicItem);
