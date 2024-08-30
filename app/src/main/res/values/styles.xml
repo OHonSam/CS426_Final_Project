@@ -26,7 +26,14 @@
     </style>
     <style name="SubTitle">
         <item name="android:fontFamily">@font/poppins_medium</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
-
+    <style name="ButtonText">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="SmallText">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">11sp</item>
+    </style>
 </resources>
