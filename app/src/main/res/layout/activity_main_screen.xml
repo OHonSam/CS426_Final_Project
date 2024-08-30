@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout_main_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainScreenActivity"
+    tools:context=".MainScreen.MainScreenActivity"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,18 +56,6 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <LinearLayout
-        android:id="@+id/sunDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.873"
-        app:layout_constraintStart_toEndOf="@+id/clockMode"
-        app:layout_constraintTop_toTopOf="parent">
-
-        </RelativeLayout>
-
         <LinearLayout
             android:id="@+id/sunDisplay"
             android:layout_width="wrap_content"
@@ -75,7 +63,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.873"
-            app:layout_constraintStart_toEndOf="@+id/RelativeLayout"
+            app:layout_constraintStart_toEndOf="@+id/clockMode"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -109,7 +97,7 @@
             android:layout_marginTop="36dp"
             android:text="Let’s focus"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RelativeLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/clockMode" />
 
         <LinearLayout
             android:id="@+id/streakLayout"

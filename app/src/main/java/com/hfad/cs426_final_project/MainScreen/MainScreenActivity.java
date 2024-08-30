@@ -44,6 +44,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
+import com.hfad.cs426_final_project.ModePickerDialog;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 import com.hfad.cs426_final_project.WelcomeScreenActivity;
@@ -55,9 +56,11 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private AppContext appContext;
     private ImageView imgTree;
     TextView timeView;
-    MyButton startButton, todoButton, musicButton;
+    MyButton startButton, todoButton, musicButton, clockMode;
     ClickableImageView todoImage, musicImage;
     LinearLayout todoContainer, musicContainer;
+
+    ModePickerDialog modePickerDialog;
 
     ConstraintLayout popupMusicContainer;
 
@@ -81,9 +84,23 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         musicManager = new MusicManager(this, musicImage);
 
+        setupClockMode();
+
         setupMusicListener();
         setupTodoListener();
         setupTree();
+    }
+
+    private void setupClockMode() {
+        clockMode = findViewById(R.id.clockMode);
+        clockMode.setOnClickListener(v -> {
+            //showClockModePopupWindow();
+            showModePickerDialog();
+        });
+    }
+
+    private void showModePickerDialog() {
+        modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
     @Override
@@ -106,6 +123,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         musicImage =findViewById(R.id.music_image);
         musicButton=findViewById(R.id.music_button);
         popupMusicContainer = findViewById(R.id.main);
+        modePickerDialog = new ModePickerDialog();
     }
 
     private void setupToolbar() {
