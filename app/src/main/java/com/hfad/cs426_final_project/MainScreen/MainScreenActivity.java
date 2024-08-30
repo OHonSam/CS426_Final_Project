@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project.MainScreen;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -32,6 +34,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
@@ -39,6 +43,7 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.StoreScreenActivity;
+import com.hfad.cs426_final_project.WelcomeScreenActivity;
 
 import java.util.List;
 import java.util.Objects;
@@ -118,16 +123,54 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         Fragment fragment = null;
-        Intent intent = null;
+        Intent intent = new Intent(this, MainScreenActivity.class);
 
         if (id == R.id.nav_store_screen)
             intent = new Intent(this, StoreScreenActivity.class);
-        else
-            intent = new Intent(this, MainScreenActivity.class);
-
+        else if (id == R.id.nav_sign_out) {
+            showSignOutDialog();
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
         startActivity(intent);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showSignOutDialog() {
+        // Create an AlertDialog.Builder object
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set the dialog title and message
+        builder.setTitle("Sign Out");
+        builder.setMessage("Are you sure you want to sign out?");
+
+        // Set the "OK" button with a click listener
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Sign out logic here
+                Intent intent = new Intent(MainScreenActivity.this, WelcomeScreenActivity.class);
+                startActivity(intent);
+                finish();
+
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+            }
+        });
+
+        // Set the "Cancel" button with a click listener
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dismiss the dialog
+                dialog.dismiss();
+            }
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
