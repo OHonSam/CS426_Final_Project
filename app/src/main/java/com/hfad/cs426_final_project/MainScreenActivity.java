@@ -9,33 +9,27 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 
-import java.util.Locale;
 import java.util.Objects;
 
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,7 +45,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     ConstraintLayout popupMusicContainer;
 
-    @SuppressLint("ClickableViewAccessibility")
     Toolbar toolbar;
     NavigationView navigationView;
     DrawerLayout drawer;
@@ -64,7 +57,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         setupMusicListener();
         setupTodoListener();
-    
 
         setupToolbar();
         setupNavigationDrawer();
@@ -146,12 +138,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void getUIReferences() {
         timeView = findViewById(R.id.time_view);
         startButton = findViewById(R.id.plant_button);
-        todoImage = findViewById(R.id.todo_image);
-        todoButton = findViewById(R.id.todo_button);
-        todoContainer = findViewById(R.id.to_do_container);
-        musicContainer = findViewById(R.id.music_container);
-        musicImage =findViewById(R.id.music_image);
-        musicButton=findViewById(R.id.music_button);
         popupMusicContainer = findViewById(R.id.main);
         toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.nav_view_screen_choices);

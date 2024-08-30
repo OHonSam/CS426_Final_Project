@@ -62,38 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:id="@+id/RelativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-            android:id="@+id/modeContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/primary_20"
-            android:text="@string/start"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time_view" />
 
-<!--        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView-->
-<!--            android:id="@+id/dropdown_menu"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="20dp"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:src="@drawable/gg_menu"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <RelativeLayout
             android:id="@+id/RelativeLayout"
@@ -291,59 +260,14 @@
         app:layout_constraintTop_toBottomOf="@+id/plant_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view_screen_choices"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/menu_nav" />
-
-        <LinearLayout
-            android:id="@+id/to_do_container"
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view_screen_choices"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:gravity="center">
-            
-            <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-                android:id="@+id/todo_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/note"/>
-            
-            <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:id="@+id/todo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:text="To-do"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/music_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-                android:id="@+id/music_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/music"/>
-
-            <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:id="@+id/music_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:text="Music"/>
-        </LinearLayout>
-
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/menu_nav" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
