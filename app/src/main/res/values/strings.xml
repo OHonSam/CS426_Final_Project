@@ -3,4 +3,7 @@
     <string name="start">Plant</string>
     <string name="stop">Stop</string>
     <string name="intro_to_app">Focus for your future</string>
+
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
 </resources>
