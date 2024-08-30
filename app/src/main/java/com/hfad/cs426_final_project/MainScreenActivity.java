@@ -33,15 +33,8 @@ import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import java.util.Objects;
 
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    //Number of seconds displayed on the stopwatch.
-    private int seconds = 0;
-    //Is the stopwatch running?
-    private boolean running;
-
     TextView timeView;
-    MyButton startButton, todoButton, musicButton;
-    ClickableImageView todoImage, musicImage;
-    LinearLayout todoContainer, musicContainer;
+    MyButton startButton;
 
     ConstraintLayout popupMusicContainer;
 
@@ -55,58 +48,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setContentView(R.layout.activity_main_screen);
         getUIReferences();
 
-        setupMusicListener();
-        setupTodoListener();
-
         setupToolbar();
         setupNavigationDrawer();
-    }
-    
-    private void showMusicSelectionPopup() {
-        // Inflate the popup layout
-        View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
-
-        // Calculate portion of the screen to show the popup
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels / 2);
-        int height = (int) (displayMetrics.heightPixels / 2);
-
-        // Create the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                width,
-                height,
-                true);
-
-        // Dim the background for the rest except the popup window
-        applyDim(popupMusicContainer, 0.5f);
-
-        // Return to the normal background for the rest if the popup window is dismissed
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                clearDim(popupMusicContainer);
-            }
-        });
-
-        // Show the popup at the center of the container view
-        popupWindow.showAtLocation(musicContainer, Gravity.CENTER, 0, 0);
-
-        // Selecting music and play it
-    }
-
-    public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
-        Drawable dim = new ColorDrawable(Color.BLACK);
-        dim.setBounds(0, 0, parent.getWidth(), parent.getHeight());
-        dim.setAlpha((int) (255 * dimAmount));
-
-        ViewGroupOverlay overlay = parent.getOverlay();
-        overlay.add(dim);
-    }
-
-    public static void clearDim(@NonNull ViewGroup parent) {
-        ViewGroupOverlay overlay = parent.getOverlay();
-        overlay.clear();
     }
 
     private void setupToolbar() {
@@ -143,57 +86,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         navigationView = findViewById(R.id.nav_view_screen_choices);
         drawer = findViewById(R.id.drawer_layout_main_screen);
     }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupMusicListener() {
-        View.OnTouchListener musicTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
-
-                // Handle pressed state for musicImage if it's the musicButton or musicImage
-                musicImage.setPressed(isPressed);
-                musicButton.onTouchEvent(event); // Pass the event to musicButton
-
-                return true; // Indicate the touch was handled
-            }
-        };
-
-        View.OnClickListener musicClickListener = v -> showMusicSelectionPopup();
-
-        // Set the listener to the views
-        musicContainer.setOnTouchListener(musicTouchListener);
-        musicButton.setOnTouchListener(musicTouchListener);
-        musicImage.setOnTouchListener(musicTouchListener);
-
-        // Set the click listener to open the music selection popup
-        musicContainer.setOnClickListener(musicClickListener);
-        musicButton.setOnClickListener(musicClickListener);
-        musicImage.setOnClickListener(musicClickListener);
-
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupTodoListener() {
-        View.OnTouchListener todoTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
-
-                // Handle pressed state for musicImage if it's the musicButton or musicImage
-                todoImage.setPressed(isPressed);
-                todoButton.onTouchEvent(event); // Pass the event to musicButton
-
-                return true; // Indicate the touch was handled
-            }
-        };
-
-        // Set the listener to the views
-        todoContainer.setOnTouchListener(todoTouchListener);
-        todoButton.setOnTouchListener(todoTouchListener);
-        todoImage.setOnTouchListener(todoTouchListener);
-    }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
