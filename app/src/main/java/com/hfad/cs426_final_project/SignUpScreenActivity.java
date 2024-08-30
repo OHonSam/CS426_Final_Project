@@ -1,10 +1,7 @@
 package com.hfad.cs426_final_project;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +15,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -101,7 +97,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
                                     startActivity(intent);
-                                    addUser(email, password, name);
+                                    addUserToDB(email, password, name);
                                     finishAffinity();
                                 } else {
                                     Toast.makeText(SignUpScreenActivity.this, "Authentication failed.",
@@ -122,7 +118,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
         });
     }
 
-    private void addUser(String email, String password, String name) {
+    private void addUserToDB(String email, String password, String name) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference("Users");
 
@@ -134,10 +130,10 @@ public class SignUpScreenActivity extends AppCompatActivity {
                 long cnt = dataSnapshot.getChildrenCount();
 
                 // Create a new User object
-                User user = new User(cnt, email, password, name);
+                appContext.setCurrentUser(new User(cnt, email, password, name));
 
                 // Add the new user to the database
-                dbRef.child("User" + cnt).setValue(user);
+                dbRef.child("User" + cnt).setValue(appContext.getCurrentUser());
             }
 
             @Override

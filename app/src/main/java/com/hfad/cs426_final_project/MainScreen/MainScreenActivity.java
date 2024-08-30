@@ -36,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
@@ -58,6 +60,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     private MusicManager musicManager;
 
+    AppContext appContext;
+
     Toolbar toolbar;
     NavigationView navigationView;
     DrawerLayout drawer;
@@ -68,6 +72,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
         getUIReferences();
+
+        appContext = AppContext.getInstance();
 
         setupToolbar();
         setupNavigationDrawer();
