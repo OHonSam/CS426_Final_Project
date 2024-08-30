@@ -23,6 +23,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 
 public class SignUpScreenActivity extends AppCompatActivity {
     private ClickableImageView btnBack;
