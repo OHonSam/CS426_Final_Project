@@ -43,6 +43,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/time_view" />
 
+    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+        android:id="@+id/clockMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/clock_mode"
+        android:minHeight="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
         <RelativeLayout
             android:id="@+id/clockModeLayout"
@@ -62,25 +73,6 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
-
-
-            <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-                android:id="@+id/timer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/timer"
-                />
-            <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-                android:id="@+id/stopwatch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/modeContainer"
-                android:layout_marginEnd="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/stopwatch"
-                />
 
         </RelativeLayout>
 
@@ -103,6 +95,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/sunTotalText"
                 app:layout_constraintTop_toTopOf="parent"
                 />
+
 
             <TextView
                 android:id="@+id/sunTotalText"

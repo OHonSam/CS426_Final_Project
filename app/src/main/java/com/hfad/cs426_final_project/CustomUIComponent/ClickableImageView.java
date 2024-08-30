@@ -3,11 +3,14 @@ package com.hfad.cs426_final_project.CustomUIComponent;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
-public class ClickableImageView extends AppCompatImageView {
+import org.w3c.dom.Text;
+
+public class ClickableImageView extends AppCompatImageView{
 
     public ClickableImageView(Context context) {
         super(context);
@@ -21,11 +24,11 @@ public class ClickableImageView extends AppCompatImageView {
 
     public ClickableImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
     }
 
     @Override
         public void setPressed(boolean pressed) {
-
         super.setPressed(pressed);
 
         if (getDrawable() == null)
