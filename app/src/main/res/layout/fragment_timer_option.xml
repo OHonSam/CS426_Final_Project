@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".TimerOptionFragment">
+    
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/deepFocusImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fire_deep_focus" />
+
+    <TextView
+        android:id="@+id/deepFocusTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/deep_focus"
+        android:textSize="14.7sp"
+        app:layout_constraintStart_toEndOf="@+id/deepFocusImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/deepFocusDescriptionTextView"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="59dp"
+        android:fontFamily="@font/poppins_light"
+        android:text="@string/deep_focus_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deepFocusTitleTextView" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/deepFocusSwitchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/deepFocusDescriptionTextView"
+        app:layout_constraintTop_toTopOf="parent">
+    </androidx.appcompat.widget.SwitchCompat>
+
+    <ImageView
+        android:id="@+id/line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/line"
+        app:layout_constraintTop_toBottomOf="@+id/deepFocusDescriptionTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/countExceedTimeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line"
+        app:srcCompat="@drawable/count_exceed_time" />
+
+    <TextView
+        android:id="@+id/countExceedTimeTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/count_exceed_time"
+        android:textSize="14.7sp"
+        app:layout_constraintStart_toEndOf="@+id/countExceedTimeImageView"
+        app:layout_constraintTop_toBottomOf="@+id/line"/>
+
+    <TextView
+        android:id="@+id/countExceedTimeDescriptionTextView"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="59dp"
+        android:fontFamily="@font/poppins_light"
+        android:text="@string/count_exceed_time_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countExceedTimeTitleTextView" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/countExceedTimeSwitchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/countExceedTimeDescriptionTextView"
+        app:layout_constraintTop_toBottomOf="@+id/line"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

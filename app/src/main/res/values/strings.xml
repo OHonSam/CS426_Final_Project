@@ -6,4 +6,13 @@
 
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
+    <string name="stopwatch">Stopwatch</string>
+    <string name="timer">Timer</string>
+    
+    <string name="dialog_start_game">dialog_start_game</string>
+    <string name="cancel">cancel</string>
+    <string name = "deep_focus">Deep focus</string>
+    <string name="deep_focus_description">You will  be guided back if you leave the app. Pro version users can set Allow List</string>
+    <string name = "count_exceed_time">Count exceeded time</string>
+    <string name="count_exceed_time_description">Count up after Timer Mode ends</string>
 </resources>
