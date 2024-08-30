@@ -1,11 +1,9 @@
 package com.hfad.cs426_final_project;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
+import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
 
 public class LoginScreenActivity extends AppCompatActivity {
     private ClickableImageView btnBack;
@@ -37,8 +37,10 @@ public class LoginScreenActivity extends AppCompatActivity {
 
     private void initUI() {
         btnBack = findViewById(R.id.backButton_loginScreen);
-        edtEmail = findViewById(R.id.emailEditText_loginScreen);
-        edtPassword = findViewById(R.id.passwordEditText_loginScreen);
+        EmailEditText emailEditText = findViewById(R.id.emailEditText_loginScreen);
+        edtEmail = emailEditText.getEditText();
+        PasswordEditText passwordEditText = findViewById(R.id.passwordEditText_loginScreen);
+        edtPassword = passwordEditText.getEditText();
         btnLogin = findViewById(R.id.loginButton_loginScreen);
     }
 
@@ -58,7 +60,7 @@ public class LoginScreenActivity extends AppCompatActivity {
                 String email = edtEmail.getText().toString().trim();
                 String password = edtPassword.getText().toString().trim();
                 if(email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginScreenActivity.this, "Authentication failed.",
+                    Toast.makeText(LoginScreenActivity.this, "Login failed.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }

@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
+import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
 
 public class SignUpScreenActivity extends AppCompatActivity {
     private ClickableImageView btnBack;
@@ -43,10 +45,18 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
     private void initUI() {
         btnBack = findViewById(R.id.backButton_signUpScreen);
+
         edtFullName = findViewById(R.id.fullNameEditText_signUpScreen);
-        edtEmail = findViewById(R.id.emailEditText_signUpScreen);
-        edtPassword = findViewById(R.id.passwordEditText_signUpScreen);
-        edtConfirmPassword = findViewById(R.id.confirmEditText_signUpScreen);
+
+        EmailEditText emailEditText = findViewById(R.id.emailEditText_signUpScreen);
+        edtEmail = emailEditText.getEditText();
+
+        PasswordEditText passwordEditText = findViewById(R.id.passwordEditText_signUpScreen);
+        edtPassword = passwordEditText.getEditText();
+
+        PasswordEditText confirmPasswordEditText = findViewById(R.id.confirmEditText_signUpScreen);
+        edtConfirmPassword = confirmPasswordEditText.getEditText();
+
         btnSignUp = findViewById(R.id.signUpButton_signUpScreen);
         tvSignIn = findViewById(R.id.signInTextView_signUpScreen);
     }
@@ -64,9 +74,11 @@ public class SignUpScreenActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = edtFullName.getText().toString().trim();
                 String email = edtEmail.getText().toString().trim();
                 String password = edtPassword.getText().toString().trim();
-                if(email.isEmpty() || password.isEmpty()) {
+                String confirmPassword = edtConfirmPassword.getText().toString().trim();
+                if(email.isEmpty() || password.isEmpty() || name.isEmpty() || confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
                     Toast.makeText(SignUpScreenActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
                     return;
