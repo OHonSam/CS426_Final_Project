@@ -38,7 +38,9 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.StoreScreenActivity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +52,10 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     ConstraintLayout popupMusicContainer;
 
     private MusicManager musicManager;
+
+    Toolbar toolbar;
+    NavigationView navigationView;
+    DrawerLayout drawer;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -133,22 +139,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         }
     }
 
-    private void toggleOnOff() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-
-            musicImage.setImageResource(R.drawable.ic_music_off);
-        } else {
-            // TODO: process latest music selection
-            playMusic(R.raw.forest_rain);
-
-            musicImage.setImageResource(R.drawable.ic_music_on);
-        }
-    }
-
-@SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility")
     private void setupMusicListener() {
         View.OnTouchListener musicTouchListener = new View.OnTouchListener() {
             @Override
