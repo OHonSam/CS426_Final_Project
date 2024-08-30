@@ -9,6 +9,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Region;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,7 +25,10 @@ public class IsometricLandView extends View {
     private int width, height;
     private List<Tree> trees;
     private Bitmap treeBitmap;
-    private static final int GRID_SIZE = 4; // 4x4 grid
+    private static final int GRID_SIZE = 5;
+    private static final float offsetWidth = 1.5f;
+    private static final float offsetHeight = 2.5f;
+    private static final int offset3D = 50;
 
     public IsometricLandView(Context context) {
         super(context);
@@ -57,13 +61,25 @@ public class IsometricLandView extends View {
     private void setupLandPath() {
         float centerX = width / 2f;
         float centerY = height / 2f;
-        float size = Math.min(width, height) * 0.8f;
+        float size = Math.min(width, height) * 0.95f;
+
+//        landPath.reset();
+//        landPath.moveTo(centerX, centerY - size / offsetHeight);
+//        landPath.lineTo(centerX + size / offsetWidth, centerY);
+//        landPath.lineTo(centerX, centerY + size / offsetHeight);
+//        landPath.lineTo(centerX - size / offsetWidth, centerY);
+//        landPath.lineTo(centerX - size /offsetWidth, centerY + offset3D);
+//        landPath.lineTo(centerX, centerY + size / offsetHeight + offset3D);
+//        landPath.lineTo(centerX + size / offsetWidth, centerY + offset3D);
+//        landPath.lineTo(centerX + size / offsetWidth, centerY);
+//        landPath.close();
 
         landPath.reset();
-        landPath.moveTo(centerX, centerY - size / 4);
-        landPath.lineTo(centerX + size / 2, centerY);
-        landPath.lineTo(centerX, centerY + size / 4);
-        landPath.lineTo(centerX - size / 2, centerY);
+        landPath.moveTo(centerX, centerY - size / offsetHeight);
+        landPath.lineTo(centerX + size / offsetWidth, centerY);
+        landPath.lineTo(centerX, centerY + size / offsetHeight);
+        landPath.lineTo(centerX - size / offsetWidth, centerY);
+        landPath.lineTo(centerX, centerY - size / offsetHeight);
         landPath.close();
     }
 
@@ -72,15 +88,15 @@ public class IsometricLandView extends View {
         int darkGreen = Color.rgb(34, 139, 34);
         LinearGradient gradient = new LinearGradient(
                 0, 0, width, height,
-                new int[]{lightGreen, darkGreen},
+                new int[]{darkGreen, lightGreen},
                 null, Shader.TileMode.CLAMP
         );
         landPaint.setShader(gradient);
     }
 
     private void scaleTreeBitmap() {
-        int scaledWidth = (int)(width / (GRID_SIZE * 2f));
-        int scaledHeight = (int)(scaledWidth * 1.5f); // Adjust this factor as needed
+        int scaledWidth = (int)(width / (GRID_SIZE * 1.5f));
+        int scaledHeight = (int)(scaledWidth * 1.5f);
         treeBitmap = Bitmap.createScaledBitmap(treeBitmap, scaledWidth, scaledHeight, true);
     }
 
@@ -110,10 +126,10 @@ public class IsometricLandView extends View {
     }
 
     private PointF gridToScreenPosition(int gridX, int gridY) {
-        float tileWidth = width / (GRID_SIZE * 2f);
-        float tileHeight = height / (GRID_SIZE * 2f);
-        float screenX = width / 2f + (gridX - gridY) * tileWidth;
-        float screenY = height / 2f + (gridX + gridY) * tileHeight / 2; // Adjust this factor if needed
+        float tileWidth = width / (GRID_SIZE * 1.5f);
+        float tileHeight = height / (GRID_SIZE * 1.5f);
+        float screenX = width / 2f + (gridX - gridY) * tileWidth * 0.5f;
+        float screenY = height / 2f + (gridX + gridY) * tileHeight * 0.25f;
         return new PointF(screenX, screenY);
     }
 

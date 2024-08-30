@@ -59,7 +59,7 @@
             android:name=".RankingScreen.RankingScreenActivity"
             android:exported="false"/>
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".StatisticScreen.StatisticScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

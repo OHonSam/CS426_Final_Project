@@ -3,23 +3,13 @@ package com.hfad.cs426_final_project.CustomUIComponent;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
-import com.hfad.cs426_final_project.R;
 
-import java.util.Objects;
 
 public class MyButton extends AppCompatButton {
 
@@ -39,20 +29,13 @@ public class MyButton extends AppCompatButton {
         super(context, attrs, defStyleAttr);
         init();
     }
-   private void init() {
-
-        // Store the original drawable
-        //originalDrawable = DrawableCompat.wrap(getBackground()).mutate();
-    }
+   private void init() {}
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int color;
         switch (event.getAction()) {
-            //case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_DOWN:
-                // Change tint color when the button is pressed
-                //DrawableCompat.setTint(originalDrawable, ContextCompat.getColor(getContext(), R.color.ripple_effect));
                 this.getBackground().setAlpha(128);
                 color = getCurrentTextColor();
                 this.setTextColor(Color.argb(128, Color.red(color),Color.green(color),Color.blue(color)));
