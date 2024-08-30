@@ -32,6 +32,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), SignUpScreenActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +40,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), LoginScreenActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
