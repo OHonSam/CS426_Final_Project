@@ -8,7 +8,6 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="8dp"
         android:background="@color/blue_deep_sea"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,12 +18,12 @@
             android:layout_height="wrap_content"
             android:src="@drawable/escape_btn"
             android:paddingHorizontal="18dp"
-            android:paddingVertical="12dp"
+            android:paddingVertical="16dp"
             android:layout_alignParentStart="true"/>
         <com.hfad.cs426_final_project.CustomUIComponent.MyButton
             android:id="@+id/overview_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@drawable/button_border"
             android:backgroundTint="@color/primary_20"
             android:text="Overview"
@@ -95,7 +94,25 @@
             style="@style/BodyText"
             android:textColor="@color/black" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
-    <com.hfad.cs426_final_project.StatisticScreen.IsometricLandView
+
+    <RelativeLayout
+        android:id="@+id/time_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/time_picker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/isometricLandView">
+        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="10dp"
+            android:src="@drawable/arrow_left"
+            android:layout_alignParentStart="true"
+            />
+        </RelativeLayout>
+        <com.hfad.cs426_final_project.StatisticScreen.IsometricLandView
         android:id="@+id/isometricLandView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
