@@ -1,7 +1,5 @@
 package com.hfad.cs426_final_project.MainScreen.Clock;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +24,9 @@ public class Clock {
     //Is the stopwatch running?
     private boolean running;
 
+    private static final String CHANNEL_ID = "clock_channel_id";
+    private static final int NOTIFICATION_ID = 1;
+
     public static enum ClockMode {
         STOPWATCH,
         TIMER
@@ -37,6 +38,8 @@ public class Clock {
     private MyButton startButton;
     private Context context;
     private ClockMode clockMode; // Enum for clock mode
+
+    private Runnable updateNotificationRunnable;
 
     public Clock(Context context, TextView timeView, MyButton startButton, ClockMode clockMode, int initialTime, int timeLimit) {
         this.context = context;
@@ -56,12 +59,20 @@ public class Clock {
         running = true;
         startButton.setText("Pause");
         startButton.setBackgroundTintList(ContextCompat.getColorStateList (startButton.getContext(), R.color.secondary_50));
+
+        Intent serviceIntent = new Intent(context, ClockService.class);
+        serviceIntent.putExtra("isTimer", clockMode == ClockMode.TIMER);
+        serviceIntent.putExtra("timeLimit", timeLimit);
+        ContextCompat.startForegroundService(context, serviceIntent);
     }
 
     public void stop() {
         running = false;
         startButton.setText("Plant");
         startButton.setBackgroundTintList(ContextCompat.getColorStateList (startButton.getContext(), R.color.primary_20));
+
+        Intent serviceIntent = new Intent(context, ClockService.class);
+        context.stopService(serviceIntent);
     }
 
     public void reset() {
@@ -71,7 +82,6 @@ public class Clock {
     public void setClockMode(ClockMode clockMode) {
         this.clockMode = clockMode;
         reset(); // Reset the clock when the mode changes
-        // Update the UI to reflect the new clock mode
     }
 
     public void run() {
@@ -110,6 +120,7 @@ public class Clock {
                             stop();
                             // Notify or vibrate when the timer reaches the limit
                             notifyOrVibrate(context);
+
                             // handle timer end (e.g., navigate to CongratulationScreen)
                             Intent intent = new Intent(context, CongratulationScreenActivity.class);
                             context.startActivity(intent);
@@ -124,38 +135,33 @@ public class Clock {
     }
 
     private void notifyOrVibrate(Context context) {
+        String channelName = "Clock Notifications";
+
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+
         // Check if the phone is in silent mode
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        if (audioManager != null && audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-            // Vibrate the phone for 1 second
+        boolean isSilentMode = audioManager != null && audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT;
+
+        // Build the notification
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("Focus Session Finished")
+                .setContentText("The focus session has reached its end.")
+                .setAutoCancel(true);
+
+        // Add lights only if not in silent mode
+        if (isSilentMode) {
+            notificationBuilder.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
+        } else {
+            // Vibrate the phone for 1 second if not in silent mode
             Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             if (vibrator != null) {
                 vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE)); // Vibrate for 1 second
             }
-
-            // Show a short notification
-
-
-        } else {
-            // Show a notification
-            String channelId = "clock_channel_id";
-            String channelName = "Clock Notifications";
-
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-
-            Notification notification = new NotificationCompat.Builder(context, channelId)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setContentTitle("Focus Session Finished")
-                    .setContentText("The focus session has reached its end.")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setAutoCancel(true)
-                    .build();
-
-            notificationManager.notify(1, notification);
         }
+
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
 }
