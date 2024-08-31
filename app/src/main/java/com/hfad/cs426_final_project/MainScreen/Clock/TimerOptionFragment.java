@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen.Clock;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hfad.cs426_final_project.R;
 
 public class TimerOptionFragment extends Fragment {
 
