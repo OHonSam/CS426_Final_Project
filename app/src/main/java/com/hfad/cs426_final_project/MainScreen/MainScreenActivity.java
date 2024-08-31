@@ -60,7 +60,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     ClickableImageView todoImage, musicImage;
     LinearLayout todoContainer, musicContainer;
     Clock clock;
-    boolean clockState;
 
     ModePickerDialog modePickerDialog;
 
@@ -71,6 +70,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     Toolbar toolbar;
     NavigationView navigationView;
     DrawerLayout drawer;
+
+    AppContext appContext;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -86,12 +87,13 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         musicManager = new MusicManager(this, musicImage);
 
-        setupClockMode();
 
         setupMusicListener();
         setupTodoListener();
 
+        setupClockMode();
         setupClock();
+
         setupStartButton();
         setupTree();
     }
@@ -99,7 +101,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void setupClockMode() {
         clockMode = findViewById(R.id.clockMode);
         clockMode.setOnClickListener(v -> {
-            //showClockModePopupWindow();
             showModePickerDialog();
         });
     }
@@ -339,11 +340,12 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
     }
+
     private void setupClock() {
-        clockState = true;
-        //
-        clock = new Clock(this, timeView, startButton, clockState, 0, 1);
-        clock.run();
+        // TODO: get from Firebase the Users clock mode selection
+        clock = new Clock(this, timeView, startButton, Clock.ClockMode.STOPWATCH, 0, 5);
+        appContext.setCurrentClock(clock);
+        appContext.getCurrentClock().run();
     }
 
     private void setupStartButton() {
