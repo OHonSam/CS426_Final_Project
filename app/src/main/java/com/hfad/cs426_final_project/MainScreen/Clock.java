@@ -27,19 +27,25 @@ public class Clock {
     private int seconds;
     //Is the stopwatch running?
     private boolean running;
-    private boolean clockState; // 0 for stopwatch, 1 for timer
+
+    public static enum ClockMode {
+        STOPWATCH,
+        TIMER
+    }
+
     private final Handler handler;
     private TextView timeView;
     private int timeLimit;
     private MyButton startButton;
     private Context context;
+    private ClockMode clockMode; // Enum for clock mode
 
-    public Clock(Context context, TextView timeView, MyButton startButton, boolean clockState, int initialTime, int timeLimit) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockMode clockMode, int initialTime, int timeLimit) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
-        this.clockState = clockState;
-        this.seconds = (!this.clockState) ? initialTime : timeLimit ;
+        this.clockMode = clockMode;
+        this.seconds = (this.clockMode == ClockMode.STOPWATCH) ? initialTime : timeLimit ;
         this.timeLimit = timeLimit;
         this.handler = new Handler();
     }
@@ -61,7 +67,13 @@ public class Clock {
     }
 
     public void reset() {
-        seconds = (!clockState ? 0 : timeLimit);
+        seconds = (clockMode == ClockMode.STOPWATCH) ? 0 : timeLimit;
+    }
+
+    public void setClockMode(ClockMode clockMode) {
+        this.clockMode = clockMode;
+        reset(); // Reset the clock when the mode changes
+        // Update the UI to reflect the new clock mode
     }
 
     public void run() {
@@ -82,7 +94,7 @@ public class Clock {
                 timeView.setText(time);
 
                 if (running) {
-                    if (!clockState) {
+                    if (clockMode == ClockMode.STOPWATCH) {
                         seconds++;
                         if (timeLimit > 0 && seconds > timeLimit) {
                             stop();

@@ -17,10 +17,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.hfad.cs426_final_project.MainScreen.Clock;
+
 public class ModePickerDialog extends DialogFragment {
     public static String TAG = "ModePickerDialog";
     private TimerOptionFragment timerOptionFragment;
     private StopwatchOptionFragment stopwatchOptionFragment;
+    private AppContext appContext;
 
     @Nullable
     @Override
@@ -45,6 +48,7 @@ public class ModePickerDialog extends DialogFragment {
                 window.setAttributes(params);
             }
         }
+        appContext = AppContext.getInstance();
         super.onResume();
     }
 
@@ -66,9 +70,11 @@ public class ModePickerDialog extends DialogFragment {
             public void onModeClick(int id) {
                 if(id == 0){
                     replaceFragment(timerOptionFragment);
+                    appContext.getCurrentClock().setClockMode(Clock.ClockMode.TIMER);
                 }
                 else{
                     replaceFragment(stopwatchOptionFragment);
+                    appContext.getCurrentClock().setClockMode(Clock.ClockMode.STOPWATCH);
                 }
             }
         });

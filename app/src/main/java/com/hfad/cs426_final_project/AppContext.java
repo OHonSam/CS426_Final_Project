@@ -123,4 +123,11 @@ public class AppContext {
             userRef.setValue(currentUser);
         }
     }
+
+    public Clock getCurrentClock() {
+        return clock;
+    }
+    public void setCurrentClock(Clock currentClock) {
+        this.clock = currentClock;
+    }
 }
