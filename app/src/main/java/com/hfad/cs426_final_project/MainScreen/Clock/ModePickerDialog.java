@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen.Clock;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -17,14 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.hfad.cs426_final_project.MainScreen.Clock;
+import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.R;
 
 public class ModePickerDialog extends DialogFragment {
     public static String TAG = "ModePickerDialog";
     private TimerOptionFragment timerOptionFragment;
     private StopwatchOptionFragment stopwatchOptionFragment;
     private AppContext appContext;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class ModePickerDialog extends DialogFragment {
         SwitchMode switchMode = new SwitchMode(timer,stopwatch,thumb,track);
         timerOptionFragment = new TimerOptionFragment();
         stopwatchOptionFragment = new StopwatchOptionFragment();
+
 
         replaceFragment(timerOptionFragment);
 

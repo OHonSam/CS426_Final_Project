@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen.Clock;
 
 import android.util.Log;
 import android.view.View;

@@ -1,13 +1,11 @@
-package com.hfad.cs426_final_project.MainScreen;
+package com.hfad.cs426_final_project.MainScreen.Clock;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
