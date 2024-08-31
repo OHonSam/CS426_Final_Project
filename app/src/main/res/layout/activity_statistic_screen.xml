@@ -99,6 +99,7 @@
         android:id="@+id/time_selection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/time_picker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -107,16 +108,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingVertical="10dp"
-            android:paddingHorizontal="10dp"
+            android:paddingHorizontal="18dp"
             android:src="@drawable/arrow_left"
             android:layout_alignParentStart="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="August 31, 2024(Today)"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            style="@style/ButtonText">
+        </TextView>
+        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="18dp"
+            android:src="@drawable/arrow_right"
+            android:layout_alignParentEnd="true"
             />
         </RelativeLayout>
         <com.hfad.cs426_final_project.StatisticScreen.IsometricLandView
         android:id="@+id/isometricLandView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        app:layout_constraintTop_toBottomOf="@id/time_picker"
+        app:layout_constraintTop_toBottomOf="@id/time_selection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

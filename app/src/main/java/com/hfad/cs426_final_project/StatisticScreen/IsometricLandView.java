@@ -26,7 +26,7 @@ public class IsometricLandView extends View {
     private int width, height;
     private List<Tree> trees;
     private Bitmap treeBitmap, grassTexture, sideTexture;
-    private static final int GRID_SIZE = 10;
+    private static final int GRID_SIZE = 8;
     private static final float OFFSET_WIDTH = 1.3f;
     private static final float OFFSET_HEIGHT = 2.5f;
 
