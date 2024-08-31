@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -33,10 +35,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
@@ -51,6 +53,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private AppContext appContext;
+    private ImageView imgTree;
     TextView timeView;
     MyButton startButton, todoButton, musicButton;
     ClickableImageView todoImage, musicImage;
@@ -59,8 +63,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     ConstraintLayout popupMusicContainer;
 
     private MusicManager musicManager;
-
-    AppContext appContext;
 
     Toolbar toolbar;
     NavigationView navigationView;
@@ -82,9 +84,11 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         setupMusicListener();
         setupTodoListener();
+        setupTree();
     }
 
     private void getUIReferences() {
+        imgTree = findViewById(R.id.tree);
         timeView = findViewById(R.id.time_view);
         startButton = findViewById(R.id.plant_button);
         toolbar = findViewById(R.id.toolbar);
@@ -305,5 +309,14 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
+    }
+
+    private void setupTree() {
+        Uri treeURI = Uri.parse(appContext.getCurrentUser().getUserSetting().getSelectedTree().getImgUri());
+        Glide.with(this)
+                .load(treeURI)
+                .override(Target.SIZE_ORIGINAL) // or specify your desired dimensions
+                .fitCenter() // Or use centerCrop() if you want to crop the image to fit
+                .into(imgTree);
     }
 }

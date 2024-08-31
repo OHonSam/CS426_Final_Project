@@ -1,36 +1,44 @@
 package com.hfad.cs426_final_project;
 
+import com.hfad.cs426_final_project.DataStorage.Tag;
+import com.hfad.cs426_final_project.DataStorage.Task;
+import com.hfad.cs426_final_project.DataStorage.Tree;
+import com.hfad.cs426_final_project.DataStorage.UserSetting;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class User {
     private long id;
     private String email;
     private String password;
     private String name;
-    private Date lastAccessDate;
-    int musicSelectedID;
-    int streak;
+    private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
-    public User(){}
+    private int streak;
+    private UserSetting userSetting;
+    private List<Tree> ownTrees;
+    private List<Tag> ownTags;
+    private List<Task> ownTasks;
 
+    public User() {}
+
+    // Use for adding a new user (when signing up)
     public User(long id, String email, String password, String name) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
-        this.lastAccessDate = Calendar.getInstance().getTime();
-        this.musicSelectedID = 0;
-        this.streak = 1;
-    }
 
-    public User(String email, String password, String name, Date lastAccessDate, int musicSelectedID, int streak) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.lastAccessDate = lastAccessDate;
-        this.musicSelectedID = musicSelectedID;
-        this.streak = streak;
+        // default
+        this.lastAccessDate = System.currentTimeMillis();
+        this.streak = 1;
+        this.userSetting = new UserSetting(); // get default settings
+        ownTrees = new ArrayList<>();
+        ownTags = new ArrayList<>();
+        ownTasks = new ArrayList<>();
     }
 
     public long getId() {
@@ -65,20 +73,12 @@ public class User {
         this.name = name;
     }
 
-    public Date getLastAccessDate() {
+    public long getLastAccessDate() {
         return lastAccessDate;
     }
 
-    public void setLastAccessDate(Date lastAccessDate) {
+    public void setLastAccessDate(long lastAccessDate) {
         this.lastAccessDate = lastAccessDate;
-    }
-
-    public int getMusicSelectedID() {
-        return musicSelectedID;
-    }
-
-    public void setMusicSelectedID(int musicSelectedID) {
-        this.musicSelectedID = musicSelectedID;
     }
 
     public int getStreak() {
@@ -87,5 +87,37 @@ public class User {
 
     public void setStreak(int streak) {
         this.streak = streak;
+    }
+
+    public UserSetting getUserSetting() {
+        return userSetting;
+    }
+
+    public void setUserSetting(UserSetting userSetting) {
+        this.userSetting = userSetting;
+    }
+
+    public List<Tree> getOwnTrees() {
+        return ownTrees;
+    }
+
+    public void setOwnTrees(List<Tree> ownTrees) {
+        this.ownTrees = ownTrees;
+    }
+
+    public List<Tag> getOwnTags() {
+        return ownTags;
+    }
+
+    public void setOwnTags(List<Tag> ownTags) {
+        this.ownTags = ownTags;
+    }
+
+    public List<Task> getOwnTasks() {
+        return ownTasks;
+    }
+
+    public void setOwnTasks(List<Task> ownTasks) {
+        this.ownTasks = ownTasks;
     }
 }

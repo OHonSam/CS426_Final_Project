@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.lottie)
     implementation ("com.github.jakob-grabner:Circle-Progress-View:1.4")
     implementation(libs.recyclerview)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

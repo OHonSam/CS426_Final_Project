@@ -95,10 +95,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
-                                    startActivity(intent);
-                                    addUserToDB(email, password, name);
-                                    finishAffinity();
+                                    addUserToDBAndNavigateMainScreen(email, password, name);
                                 } else {
                                     Toast.makeText(SignUpScreenActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
@@ -118,32 +115,47 @@ public class SignUpScreenActivity extends AppCompatActivity {
         });
     }
 
-    private void addUserToDB(String email, String password, String name) {
+    private void addUserToDBAndNavigateMainScreen(String email, String password, String name) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference("Users");
 
         // Attach a listener to get the number of children
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get the current number of users
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get the current number of users (children count)
                 long cnt = dataSnapshot.getChildrenCount();
 
-                // Create a new User object
-                appContext.setCurrentUser(new User(cnt, email, password, name));
+                // Create a new User object with the new user ID
+                User newUser = new User(cnt, email, password, name);
 
                 // Add the new user to the database
-                dbRef.child("User" + cnt).setValue(appContext.getCurrentUser());
+                dbRef.child("User" + cnt).setValue(newUser)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // Update appContext with the new user
+                                    appContext.setCurrentUser(newUser);
+
+                                    // Navigate to MainScreenActivity
+                                    Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
+                                    startActivity(intent);
+                                    finishAffinity(); // Close all activities below this one
+                                } else {
+                                    Toast.makeText(SignUpScreenActivity.this, "Failed to register user.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any errors that might occur
-                // Log or display error message
-                Toast.makeText(SignUpScreenActivity.this, "Authentication cancelled.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpScreenActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }
 

@@ -3,48 +3,94 @@ package com.hfad.cs426_final_project;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
+    private AppContext appContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                nextActivity();
-            }
-        }, 2000);
+        appContext = AppContext.getInstance();
+
+        new Handler().postDelayed(this::checkCurrentUser, 2000);
     }
-    private void nextActivity() {
+
+    private void checkCurrentUser() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (currentUser != null) {
             currentUser.getIdToken(true).addOnCompleteListener(task -> {
-                Intent intent;
                 if (task.isSuccessful()) {
-                    // Token is valid, proceed to the Main Screen
-                    intent = new Intent(this, MainScreenActivity.class);
+                    // Token is valid, proceed to load the user data and move to MainAppScreen
+                    loadUserDataAndGoToMainApp(currentUser.getEmail());
                 } else {
                     // Token is invalid, user might have been deleted, redirect to Welcome Screen
-                    intent = new Intent(this, WelcomeScreenActivity.class);
+                    redirectToWelcomeScreen();
                 }
-                startActivity(intent);
-                finish(); // Prevent the user from returning to this screen
             });
         } else {
             // No user is signed in, redirect to Welcome Screen
-            Intent intent = new Intent(this, WelcomeScreenActivity.class);
-            startActivity(intent);
-            finish(); // Prevent the user from returning to this screen
+            redirectToWelcomeScreen();
         }
+    }
+
+    private void loadUserDataAndGoToMainApp(String email) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        // Query to find the user by email
+        databaseReference.orderByChild("email").equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                User user = userSnapshot.getValue(User.class);
+                                if (user != null) {
+                                    appContext.setCurrentUser(user);
+                                    redirectToMainScreen();  // Start MainScreenActivity after user data is set
+                                    return;
+                                }
+                            }
+                        } else {
+                            Toast.makeText(SplashScreenActivity.this, "User not found.",
+                                    Toast.LENGTH_SHORT).show();
+                            redirectToWelcomeScreen();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(SplashScreenActivity.this, "Database error: " + databaseError.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                        redirectToWelcomeScreen();
+                    }
+                });
+    }
+
+    private void redirectToMainScreen() {
+        Intent intent = new Intent(this, MainScreenActivity.class);
+        startActivity(intent);
+        finish(); // Prevent the user from returning to this screen
+    }
+
+    private void redirectToWelcomeScreen() {
+        Intent intent = new Intent(this, WelcomeScreenActivity.class);
+        startActivity(intent);
+        finish(); // Prevent the user from returning to this screen
     }
 }
