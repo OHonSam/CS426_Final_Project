@@ -36,7 +36,6 @@ public class LoginScreenActivity extends AppCompatActivity {
     private EditText edtEmail;
     private EditText edtPassword;
     private MyButton btnLogin;
-    private AppContext appContext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,7 +87,6 @@ public class LoginScreenActivity extends AppCompatActivity {
                                     updateUser();
                                     Intent intent = new Intent(LoginScreenActivity.this, MainScreenActivity.class);
                                     startActivity(intent);
-                                    findUserFromDB(email, password);
                                     finishAffinity();
                                 } else {
                                     showToast("Login failed.");
@@ -130,52 +128,6 @@ public class LoginScreenActivity extends AppCompatActivity {
                 });
     }
 
-    private void findUserFromDB(String email, String password) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference("Users");
-
-        // Query the database for the user with the matching email
-        dbRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Iterate through the results (although there should only be one match)
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String dbPassword = userSnapshot.child("password").getValue(String.class);
-
-                        // Check if the password matches
-                        if (dbPassword != null && dbPassword.equals(password)) {
-                            long id = userSnapshot.child("id").getValue(Long.class);
-                            String name = userSnapshot.child("name").getValue(String.class);
-                            Date lastAccessDate = userSnapshot.child("lastAccessDate").getValue(Date.class);
-                            int musicSelectedID = userSnapshot.child("musicSelectedID").getValue(Integer.class);
-                            int streak = userSnapshot.child("streak").getValue(Integer.class);
-
-                            User currentUser = new User(id, email, password, name, lastAccessDate, musicSelectedID, streak);
-                            appContext.setCurrentUser(currentUser);
-
-                            // You can also update the last access date here if you want:
-                            userSnapshot.getRef().child("lastAccessDate").setValue(Calendar.getInstance().getTime());
-
-                            break; // Exit the loop after finding the matching user
-                        } else {
-                            // Password does not match
-                            Log.d("findUserFromDB", "Incorrect password.");
-                        }
-                    }
-                } else {
-                    // No user with the given email found
-                    Log.d("findUserFromDB", "User not found.");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("findUserFromDB", "Database error: " + databaseError.getMessage());
-            }
-        });
-
-    }
     private void showToast(String message) {
         Toast.makeText(LoginScreenActivity.this, message, Toast.LENGTH_SHORT).show();
     }

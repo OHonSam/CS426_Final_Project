@@ -208,7 +208,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         };
 
         View.OnLongClickListener musicLongClickListener = v -> {
-            showMusicSelectionPopup(); // Call your method to show the popup
+//            showMusicSelectionPopup(); // Call your method to show the popup
             return true; // Return true to indicate that the long click event was handled
         };
 
@@ -220,9 +220,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         musicImage.setOnTouchListener(musicTouchListener);
 
         // Set the long click listener to open the music selection popup
-        musicContainer.setOnLongClickListener(musicLongClickListener);
-        musicButton.setOnLongClickListener(musicLongClickListener);
-        musicImage.setOnLongClickListener(musicLongClickListener);
+//        musicContainer.setOnLongClickListener(musicLongClickListener);
+//        musicButton.setOnLongClickListener(musicLongClickListener);
+//        musicImage.setOnLongClickListener(musicLongClickListener);
 
         // Set the click listener to toggle the music on/off
         musicContainer.setOnClickListener(musicClickListener);
@@ -230,52 +230,52 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         musicImage.setOnClickListener(musicClickListener);
     }
 
-    private void showMusicSelectionPopup() {
-        // Inflate the popup layout
-        View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
-
-        // RecyclerView from the inflated popupView
-        RecyclerView recyclerView = popupView.findViewById(R.id.recycler_view_music);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<MusicItem> musicList = MusicItem.getMusicList();
-
-        MusicAdapter adapter = new MusicAdapter(this, musicList, musicManager.loadSavedMusicSelection(), musicItem -> {
-            // Handle music item click (e.g., switch music)
-            musicManager.switchMusic(musicItem.getFileResourceId());
-        });
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setClickable(true);
-        recyclerView.scrollToPosition(adapter.getPositionByMusicResId(musicManager.loadSavedMusicSelection()));
-
-        // Calculate portion of the screen to show the popup
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels / 1.5);
-        int height = (int) (displayMetrics.heightPixels / 2);
-
-        // Create the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                width,
-                height,
-                true);
-
-        // Dim the background for the rest except the popup window
-        applyDim(popupMusicContainer, 0.5f);
-
-        // Return to the normal background for the rest if the popup window is dismissed
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                clearDim(popupMusicContainer);
-                musicManager.saveMusicSelection();
-            }
-        });
-
-        // Show the popup at the center of the container view
-        popupWindow.showAtLocation(musicContainer, Gravity.CENTER, 0, 0);
-    }
+//    private void showMusicSelectionPopup() {
+//        // Inflate the popup layout
+//        View popupView = getLayoutInflater().inflate(R.layout.popup_music_selection, null);
+//
+//        // RecyclerView from the inflated popupView
+//        RecyclerView recyclerView = popupView.findViewById(R.id.recycler_view_music);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        List<MusicItem> musicList = MusicItem.getMusicList();
+//
+//        MusicAdapter adapter = new MusicAdapter(this, musicList, musicManager.loadSavedMusicSelection(), musicItem -> {
+//            // Handle music item click (e.g., switch music)
+//            musicManager.switchMusic(musicItem.getFileResourceId());
+//        });
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setClickable(true);
+////        recyclerView.scrollToPosition(adapter.getPositionByMusicResId(musicManager.loadSavedMusicSelection()));
+//
+//        // Calculate portion of the screen to show the popup
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int width = (int) (displayMetrics.widthPixels / 1.5);
+//        int height = (int) (displayMetrics.heightPixels / 2);
+//
+//        // Create the PopupWindow
+//        PopupWindow popupWindow = new PopupWindow(popupView,
+//                width,
+//                height,
+//                true);
+//
+//        // Dim the background for the rest except the popup window
+//        applyDim(popupMusicContainer, 0.5f);
+//
+//        // Return to the normal background for the rest if the popup window is dismissed
+//        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                clearDim(popupMusicContainer);
+//                musicManager.saveMusicSelection();
+//            }
+//        });
+//
+//        // Show the popup at the center of the container view
+//        popupWindow.showAtLocation(musicContainer, Gravity.CENTER, 0, 0);
+//    }
 
     public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
         Drawable dim = new ColorDrawable(Color.BLACK);

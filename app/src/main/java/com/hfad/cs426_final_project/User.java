@@ -41,13 +41,13 @@ public class User {
         ownTasks = new ArrayList<>();
     }
 
-    public User(long id, String email, String password, String name, Date lastAccessDate, int musicSelectedID, int streak) {
+    public User(long id, String email, String password, String name, long lastAccessDate, int streak) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.lastAccessDate = lastAccessDate;
-        this.musicSelectedID = musicSelectedID;
+//        this.musicSelectedID = musicSelectedID;
         this.streak = streak;
     }
 

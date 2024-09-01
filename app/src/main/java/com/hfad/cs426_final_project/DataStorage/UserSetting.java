@@ -4,6 +4,7 @@ public class UserSetting {
     private int clockMode;
     //private int musicSelectedID;
     private Tree selectedTree;
+    //private String musicSelectedUri;
 
     public UserSetting() {
         // default
