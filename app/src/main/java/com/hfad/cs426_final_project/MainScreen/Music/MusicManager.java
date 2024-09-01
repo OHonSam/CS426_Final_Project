@@ -1,21 +1,16 @@
 package com.hfad.cs426_final_project.MainScreen.Music;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
 
 public class MusicManager {
     private MediaPlayer mediaPlayer;
@@ -23,24 +18,17 @@ public class MusicManager {
     private static final String PREFS_NAME = "MusicPrefs";
     private static final String KEY_SELECTED_MUSIC = "SelectedMusic";
     private final ClickableImageView musicImage;
-    private int curSavedMusicResId;
-    private Uri curSavedMusicUri;
+    private MusicItem curSavedMusicItem;
+
+    private String cachedAudioUrl;
 
     private final AppContext appContext;
 
     public MusicManager(Context context, ClickableImageView musicImage) {
         this.context = context;
         this.musicImage = musicImage;
-        this.curSavedMusicResId = -1;
-        this.curSavedMusicUri = null;
+        this.curSavedMusicItem = null;
         appContext = AppContext.getInstance();
-    }
-
-    public void playMusic(int musicResId) {
-        mediaPlayer = MediaPlayer.create(context, musicResId);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
-        musicImage.setImageResource(R.drawable.ic_music_on);
     }
 
     public void playMusic(Uri musicUri) {
@@ -50,19 +38,27 @@ public class MusicManager {
         musicImage.setImageResource(R.drawable.ic_music_on);
     }
 
-    public void playMusicFromFirebase(String fileName) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://focus-da00f.appspot.com/Musics").child(fileName);
+    public void playMusicFromFirebase(String musicUri) {
+        if (cachedAudioUrl != null && musicUri.equals(cachedAudioUrl)) {
+            playMusic(Uri.parse(cachedAudioUrl));
+            return;
+        }
 
-        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            // Play music with the downloaded URI
-            playMusic(uri);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl(musicUri);
+
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                cachedAudioUrl = uri.toString(); // Cache the URL
+                // Play music with the downloaded URI
+                playMusic(uri);
+            }
         }).addOnFailureListener(exception -> {
             // Handle any errors
             Log.e("MusicManager", "Failed to get download URL: " + exception.getMessage());
         });
     }
-
 
     public void releaseMusic() {
         mediaPlayer.stop();
@@ -71,81 +67,88 @@ public class MusicManager {
         musicImage.setImageResource(R.drawable.ic_music_off);
     }
 
-    public void switchMusic(Uri musicUri) {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            releaseMusic();
-        }
-        playMusic(musicUri);
-        curSavedMusicUri = musicUri;
-    }
-
-    public void switchMusic(int fileResourceId) {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            releaseMusic();
-        }
-        playMusic(fileResourceId);
-        curSavedMusicResId = fileResourceId;
-    }
-
-    // Save the selected music in SharedPreferences
-    public void saveMusicSelection() {
-        if (curSavedMusicResId == -1) return; // No music was selected, so don't save
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(KEY_SELECTED_MUSIC, curSavedMusicResId);
-        editor.apply();
-
-        // set music_selected_id in Users in firebase to curSavedMusicResId
-//        AppContext appContext = AppContext.getInstance();
-//        String userId = "User" + appContext.getCurrentUser().getId(); // Get the current user's UID
-//        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
-//        userRef.child("musicSelectedID").setValue(curSavedMusicResId); // curSavedMusicResId is the problem!!
-    }
-
-    // Save the selected music Uri in SharedPreferences
-    public void saveMusicUriSelection() {
-        if (curSavedMusicUri == null) return; // No music was selected, so don't save
-
-        // set music_selected_uri in Users in Firebase to curSavedMusicUri
-        User currentUser = appContext.getCurrentUser();
-        if (currentUser != null) {
-            String userId = "User" + currentUser.getId(); // Get the current user's UID
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
-            userRef.child("musicSelectedUri").setValue(curSavedMusicUri.toString());
-        }
-    }
-
-
-
-//    // Load the saved music selection from SharedPreferences
-//    public int loadSavedMusicSelection() {
-//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        return prefs.getInt(KEY_SELECTED_MUSIC, -1);  // Return -1 if no music was saved
+//    public void switchMusic(MusicItem musicItem) {
+//        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+//            releaseMusic();
+//        }
+//        playMusicFromFirebase(musicItem);
+//        curSavedMusicItem = musicItem;
+//    }
+//
+//    public void saveMusicItemSelection() {
+//        if (curSavedMusicItem == null) return; // No music was selected, so don't save
+//
+//        // set music_selected_uri in Users in Firebase to curSavedMusicUri
+//        User currentUser = appContext.getCurrentUser();
+//        if (currentUser != null) {
+//            String userId = "User" + currentUser.getId(); // Get the current user's UID
+//            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("userSetting");
+//            userRef.child("selectedMusicItem").setValue(curSavedMusicItem);
+//        }
 //    }
 
-    // Load the saved music Uri from SharedPreferences
-    public Uri loadSavedMusicSelection() {
-//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        String uriString = prefs.getString(KEY_SELECTED_MUSIC_URI, null);
-//        return uriString != null ? Uri.parse(uriString) : null;
-        return Uri.parse("gs://focus-da00f.appspot.com/Musics/forest_rain.mp3");
+//    public void loadSavedMusicItemSelection(OnMusicItemLoadedListener listener) {
+//        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/User" + appContext.getCurrentUser().getId() + "/userSetting");
+//
+//        userRef.child("selectedMusicItem").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    MusicItem musicItem = dataSnapshot.getValue(MusicItem.class);
+//                    listener.onMusicItemLoaded(musicItem);
+//                } else {
+//                    listener.onMusicItemLoaded(null); // No selected music ID found
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("MusicManager", "Failed to read selectedMusicItem: " + databaseError.getMessage());
+//                listener.onMusicItemLoaded(null);
+//            }
+//        });
+//    }
+
+//    public void toggleOnOff() {
+//        if (isPlaying()) {
+//            releaseMusic();
+//        } else {
+//            loadSavedMusicItemSelection(musicItem -> {
+//                if (musicItem != null) {
+//                    playMusicFromFirebase(musicItem);
+//                } else {
+//                    // Play default music if no saved music selection
+//                    playMusicFromFirebase(new MusicItem());
+//                }
+//            });
+//        }
+//    }
+
+    public MusicItem loadSavedMusicItemSelection() {
+        return appContext.getCurrentUser().getUserSetting().getSelectedMusicItem();
+    }
+
+    public String loadSavedMusicUriSelection() {
+        return appContext.getCurrentUser().getUserSetting().getSelectedMusicItem().getAudioUri();
     }
 
     public void toggleOnOff() {
         if (isPlaying()) {
             releaseMusic();
-        } else {
-//            Uri savedMusicUri = loadSavedMusicSelection();
-//            if (savedMusicUri != null) {
-//                playMusic(savedMusicUri);
-//            } else {
-                // Play default music if no saved music selection
-                playMusicFromFirebase("forest_rain.mp3");
-//            }
+        }
+        else {
+            String savedMusicUri = loadSavedMusicUriSelection();
+            if (savedMusicUri != null) {
+                playMusicFromFirebase(savedMusicUri);
+            }
         }
     }
 
     public boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.isPlaying();
+    }
+
+    public interface OnMusicItemLoadedListener {
+        void onMusicItemLoaded(MusicItem musicItem);
     }
 }

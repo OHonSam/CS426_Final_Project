@@ -52,16 +52,6 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
         return musicList.size();
     }
 
-    public int getPositionByMusicResId(int musicResId) {
-        for (int i = 0; i < musicList.size(); i++) {
-            if (musicList.get(i).getFileResourceId() == musicResId) {
-                return i;  // Return the position if a match is found
-            }
-        }
-        return 0;  // Return 0 (forest_rain) if no match is found
-    }
-
-
     public class MusicViewHolder extends RecyclerView.ViewHolder {
         private final TextView titleView;
 

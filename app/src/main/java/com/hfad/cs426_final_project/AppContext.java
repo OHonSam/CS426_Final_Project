@@ -1,5 +1,7 @@
 package com.hfad.cs426_final_project;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +56,7 @@ public class AppContext {
                 musicList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     MusicItem musicItem = dataSnapshot.getValue(MusicItem.class);
+                    Log.d("MusicItem", "MusicItem: " + musicItem.getTitle() + " " + musicItem.getId() + " " + musicItem.getAudioUri());
                     if (musicItem != null) {
                         // Fetch URI for the tree image from Firebase Storage
                         fetchMusicItemsAudioUri(musicItem);
@@ -69,11 +72,12 @@ public class AppContext {
     }
 
     private void fetchMusicItemsAudioUri(MusicItem musicItem) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("Musics/music" + musicItem.getTitle() + ".mp3");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(musicItem.getAudioUri());
 
         storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
             // Set the audio URI for the music item
-            musicItem.setAudioUri(String.valueOf(uri));
+            Log.d("MusicItem", "Audio URI: " + String.valueOf(uri));
+//            musicItem.setAudioUri(String.valueOf(uri));
             musicList.add(musicItem); // Add the music item to the list after setting the URI
         }).addOnFailureListener(exception -> {
             // Handle the case where the audio file is not found or any other error occurs
@@ -85,6 +89,14 @@ public class AppContext {
     public List<MusicItem> getMusicList() {
         return musicList;
     }
+
+    public String convertToSnakeCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return input; // Handle null or empty input
+        }
+        return input.trim().toLowerCase().replace(" ", "_");
+    }
+
 
     private void loadTreeListFromDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
