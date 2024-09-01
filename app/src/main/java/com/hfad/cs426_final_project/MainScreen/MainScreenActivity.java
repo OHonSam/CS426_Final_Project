@@ -141,6 +141,12 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         appContext.saveUserInfo();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        musicManager.releaseMusic();
+    }
+
     private void getUIReferences() {
         imgTree = findViewById(R.id.tree);
         timeView = findViewById(R.id.time_view);
