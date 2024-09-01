@@ -101,7 +101,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         drawer = findViewById(R.id.drawer_layout_main_screen);
         todoImage = findViewById(R.id.todo_image);
         todoButton = findViewById(R.id.todo_button);
-        todoContainer = findViewById(R.id.to_do_container);
+        todoContainer = findViewById(R.id.todo_container);
         musicContainer = findViewById(R.id.music_container);
         musicImage =findViewById(R.id.music_image);
         musicButton=findViewById(R.id.music_button);
