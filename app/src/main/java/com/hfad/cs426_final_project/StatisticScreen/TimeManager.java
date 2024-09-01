@@ -8,6 +8,14 @@ public class TimeManager {
     private Calendar currentDate;
     private String currentPeriod;
 
+    public String getCurrentPeriod() {
+        return currentPeriod;
+    }
+
+    public Calendar getCurrentDate() {
+        return currentDate;
+    }
+
     public TimeManager() {
         currentDate = Calendar.getInstance();
         currentPeriod = "Day";

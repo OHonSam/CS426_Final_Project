@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
@@ -18,7 +19,7 @@ public class StatisticScreenActivity extends AppCompatActivity {
     private MyButton overviewBtn;
     private TextView timeSelectionText;
     private TimeManager timeManager;
-
+    private AnimatedLineChart lineChart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +51,9 @@ public class StatisticScreenActivity extends AppCompatActivity {
         landView = findViewById(R.id.isometricLandView);
         initializeIsometricLandView();
 
+        lineChart = findViewById(R.id.line_chart);
         updateTimeSelection();
+        updateChart();
     }
 
     private void initializeToggleGroup() {
@@ -91,6 +94,10 @@ public class StatisticScreenActivity extends AppCompatActivity {
     private void updateTimeSelection() {
         timeSelectionText.setText(timeManager.getFormattedTimeSelection());
         forwardBtn.setVisibility(timeManager.isLatestTime() ? View.INVISIBLE : View.VISIBLE);
+    }
+
+    private void updateChart() {
+        lineChart.updateChart(timeManager.getCurrentPeriod(), timeManager.getCurrentDate());
     }
 
     private void initializeIsometricLandView() {
