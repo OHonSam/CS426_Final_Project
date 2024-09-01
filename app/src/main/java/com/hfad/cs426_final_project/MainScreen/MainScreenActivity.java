@@ -15,9 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -63,6 +66,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     private MusicManager musicManager;
 
+    Spinner searchTagSpinner;
+
     Toolbar toolbar;
     NavigationView navigationView;
     DrawerLayout drawer;
@@ -81,6 +86,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         musicManager = new MusicManager(this, musicImage);
 
+        setupSearchTag();
         setupMusicListener();
         setupTodoListener();
         setupTree();
@@ -106,6 +112,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         musicImage =findViewById(R.id.music_image);
         musicButton=findViewById(R.id.music_button);
         popupMusicContainer = findViewById(R.id.main);
+        searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
     private void setupToolbar() {
@@ -293,6 +300,33 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     public static void clearDim(@NonNull ViewGroup parent) {
         ViewGroupOverlay overlay = parent.getOverlay();
         overlay.clear();
+    }
+
+    private void setupSearchTag() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.spinner_items, // Use the array defined in strings.xml
+                android.R.layout.simple_spinner_item // Use a built-in layout for the items
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        searchTagSpinner.setAdapter(adapter);
+
+        searchTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Get the selected item
+                String selectedItem = parentView.getItemAtPosition(position).toString();
+                // Do something with the selected item
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do something if nothing is selected
+            }
+        });
+
     }
 
     @SuppressLint("ClickableViewAccessibility")

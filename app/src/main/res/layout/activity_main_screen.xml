@@ -168,17 +168,14 @@
 
             <Spinner
                 android:id="@+id/search_tag_spinner"
-                style="@style/SubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="40dp"
                 android:layout_marginVertical="20dp"
                 android:background="@drawable/rounded_white_bar"
-                android:gravity="center_horizontal"
-                android:paddingStart="5dp"
-
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:textAlignment="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="6dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
