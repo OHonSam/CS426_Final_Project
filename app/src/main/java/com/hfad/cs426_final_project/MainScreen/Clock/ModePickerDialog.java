@@ -26,43 +26,55 @@ public class ModePickerDialog extends DialogFragment {
     public static String TAG = "ModePickerDialog";
     private TimerOptionFragment timerOptionFragment;
     private StopwatchOptionFragment stopwatchOptionFragment;
-//    private AppContext appContext;
     private SwitchMode switchMode;
     private boolean isCurDeepMode;
     private boolean isCurTimer;
     private boolean isCurCountExceed;
-
-    //DIALOG FRAGMENT
-//Create interface in your DialogFragment (or a new file)
-    public interface onDismissListener {
-        void onDismiss(ModePickerDialog modePickerDialog);
-    }
-    //create Pointer and setter to it
-    private onDismissListener onDismissListener;
-
-    public void setOnDismissListener(onDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
-    }
-    //Call it on the dialogFragment onDismiss
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-//        User userData = AppContext.getInstance().getCurrentUser();
-//        userData.setIsDeepMode(isCurDeepMode);
-//        userData.setIsCountExceed(isCurCountExceed);
-//        userData.setIsTimer(isCurTimer);
-
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(this);
-        }
-    }
-
+    private AppContext appContext;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.popup_clock_mode,container,false);
+        return inflater.inflate(R.layout.popup_clock_mode, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ImageView timer = view.findViewById(R.id.hourglassImageView);
+        ImageView stopwatch = view.findViewById(R.id.stopwatchImageView);
+        ImageView thumb = view.findViewById(R.id.thumbTrackImageView);
+        ImageView track = view.findViewById(R.id.rectangle);
+
+        switchMode = new SwitchMode(timer, stopwatch, thumb, track);
+        timerOptionFragment = new TimerOptionFragment();
+        stopwatchOptionFragment = new StopwatchOptionFragment();
+
+        appContext = AppContext.getInstance();
+
+        this.isCurCountExceed = appContext.getCurrentUser().getIsCountExceed();
+        this.isCurDeepMode = appContext.getCurrentUser().getIsDeepMode();
+        this.isCurTimer = appContext.getCurrentUser().getIsTimer();
+
+        if (isCurTimer)
+            replaceFragment(timerOptionFragment);
+        else
+            replaceFragment(stopwatchOptionFragment);
+
+        switchMode.addSwitchListener(new onModeClickListener() {
+            @Override
+            public void onModeClick(int id) {
+                if (id == 0) {
+                    isCurTimer = true;
+                    replaceFragment(timerOptionFragment);
+                    AppContext.getInstance().getCurrentClock().setClockMode(Clock.ClockMode.TIMER);
+                } else {
+                    isCurTimer = false;
+                    replaceFragment(stopwatchOptionFragment);
+                    AppContext.getInstance().getCurrentClock().setClockMode(Clock.ClockMode.STOPWATCH);
+                }
+            }
+        });
     }
 
     @Override
@@ -86,48 +98,36 @@ public class ModePickerDialog extends DialogFragment {
         super.onResume();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ImageView timer = view.findViewById(R.id.hourglassImageView);
-        ImageView stopwatch = view.findViewById(R.id.stopwatchImageView);
-        ImageView thumb = view.findViewById(R.id.thumbTrackImageView);
-        ImageView track = view.findViewById(R.id.rectangle);;
-        switchMode = new SwitchMode(timer,stopwatch,thumb,track);
-        timerOptionFragment = new TimerOptionFragment();
-        stopwatchOptionFragment = new StopwatchOptionFragment();
-
-        User user = AppContext.getInstance().getCurrentUser();
-        this.isCurCountExceed = AppContext.getInstance().getCurrentUser().getIsCountExceed();
-        this.isCurDeepMode = AppContext.getInstance().getCurrentUser().getIsDeepMode();
-        this.isCurTimer = AppContext.getInstance().getCurrentUser().getIsTimer();
-
-        if (isCurTimer)
-            replaceFragment(timerOptionFragment);
-        else
-            replaceFragment(stopwatchOptionFragment);
-
-        switchMode.addSwitchListener(new onModeClickListener() {
-            @Override
-            public void onModeClick(int id) {
-                if(id == 0){
-                    isCurTimer = true;
-                    replaceFragment(timerOptionFragment);
-                    AppContext.getInstance().getCurrentClock().setClockMode(Clock.ClockMode.TIMER);
-                }
-                else{
-                    isCurTimer = false;
-                    replaceFragment(stopwatchOptionFragment);
-                    AppContext.getInstance().getCurrentClock().setClockMode(Clock.ClockMode.STOPWATCH);
-                }
-            }
-        });
-    }
-
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.menuOption,fragment);
+        fragmentTransaction.replace(R.id.menuOption, fragment);
         fragmentTransaction.commit();
+    }
+
+    //Create interface in your DialogFragment (or a new file)
+    public interface onDismissListener {
+        void onDismiss(ModePickerDialog modePickerDialog);
+    }
+
+    //create Pointer and setter to it
+    private onDismissListener onDismissListener;
+
+    public void setOnDismissListener(onDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
+    //Call it on the dialogFragment onDismiss
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        appContext.getCurrentUser().setIsDeepMode(isCurDeepMode);
+        appContext.getCurrentUser().setIsCountExceed(isCurCountExceed);
+        appContext.getCurrentUser().setIsTimer(isCurTimer);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(this);
+        }
     }
 }
