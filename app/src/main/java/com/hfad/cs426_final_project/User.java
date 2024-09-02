@@ -22,9 +22,14 @@ public class User {
     private List<Tag> ownTags = new ArrayList<>();
     private List<UserTask> ownUserTasks = new ArrayList<>();
 
+    private boolean isDeepMode;
+
+    private boolean isCountExceed;
+    private boolean isTimer;
     public User() {}
 
     // Use for adding a new user (when signing up)
+
     public User(long id, String email, String password, String name) {
         this.id = id;
         this.email = email;
@@ -39,8 +44,11 @@ public class User {
 
         Tree tree = new Tree(); // default tree
         ownTrees.add(tree);
-    }
 
+        this.isDeepMode = false;
+        this.isCountExceed = false;
+        this.isTimer = true;
+    }
     public long getId() {
         return id;
     }
@@ -99,6 +107,30 @@ public class User {
 
     public UserSetting getUserSetting() {
         return userSetting;
+    }
+
+    public boolean getIsDeepMode() {
+        return isDeepMode;
+    }
+
+    public void setIsDeepMode(boolean deepMode) {
+        isDeepMode = deepMode;
+    }
+
+    public boolean getIsCountExceed() {
+        return isCountExceed;
+    }
+
+    public void setIsCountExceed(boolean countExceed) {
+        isCountExceed = countExceed;
+    }
+
+    public boolean getIsTimer() {
+        return isTimer;
+    }
+
+    public void setIsTimer(boolean timer) {
+        isTimer = timer;
     }
 
     public void setUserSetting(UserSetting userSetting) {
