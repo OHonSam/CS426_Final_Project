@@ -79,10 +79,7 @@ public class LoginScreenActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    updateUser();
-                                    Intent intent = new Intent(LoginScreenActivity.this, MainScreenActivity.class);
-                                    startActivity(intent);
-                                    finishAffinity();
+                                    updateUserAndRedirectMainScreen();
                                 } else {
                                     Toast.makeText(LoginScreenActivity.this, "Login failed.",
                                             Toast.LENGTH_SHORT).show();
@@ -93,7 +90,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUser() {
+    private void updateUserAndRedirectMainScreen() {
         // Assuming the user data is stored under a "users" node in the database
         String email = edtEmail.getText().toString().trim();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -109,6 +106,9 @@ public class LoginScreenActivity extends AppCompatActivity {
                                 if (user != null) {
                                     appContext.setCurrentUser(user);
                                 }
+                                Intent intent = new Intent(LoginScreenActivity.this, MainScreenActivity.class);
+                                startActivity(intent);
+                                finishAffinity();
                             }
                         } else {
                             Toast.makeText(LoginScreenActivity.this, "User not found.",

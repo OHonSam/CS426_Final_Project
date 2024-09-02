@@ -1,6 +1,6 @@
 package com.hfad.cs426_final_project.DataStorage;
 
-public class Task {
+public class UserTask {
     private int id;
     private String title;
     private String location;
@@ -8,10 +8,10 @@ public class Task {
     private long endDate;   // Store Date as long (timestamp)
     private String description;
 
-    public Task() {
+    public UserTask() {
     }
 
-    public Task(int id, String title, String location, long startDate, long endDate, String description) {
+    public UserTask(int id, String title, String location, long startDate, long endDate, String description) {
         this.id = id;
         this.title = title;
         this.location = location;

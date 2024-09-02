@@ -2,13 +2,15 @@ package com.hfad.cs426_final_project;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 
 import java.util.ArrayList;
@@ -21,7 +23,36 @@ public class AppContext {
 
     private AppContext() {
         treeList = new ArrayList<Tree>();
-        loadTreeListFromDB();
+        loadTreeListFromDB().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    fetchTrees();
+                }
+                else {
+                    // Handle the error
+                    Exception e = task.getException();
+                    // Show error or take appropriate action
+                }
+            }
+        });
+    }
+
+    private void fetchTrees() {
+        fetchTreeUriSequentially(0); // Start fetching URIs from the first tree
+    }
+
+    private void fetchTreeUriSequentially(int index) {
+        if (index >= treeList.size()) {
+            // All trees have been processed
+            return;
+        }
+
+        Tree tree = treeList.get(index);
+        tree.fetchUri(() -> {
+            // Move to the next tree after the current tree's URI is fetched
+            fetchTreeUriSequentially(index + 1);
+        });
     }
 
     public static synchronized AppContext getInstance() {
@@ -39,40 +70,55 @@ public class AppContext {
         this.currentUser = currentUser;
     }
 
-    private void loadTreeListFromDB() {
+    public List<Tree> getTreeList() {
+        return treeList;
+    }
+
+    private Task<Void> loadTreeListFromDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Trees");
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 treeList.clear();
+                List<Task<Void>> addTreeTasks = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Tree tree = dataSnapshot.getValue(Tree.class);
                     if (tree != null) {
-                        // Fetch URI for the tree image from Firebase Storage
-                        fetchTreeImageUri(tree);
+                        addTreeTasks.add(addNewtree(tree));
                     }
                 }
+                // Once all fetchUri tasks are completed, we complete the main task
+                Tasks.whenAll(addTreeTasks).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        taskCompletionSource.setResult(null);
+                    } else {
+                        taskCompletionSource.setException(task.getException());
+                    }
+                });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
+                taskCompletionSource.setException(error.toException());
             }
         });
+        return taskCompletionSource.getTask();
     }
 
-    private void fetchTreeImageUri(Tree tree) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("Trees/tree" + tree.getId() + ".png");
+    private Task<Void> addNewtree(Tree tree) {
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+        treeList.add(tree);
+        taskCompletionSource.setResult(null);
+        return taskCompletionSource.getTask();
+    }
 
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            tree.setImgUri(String.valueOf(uri));
-            treeList.add(tree); // Add tree to the list after setting the URI
-        }).addOnFailureListener(exception -> {
-            // Handle the case where the image is not found or any other error
-            // You may still want to add the tree without the image or log the error
-            treeList.add(tree); // Add tree without the URI
-        });
+    public void saveUserInfo() {
+        if (currentUser != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child("User" + currentUser.getId());
+            userRef.setValue(currentUser);
+        }
     }
 }
