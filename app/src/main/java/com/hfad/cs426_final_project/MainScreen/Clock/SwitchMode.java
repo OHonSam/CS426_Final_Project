@@ -11,6 +11,7 @@ public class SwitchMode{
     ImageView timer, stopwatch;
     public ImageView thumb;
     ImageView track;
+    ClockSetting setting;
     int selectedMode; // 0: timer ; 1: stopwatch
 
     public SwitchMode(ImageView timer, ImageView stopwatch, ImageView thumb, ImageView track) {
@@ -18,7 +19,7 @@ public class SwitchMode{
         this.stopwatch = stopwatch;
         this.thumb = thumb;
         this.track = track;
-        this.selectedMode = 0;
+        this.setting = new ClockSetting();
         this.onModeClickListener = null;
         setupOnClickListener();
     }
@@ -27,7 +28,8 @@ public class SwitchMode{
         timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTranslateAnimation(selectedMode,timer);
+                startTranslateAnimation(setting.getType(),timer);
+                setting.setType(Clock.ClockMode.TIMER);
                 selectedMode = 0;
                 onModeClickListener.onModeClick(selectedMode);
             }
@@ -36,14 +38,15 @@ public class SwitchMode{
         stopwatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTranslateAnimation(selectedMode,stopwatch);
+                startTranslateAnimation(setting.getType(),stopwatch);
+                setting.setType(Clock.ClockMode.STOPWATCH);
                 selectedMode = 1;
                 onModeClickListener.onModeClick(selectedMode);
             }
         });
     }
 
-    private void startTranslateAnimation(int selectedMode, View destination){
+    private void startTranslateAnimation(Clock.ClockMode selectedMode, View destination){
 
         float thumb_x = thumb.getX();
         float thumb_y = thumb.getY();
@@ -52,7 +55,7 @@ public class SwitchMode{
 
         int[] absolute_coordinate_source = new int[2];
         View source;
-        if(selectedMode == 0){
+        if(selectedMode == Clock.ClockMode.TIMER){
             source = timer;
         }
         else

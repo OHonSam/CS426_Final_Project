@@ -72,8 +72,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     NavigationView navigationView;
     DrawerLayout drawer;
 
-    AppContext appContext;
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +94,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupClock();
 
         setupStartButton();
-        setupTree();
+//        setupTree();
     }
 
     private void setupClockMode() {
@@ -109,6 +107,12 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void showModePickerDialog() {
         if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
             modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
+//        modePickerDialog.setOnDismissListener(new ModePickerDialog.onDismissListener() {
+//            @Override
+//            public void onDismiss(ModePickerDialog modePickerDialog) {
+//                //clock.updateSetting(modePickerDialog.);
+//            }
+//        });
     }
 
     @Override

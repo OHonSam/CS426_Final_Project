@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project.MainScreen.Clock;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,29 @@ public class ModePickerDialog extends DialogFragment {
     private TimerOptionFragment timerOptionFragment;
     private StopwatchOptionFragment stopwatchOptionFragment;
     private AppContext appContext;
+    private SwitchMode switchMode;
+    //DIALOG FRAGMENT
+//Create interface in your DialogFragment (or a new file)
+    public interface onDismissListener {
+        void onDismiss(ModePickerDialog modePickerDialog);
+    }
+    //create Pointer and setter to it
+    private onDismissListener onDismissListener;
+
+    public void setOnDismissListener(onDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+    //Call it on the dialogFragment onDismiss
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(this);
+        }
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,7 +83,7 @@ public class ModePickerDialog extends DialogFragment {
         ImageView stopwatch = view.findViewById(R.id.stopwatchImageView);
         ImageView thumb = view.findViewById(R.id.thumbTrackImageView);
         ImageView track = view.findViewById(R.id.rectangle);;
-        SwitchMode switchMode = new SwitchMode(timer,stopwatch,thumb,track);
+        switchMode = new SwitchMode(timer,stopwatch,thumb,track);
         timerOptionFragment = new TimerOptionFragment();
         stopwatchOptionFragment = new StopwatchOptionFragment();
 
@@ -86,5 +110,9 @@ public class ModePickerDialog extends DialogFragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.menuOption,fragment);
         fragmentTransaction.commit();
+    }
+
+    public ClockSetting getSetting(){
+        return null;
     }
 }

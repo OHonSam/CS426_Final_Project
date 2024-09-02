@@ -22,6 +22,8 @@ public class AppContext {
     private User currentUser;
     private List<Tree> treeList;
 
+    private Clock clock;
+
     private AppContext() {
         treeList = new ArrayList<Tree>();
         loadTreeListFromDB().addOnCompleteListener(new OnCompleteListener<Void>() {
