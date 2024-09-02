@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".MainScreen.Clock.TimerOptionFragment">
     
@@ -45,9 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/deepFocusDescriptionTextView"
-        app:layout_constraintTop_toTopOf="parent">
-    </androidx.appcompat.widget.SwitchCompat>
+        app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.SwitchCompat>
 
     <ImageView
         android:id="@+id/line"
@@ -96,6 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/countExceedTimeDescriptionTextView"
-        app:layout_constraintTop_toBottomOf="@+id/line"/>
+        app:layout_constraintTop_toBottomOf="@+id/line" />
 </androidx.constraintlayout.widget.ConstraintLayout>

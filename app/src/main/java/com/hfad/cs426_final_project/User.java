@@ -44,10 +44,6 @@ public class User {
 
         Tree tree = new Tree(); // default tree
         ownTrees.add(tree);
-
-        this.isDeepMode = false;
-        this.isCountExceed = false;
-        this.isTimer = true;
     }
     public long getId() {
         return id;

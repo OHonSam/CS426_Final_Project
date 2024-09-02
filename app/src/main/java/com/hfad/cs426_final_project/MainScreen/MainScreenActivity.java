@@ -129,8 +129,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         appContext.saveUserInfo();
+        super.onDestroy();
     }
 
     private void getUIReferences() {
@@ -399,7 +399,13 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     private void setupClock() {
         // TODO: get from Firebase the Users clock mode selection
-        clock = new Clock(this, timeView, startButton, Clock.ClockMode.STOPWATCH, 0, 5);
+        if (appContext.getCurrentUser().getIsTimer()) {
+            clock = new Clock(this, timeView, startButton, Clock.ClockMode.TIMER, 0, 5);
+        }
+        else {
+            clock = new Clock(this, timeView, startButton, Clock.ClockMode.STOPWATCH, 0, 5);
+        }
+
         appContext.setCurrentClock(clock);
         appContext.getCurrentClock().run();
     }
