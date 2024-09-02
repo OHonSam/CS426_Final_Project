@@ -8,18 +8,18 @@ import android.widget.ImageView;
 
 public class SwitchMode{
     onModeClickListener onModeClickListener;
-    ImageView timer, stopwatch;
+    private ImageView timer, stopwatch;
     public ImageView thumb;
-    ImageView track;
-    ClockSetting setting;
-    int selectedMode; // 0: timer ; 1: stopwatch
+    private ImageView track;
+    private ClockSetting setting;
+    private int selectedMode; // 0: timer ; 1: stopwatch
 
-    public SwitchMode(ImageView timer, ImageView stopwatch, ImageView thumb, ImageView track) {
+    public SwitchMode(ImageView timer, ImageView stopwatch, ImageView thumb, ImageView track, ClockSetting clockSetting) {
         this.timer = timer;
         this.stopwatch = stopwatch;
         this.thumb = thumb;
         this.track = track;
-        this.setting = new ClockSetting();
+        this.setting = clockSetting;
         this.onModeClickListener = null;
         setupOnClickListener();
     }

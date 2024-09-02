@@ -123,7 +123,6 @@ public class AppContext {
     }
 
     public void saveUserInfo() {
-        Log.d("AppContext", "isTimer" + currentUser.getIsTimer());
         if (currentUser != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child("User" + currentUser.getId());
             userRef.setValue(currentUser);

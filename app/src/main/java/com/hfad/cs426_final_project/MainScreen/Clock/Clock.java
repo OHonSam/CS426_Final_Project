@@ -37,18 +37,16 @@ public class Clock {
     private int timeLimit;
     private MyButton startButton;
     private Context context;
-    private ClockMode clockMode; // Enum for clock mode
-    private boolean isDeepFocus;
-    private boolean isCountExceedTime;
+    // We can't use AppContext.getClockSetting().getType() as there is switch mode in the app
+    // mClockMode is to display and it may differ from the Firebase-fetched clock setting type until onDismiss of DialogFragment
+    private ClockMode mClockMode;
 
-    private Runnable updateNotificationRunnable;
-
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockMode clockMode, int initialTime, int timeLimit) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockMode mClockMode, int initialTime, int timeLimit) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
-        this.clockMode = clockMode;
-        this.seconds = (this.clockMode == ClockMode.STOPWATCH) ? initialTime : timeLimit ;
+        this.mClockMode = mClockMode;
+        this.seconds = (this.mClockMode == ClockMode.STOPWATCH) ? initialTime : timeLimit ;
         this.timeLimit = timeLimit;
         this.handler = new Handler();
     }
@@ -63,7 +61,7 @@ public class Clock {
         startButton.setBackgroundTintList(ContextCompat.getColorStateList (startButton.getContext(), R.color.secondary_50));
 
         Intent serviceIntent = new Intent(context, ClockService.class);
-        serviceIntent.putExtra("isTimer", clockMode == ClockMode.TIMER);
+        serviceIntent.putExtra("isTimer", mClockMode == ClockMode.TIMER);
         serviceIntent.putExtra("timeLimit", timeLimit);
         ContextCompat.startForegroundService(context, serviceIntent);
     }
@@ -78,11 +76,11 @@ public class Clock {
     }
 
     public void reset() {
-        seconds = (clockMode == ClockMode.STOPWATCH) ? 0 : timeLimit;
+        seconds = (mClockMode == ClockMode.STOPWATCH) ? 0 : timeLimit;
     }
 
-    public void setClockMode(ClockMode clockMode) {
-        this.clockMode = clockMode;
+    public void setClockMode(ClockMode mClockMode) {
+        this.mClockMode = mClockMode;
         reset(); // Reset the clock when the mode changes
         // Update the UI to reflect the new clock mode
     }
@@ -105,7 +103,7 @@ public class Clock {
                 timeView.setText(time);
 
                 if (running) {
-                    if (clockMode == ClockMode.STOPWATCH) {
+                    if (mClockMode == ClockMode.STOPWATCH) {
                         seconds++;
                         if (timeLimit > 0 && seconds > timeLimit) {
                             stop();
@@ -166,11 +164,4 @@ public class Clock {
 
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
-
-    public void updateSetting(ClockSetting setting){
-        this.clockMode = setting.getType();
-        this.isDeepFocus = setting.isDeepFocus();
-        this.isCountExceedTime = setting.isCountExceedTime();
-    }
-
 }
