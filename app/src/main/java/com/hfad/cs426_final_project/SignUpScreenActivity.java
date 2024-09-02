@@ -2,6 +2,7 @@ package com.hfad.cs426_final_project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -128,27 +129,30 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
                 // Create a new User object with the new user ID
                 User newUser = new User(cnt, email, password, name);
+                newUser.getUserSetting().getSelectedTree().fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Add the new user to the database
+                        dbRef.child("User" + cnt).setValue(newUser)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            // Update appContext with the new user
+                                            appContext.setCurrentUser(newUser);
 
-                // Add the new user to the database
-                dbRef.child("User" + cnt).setValue(newUser)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    // Update appContext with the new user
-                                    appContext.setCurrentUser(newUser);
-
-                                    // Navigate to MainScreenActivity
-                                    Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
-                                    startActivity(intent);
-                                    finishAffinity(); // Close all activities below this one
-                                } else {
-                                    Toast.makeText(SignUpScreenActivity.this, "Failed to register user.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                                            // Navigate to MainScreenActivity
+                                            Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
+                                            startActivity(intent);
+                                            finishAffinity(); // Close all activities below this one
+                                        } else {
+                                            Toast.makeText(SignUpScreenActivity.this, "Failed to register user.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any errors that might occur
@@ -158,4 +162,3 @@ public class SignUpScreenActivity extends AppCompatActivity {
     }
 
 }
-

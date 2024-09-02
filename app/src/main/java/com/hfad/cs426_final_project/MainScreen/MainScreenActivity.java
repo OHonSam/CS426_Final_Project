@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,7 +45,7 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.StoreScreenActivity;
+import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 import com.hfad.cs426_final_project.WelcomeScreenActivity;
 
 import java.util.List;
@@ -85,6 +84,12 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupMusicListener();
         setupTodoListener();
         setupTree();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        appContext.saveUserInfo();
     }
 
     private void getUIReferences() {

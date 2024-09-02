@@ -1,13 +1,11 @@
 package com.hfad.cs426_final_project;
 
 import com.hfad.cs426_final_project.DataStorage.Tag;
-import com.hfad.cs426_final_project.DataStorage.Task;
+import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.DataStorage.UserSetting;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class User {
@@ -18,10 +16,11 @@ public class User {
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
     private int streak;
+    private int sun; // money
     private UserSetting userSetting;
-    private List<Tree> ownTrees;
-    private List<Tag> ownTags;
-    private List<Task> ownTasks;
+    private List<Tree> ownTrees = new ArrayList<>();
+    private List<Tag> ownTags = new ArrayList<>();
+    private List<UserTask> ownUserTasks = new ArrayList<>();
 
     public User() {}
 
@@ -35,10 +34,11 @@ public class User {
         // default
         this.lastAccessDate = System.currentTimeMillis();
         this.streak = 1;
+        this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
-        ownTrees = new ArrayList<>();
-        ownTags = new ArrayList<>();
-        ownTasks = new ArrayList<>();
+
+        Tree tree = new Tree(); // default tree
+        ownTrees.add(tree);
     }
 
     public long getId() {
@@ -89,6 +89,14 @@ public class User {
         this.streak = streak;
     }
 
+    public int getSun() {
+        return sun;
+    }
+
+    public void setSun(int sun) {
+        this.sun = sun;
+    }
+
     public UserSetting getUserSetting() {
         return userSetting;
     }
@@ -113,11 +121,21 @@ public class User {
         this.ownTags = ownTags;
     }
 
-    public List<Task> getOwnTasks() {
-        return ownTasks;
+    public List<UserTask> getOwnTasks() {
+        return ownUserTasks;
     }
 
-    public void setOwnTasks(List<Task> ownTasks) {
-        this.ownTasks = ownTasks;
+    public void setOwnTasks(List<UserTask> ownUserTasks) {
+        this.ownUserTasks = ownUserTasks;
+    }
+
+    public boolean hasTree(Tree tree) {
+        if(ownTrees == null)
+            return false;
+        List<Integer> listOwnTreeID = new ArrayList<>();
+        for(Tree t : ownTrees) {
+            listOwnTreeID.add(t.getId());
+        }
+        return listOwnTreeID.contains(tree.getId());
     }
 }
