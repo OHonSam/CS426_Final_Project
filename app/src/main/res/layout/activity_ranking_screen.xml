@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_deep_sea"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ranking"
+            style="@style/SubHead"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true" />
+        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:id="@+id/ranking_mode_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/button_border"
+            android:paddingVertical="0dp"
+            android:backgroundTint="@color/primary_20"
+            android:text="Streak"
+            style="@style/BodyText"
+            android:textAllCaps="false"
+            android:drawableEnd="@drawable/dropdown"
+            android:drawablePadding="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginVertical="8dp"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/period_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/today_btn"
+            style="@style/ToggleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@drawable/toggle_background"
+            android:paddingHorizontal="60dp"
+            android:text="Today"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/all_time_btn"
+            style="@style/ToggleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@drawable/toggle_background"
+            android:paddingHorizontal="60dp"
+            android:text="All time"
+            android:textColor="@color/black" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <RelativeLayout
+        android:id="@+id/attributes"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/button_border"
+        android:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/period_picker">
+
+        <TextView
+            android:id="@+id/Rank"
+            style="@style/SubTitle2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:paddingVertical="6dp"
+            android:text="Rank"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/Username"
+            style="@style/SubTitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Username"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/Streak"
+            style="@style/SubTitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:paddingVertical="6dp"
+            android:text="Streak"
+            android:textColor="@color/black" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/ranking_list"
+        android:layout_width="360dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="23dp"
+        android:divider="@drawable/ranking_divider"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/attributes"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

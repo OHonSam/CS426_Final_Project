@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:id="@+id/ranking_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    android:backgroundTint="@color/Accent2">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/ranking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:elegantTextHeight="true"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="8dp"
+            style="@style/SubTitle2" />
+        <ImageView
+            android:id="@+id/medal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/medal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phan Phuc Bao"
+            android:elegantTextHeight="true"
+            style="@style/BodyText"
+            android:layout_centerInParent="true"
+            android:paddingVertical="5dp"/>
+        <TextView
+            android:id="@+id/streak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elegantTextHeight="true"
+            android:text="300"
+            style="@style/BodyText"
+            android:layout_alignParentEnd="true"
+            android:drawablePadding="3dp"
+            app:drawableStartCompat="@drawable/streak"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
