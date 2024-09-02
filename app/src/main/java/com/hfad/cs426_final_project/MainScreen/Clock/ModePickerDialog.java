@@ -20,7 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
 
 public class ModePickerDialog extends DialogFragment {
     public static String TAG = "ModePickerDialog";
@@ -28,7 +27,7 @@ public class ModePickerDialog extends DialogFragment {
     private StopwatchOptionFragment stopwatchOptionFragment;
     private SwitchMode switchMode;
     private boolean isCurDeepMode;
-    private boolean isCurTimer;
+    private Clock.ClockMode curMode;
     private boolean isCurCountExceed;
     private AppContext appContext;
 
@@ -46,17 +45,19 @@ public class ModePickerDialog extends DialogFragment {
         ImageView thumb = view.findViewById(R.id.thumbTrackImageView);
         ImageView track = view.findViewById(R.id.rectangle);
 
-        switchMode = new SwitchMode(timer, stopwatch, thumb, track);
         timerOptionFragment = new TimerOptionFragment();
         stopwatchOptionFragment = new StopwatchOptionFragment();
 
         appContext = AppContext.getInstance();
 
-        this.isCurCountExceed = appContext.getCurrentUser().getIsCountExceed();
-        this.isCurDeepMode = appContext.getCurrentUser().getIsDeepMode();
-        this.isCurTimer = appContext.getCurrentUser().getIsTimer();
+        //TODO: fix switchMode
+        switchMode = new SwitchMode(timer, stopwatch, thumb, track, appContext.getCurrentUser().getClockSetting());
 
-        if (isCurTimer)
+        this.isCurCountExceed = appContext.getCurrentUser().getClockSetting().getIsCountExceedTime();
+        this.isCurDeepMode = appContext.getCurrentUser().getClockSetting().getIsDeepMode();
+        this.curMode = appContext.getCurrentUser().getClockSetting().getType();
+
+        if (curMode == Clock.ClockMode.TIMER)
             replaceFragment(timerOptionFragment);
         else
             replaceFragment(stopwatchOptionFragment);
@@ -65,13 +66,13 @@ public class ModePickerDialog extends DialogFragment {
             @Override
             public void onModeClick(int id) {
                 if (id == 0) {
-                    isCurTimer = true;
+                    curMode = Clock.ClockMode.TIMER;
                     replaceFragment(timerOptionFragment);
-                    AppContext.getInstance().getCurrentClock().setClockMode(Clock.ClockMode.TIMER);
+                    appContext.getCurrentClock().setClockMode(Clock.ClockMode.TIMER);
                 } else {
-                    isCurTimer = false;
+                    curMode = Clock.ClockMode.STOPWATCH;
                     replaceFragment(stopwatchOptionFragment);
-                    AppContext.getInstance().getCurrentClock().setClockMode(Clock.ClockMode.STOPWATCH);
+                    appContext.getCurrentClock().setClockMode(Clock.ClockMode.STOPWATCH);
                 }
             }
         });
@@ -122,9 +123,9 @@ public class ModePickerDialog extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
-        appContext.getCurrentUser().setIsDeepMode(isCurDeepMode);
-        appContext.getCurrentUser().setIsCountExceed(isCurCountExceed);
-        appContext.getCurrentUser().setIsTimer(isCurTimer);
+        appContext.getCurrentUser().getClockSetting().setIsDeepMode(isCurDeepMode);
+        appContext.getCurrentUser().getClockSetting().setIsCountExceedTime(isCurCountExceed);
+        appContext.getCurrentUser().getClockSetting().setType(curMode);
 
         if (onDismissListener != null) {
             onDismissListener.onDismiss(this);

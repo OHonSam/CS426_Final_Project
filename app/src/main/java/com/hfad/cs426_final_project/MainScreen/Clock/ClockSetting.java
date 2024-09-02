@@ -2,36 +2,38 @@ package com.hfad.cs426_final_project.MainScreen.Clock;
 
 public class ClockSetting {
     private Clock.ClockMode clockMode;
-    private boolean isDeepFocus;
+
+    private boolean isDeepMode;
+
     private boolean isCountExceedTime;
-
-    public ClockSetting(Clock.ClockMode clockMode, boolean isDeepFocus, boolean isCountExceedTime) {
-        this.clockMode = clockMode;
-        this.isDeepFocus = isDeepFocus;
-        this.isCountExceedTime = isCountExceedTime;
-    }
-
     public ClockSetting(){
         this.clockMode = Clock.ClockMode.TIMER;
-        this.isDeepFocus = false;
+        this.isDeepMode = false;
         this.isCountExceedTime = false;
+    }
+
+    public ClockSetting(Clock.ClockMode clockMode, boolean isDeepMode, boolean isCountExceedTime) {
+        this.clockMode = clockMode;
+        this.isDeepMode = isDeepMode;
+        this.isCountExceedTime = isCountExceedTime;
     }
 
     public Clock.ClockMode getType() {
         return clockMode;
     }
-
-    public boolean isDeepFocus() {
-        return isDeepFocus;
+    public void setType(Clock.ClockMode type) {
+        this.clockMode = type;
     }
 
-    public boolean isCountExceedTime() {return isCountExceedTime;}
-
-    public ClockSetting getSetting(){
-        return new ClockSetting(this.clockMode,this.isDeepFocus,this.isCountExceedTime);
+    public boolean getIsDeepMode() {
+        return isDeepMode;
     }
-
-    public void setType(Clock.ClockMode clockMode){
-        this.clockMode = clockMode;
+    public void setIsDeepMode(boolean deepMode) {
+        isDeepMode = deepMode;
+    }
+    
+    public boolean getIsCountExceedTime() {return isCountExceedTime;}
+    public void setIsCountExceedTime(boolean countExceedTime) {
+        isCountExceedTime = countExceedTime;
     }
 }

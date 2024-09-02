@@ -398,14 +398,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClock() {
-        // TODO: get from Firebase the Users clock mode selection
-        if (appContext.getCurrentUser().getIsTimer()) {
-            clock = new Clock(this, timeView, startButton, Clock.ClockMode.TIMER, 0, 5);
-        }
-        else {
-            clock = new Clock(this, timeView, startButton, Clock.ClockMode.STOPWATCH, 0, 5);
-        }
-
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting().getType(), 0, 5);
         appContext.setCurrentClock(clock);
         appContext.getCurrentClock().run();
     }
