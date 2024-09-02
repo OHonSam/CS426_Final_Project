@@ -38,6 +38,8 @@ public class Clock {
     private MyButton startButton;
     private Context context;
     private ClockMode clockMode; // Enum for clock mode
+    private boolean isDeepFocus;
+    private boolean isCountExceedTime;
 
     private Runnable updateNotificationRunnable;
 
@@ -82,6 +84,7 @@ public class Clock {
     public void setClockMode(ClockMode clockMode) {
         this.clockMode = clockMode;
         reset(); // Reset the clock when the mode changes
+        // Update the UI to reflect the new clock mode
     }
 
     public void run() {
@@ -162,6 +165,12 @@ public class Clock {
         }
 
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    public void updateSetting(ClockSetting setting){
+        this.clockMode = setting.getType();
+        this.isDeepFocus = setting.isDeepFocus();
+        this.isCountExceedTime = setting.isCountExceedTime();
     }
 
 }
