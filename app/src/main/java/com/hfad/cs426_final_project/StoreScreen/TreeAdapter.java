@@ -19,6 +19,7 @@ import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder> {
@@ -49,7 +50,7 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
                 .load(tree.getImgUri())
                 .into(holder.treeImage);
 
-        if (currentUser.getOwnTrees() != null && currentUser.getOwnTrees().contains(tree)) {
+        if (currentUser.hasTree(tree)) {
             holder.treeCost.setText("Purchased!");
             holder.treeImage.setOnClickListener(null); // Disable click for owned trees
             holder.treeContainer.setCardBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.primary_20, null));
@@ -57,7 +58,8 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
         } else {
             holder.treeCost.setText(String.valueOf(tree.getCost()));
             holder.treeImage.setOnClickListener(v -> showPurchaseDialog(tree));
-//            holder.treeImage.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.accent2, null));
+            holder.treeContainer.setCardBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.white, null));
+            holder.sunDisplay.setVisibility(View.VISIBLE);
         }
     }
 
@@ -96,7 +98,6 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
 
         // Update the RecyclerView to reflect the purchase
         storeScreenActivity.updateSunDisplay();
-
         notifyDataSetChanged();
     }
 

@@ -36,6 +36,9 @@ public class User {
         this.streak = 1;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
+
+        Tree tree = new Tree(); // default tree
+        ownTrees.add(tree);
     }
 
     public long getId() {
@@ -124,5 +127,15 @@ public class User {
 
     public void setOwnTasks(List<UserTask> ownUserTasks) {
         this.ownUserTasks = ownUserTasks;
+    }
+
+    public boolean hasTree(Tree tree) {
+        if(ownTrees == null)
+            return false;
+        List<Integer> listOwnTreeID = new ArrayList<>();
+        for(Tree t : ownTrees) {
+            listOwnTreeID.add(t.getId());
+        }
+        return listOwnTreeID.contains(tree.getId());
     }
 }

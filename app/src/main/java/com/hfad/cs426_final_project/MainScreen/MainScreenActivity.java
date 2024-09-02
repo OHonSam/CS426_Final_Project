@@ -88,8 +88,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     @Override
     protected void onDestroy() {
-        appContext.saveUserInfo();
         super.onDestroy();
+        appContext.saveUserInfo();
     }
 
     private void getUIReferences() {

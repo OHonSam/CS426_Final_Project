@@ -129,10 +129,9 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
                 // Create a new User object with the new user ID
                 User newUser = new User(cnt, email, password, name);
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                newUser.getUserSetting().getSelectedTree().fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void run() {
+                    public void onComplete(@NonNull Task<Void> task) {
                         // Add the new user to the database
                         dbRef.child("User" + cnt).setValue(newUser)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -152,7 +151,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
                                     }
                                 });
                     }
-                }, 1000);
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -163,4 +162,3 @@ public class SignUpScreenActivity extends AppCompatActivity {
     }
 
 }
-

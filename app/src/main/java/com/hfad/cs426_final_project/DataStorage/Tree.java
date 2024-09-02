@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -18,12 +20,7 @@ public class Tree {
         // default
         id = 0;
         cost = 120;
-        fetchUri(new OnUriFetchedListener() {
-            @Override
-            public void onUriFetched() {
-
-            }
-        });
+        fetchUri();
     }
 
     public int getId() {
@@ -50,19 +47,14 @@ public class Tree {
         this.cost = cost;
     }
 
-    public void fetchUri(OnUriFetchedListener listener) {
+    public Task<Void> fetchUri() {
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("Trees/tree" + id + ".png");
 
         storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
             setImgUri(String.valueOf(uri));
-            listener.onUriFetched(); // Notify that the URI has been fetched
-        }).addOnFailureListener(exception -> {
-            // Handle the case where the image is not found or any other error
-            listener.onUriFetched(); // Still notify that the URI fetch attempt is complete
-        });
-    }
-
-    public interface OnUriFetchedListener {
-        void onUriFetched();
+            taskCompletionSource.setResult(null);
+        }).addOnFailureListener(taskCompletionSource::setException);
+        return taskCompletionSource.getTask();
     }
 }

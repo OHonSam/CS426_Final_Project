@@ -69,7 +69,7 @@ public class StoreScreenActivity extends AppCompatActivity {
     private List<Tree> filterTrees(List<Tree> treeList, boolean excludeOwned) {
         List<Tree> filteredList = new ArrayList<>();
         for (Tree tree : treeList) {
-            if (excludeOwned && currentUser.getOwnTrees() != null && currentUser.getOwnTrees().contains(tree)) {
+            if (excludeOwned && currentUser.hasTree(tree)) {
                 continue;
             }
             filteredList.add(tree);

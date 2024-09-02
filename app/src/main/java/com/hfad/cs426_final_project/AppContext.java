@@ -49,9 +49,11 @@ public class AppContext {
         }
 
         Tree tree = treeList.get(index);
-        tree.fetchUri(() -> {
-            // Move to the next tree after the current tree's URI is fetched
-            fetchTreeUriSequentially(index + 1);
+        tree.fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                fetchTreeUriSequentially(index + 1);
+            }
         });
     }
 
