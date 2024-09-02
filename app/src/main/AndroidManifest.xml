@@ -31,7 +31,7 @@
             android:name=".StoreScreen.StoreScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".MainScreen.MainScreenActivity"
             android:exported="false"/>
         <activity
             android:name=".LoginScreenActivity"
@@ -40,7 +40,7 @@
             android:name=".SignUpScreenActivity"
             android:exported="false"/>
         <activity
-            android:name=".MainScreen.MainScreenActivity"
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
