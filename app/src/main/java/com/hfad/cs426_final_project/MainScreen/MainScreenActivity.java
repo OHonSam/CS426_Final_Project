@@ -109,6 +109,17 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         setupStartButton();
         setupTree();
+        setupBottomSheet();
+    }
+
+    private void setupBottomSheet() {
+        imgTree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetSelectionTree bottomSheet = new BottomSheetSelectionTree();
+                bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+            }
+        });
     }
 
     private void setupClockMode() {
@@ -516,7 +527,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         dialog.show();
     }
 
-    private void setupTree() {
+    public void setupTree() {
         Uri treeURI = Uri.parse(appContext.getCurrentUser().getUserSetting().getSelectedTree().getImgUri());
         Glide.with(this)
                 .load(treeURI)

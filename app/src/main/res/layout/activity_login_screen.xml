@@ -55,7 +55,7 @@
             android:gravity="end"
             android:text="Forgotten password?"
             android:layout_marginTop="8dp"
-            style="@style/SmallText"
+            style="@style/SmallText_bold"
             android:textColor="@color/primary_100"/>
 
         <com.hfad.cs426_final_project.CustomUIComponent.MyButton
