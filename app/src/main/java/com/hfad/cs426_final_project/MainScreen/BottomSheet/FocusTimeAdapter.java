@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project.MainScreen;
+package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 public class FocusTimeAdapter extends RecyclerView.Adapter<FocusTimeAdapter.FocusedTimeViewHolder> {
     private List<Integer> focusedTimes;
     private final FocusTimeAdapter.IClickFocusTimeListener clickListener;
-    private int selectedPosition = -1; // Initialize as 0 to indicate no selection by default
+    private int selectedPosition; // Initialize as 0 to indicate no selection by default
 
     public FocusTimeAdapter(FocusTimeAdapter.IClickFocusTimeListener listener) {
         focusedTimes = new ArrayList<>();
@@ -26,6 +27,10 @@ public class FocusTimeAdapter extends RecyclerView.Adapter<FocusTimeAdapter.Focu
             focusedTimes.add(i);
         }
         this.clickListener = listener;
+
+        int initialPosition = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % 12 + 1;
+        selectedPosition = (AppContext.getInstance().getCurrentUser().getFocusTime() - 10) / 5;
+        selectedPosition += initialPosition;
     }
 
     @NonNull

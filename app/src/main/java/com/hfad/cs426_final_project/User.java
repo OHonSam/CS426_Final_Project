@@ -17,6 +17,7 @@ public class User {
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
     private int focusTime;
+    private Tag focusTag;
     private int streak;
     private int sun; // money
     private UserSetting userSetting;
@@ -37,6 +38,7 @@ public class User {
 
         // default
         this.lastAccessDate = System.currentTimeMillis();
+        this.focusTag = new Tag();
         this.focusTime = 10;
         this.streak = 1;
         this.sun = 0;
@@ -89,6 +91,14 @@ public class User {
 
     public void setFocusTime(int focusTime) {
         this.focusTime = focusTime;
+    }
+
+    public Tag getFocusTag() {
+        return focusTag;
+    }
+
+    public void setFocusTag(Tag focusTag) {
+        this.focusTag = focusTag;
     }
 
     public int getStreak() {

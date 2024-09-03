@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project.MainScreen;
+package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +18,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.Tree;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
@@ -26,12 +28,9 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
     MainScreenActivity mainScreenActivity;
     private AppContext appContext;
 
-    private RecyclerView rcvTree, rcvFocusTime;
-    private OwnTreeAdapter treeAdapter;
-    private FocusTimeAdapter focusTimeAdapter;
-
+    private RecyclerView rcvTree, rcvFocusTime, rcvTag;
     private ImageView ivTreeSelected;
-    private TextView tvFocusTime;
+    private TextView tvFocusTime, tvTag;
 
     public BottomSheetSelectionTree() {
         // Required empty public constructor
@@ -49,6 +48,7 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
         setupSelectionArea();
         initRCVTreeSelection();
         initRCVFocusTime();
+        initRCVTag();
 
         return mView;
     }
@@ -56,8 +56,10 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
     private void initUI() {
         rcvTree = mView.findViewById(R.id.rcv_treeSelection);
         rcvFocusTime = mView.findViewById(R.id.rcvFocusedTime);
+        rcvTag = mView.findViewById(R.id.rcvTag);
         ivTreeSelected = mView.findViewById(R.id.selectedTree);
         tvFocusTime = mView.findViewById(R.id.tvFocusedTime);
+        tvTag = mView.findViewById(R.id.tvTag);
     }
 
     private void setupSelectionArea() {
@@ -67,13 +69,17 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
                 .fitCenter() // Or use centerCrop() if you want to crop the image to fit
                 .into(ivTreeSelected);
         tvFocusTime.setText(String.valueOf((appContext.getCurrentUser().getFocusTime() / 5) * 5));
+        tvTag.setText(appContext.getCurrentUser().getFocusTag().getName());
     }
 
     private void initRCVTreeSelection() {
         rcvTree.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
         // Initialize the adapter (assuming you pass the list of trees from the main activity)
-        treeAdapter = new OwnTreeAdapter(appContext.getCurrentUser().getOwnTrees(), new OwnTreeAdapter.IClickTreeListener() {
+        // change in selection area
+        // or specify your desired dimensions
+        // Or use centerCrop() if you want to crop the image to fit
+        OwnTreeAdapter treeAdapter = new OwnTreeAdapter(appContext.getCurrentUser().getOwnTrees(), new OwnTreeAdapter.IClickTreeListener() {
             @Override
             public void onClickTree(Tree tree) {
                 appContext.getCurrentUser().getUserSetting().setSelectedTree(tree);
@@ -106,7 +112,23 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
         rcvFocusTime.setAdapter(adapter);
 
         // Optionally, start from the middle position to simulate endless scroll
-        int initialPosition = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % 12; // Assuming there are 12 items (10-120)
+        int initialPosition = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % 12 + 1; // Assuming there are 12 items (10-120)
         rcvFocusTime.scrollToPosition(initialPosition);
+    }
+
+    private void initRCVTag() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mainScreenActivity, LinearLayoutManager.HORIZONTAL, false);
+        rcvTag.setLayoutManager(layoutManager);
+
+        TagAdapter tagAdapter = new TagAdapter(appContext.getCurrentUser().getOwnTags(), new TagAdapter.IClickTagListener() {
+            @Override
+            public void onClickTag(Tag tag) {
+                appContext.getCurrentUser().setFocusTag(tag);
+                mainScreenActivity.updateSpinner();
+
+                tvTag.setText(tag.getName());
+            }
+        });
+        rcvTag.setAdapter(tagAdapter);
     }
 }

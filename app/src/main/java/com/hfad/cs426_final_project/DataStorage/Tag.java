@@ -5,6 +5,8 @@ public class Tag {
     private String name;
 
     public Tag() {
+        this.id = 0;
+        this.name = "none";
     }
 
     public Tag(int id, String name) {

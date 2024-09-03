@@ -52,6 +52,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.DataStorage.Tag;
+import com.hfad.cs426_final_project.MainScreen.BottomSheet.BottomSheetSelectionTree;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
@@ -98,8 +99,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         musicManager = new MusicManager(this, musicImage);
 
-
-        setupSearchTag();
+        setupSearchTag(); // Spinner
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
@@ -371,35 +371,19 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
     private void setupSearchTag() {
         List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
-        String[] tagNames = new String[tagList.size()];
-
-        for (int i = 0; i < tagList.size(); i++) {
-            tagNames[i] = tagList.get(i).getName();
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item, // Layout for each item in the dropdown
-                tagNames // The array of tag names
-        );
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        searchTagSpinner.setAdapter(adapter);
-
+        TagAdapterSpinner tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
+        searchTagSpinner.setAdapter(tagAdapterSpinner);
         searchTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Get the selected item
-                String selectedItem = parentView.getItemAtPosition(position).toString();
-                // Do something with the selected item
-
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                appContext.getCurrentUser().setFocusTag(tagList.get(position));
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do something if nothing is selected
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -536,4 +520,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 .into(imgTree);
     }
 
+    public void updateSpinner() {
+        TagAdapterSpinner tagAdapterSpinner = (TagAdapterSpinner) searchTagSpinner.getAdapter();
+        int position = tagAdapterSpinner.getPosition(appContext.getCurrentUser().getFocusTag());
+        searchTagSpinner.setSelection(position);
+    }
 }

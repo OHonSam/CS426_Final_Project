@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project.MainScreen;
+package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.R;
 
@@ -21,11 +22,18 @@ import java.util.List;
 public class OwnTreeAdapter extends RecyclerView.Adapter<OwnTreeAdapter.TreeViewHolder> {
     private final List<Tree> treeList;
     private final IClickTreeListener clickListener;
-    private int selectedPosition = 0; // Initialize as 0 to indicate no selection by default
+    private int selectedPosition;
 
     public OwnTreeAdapter(List<Tree> treeList, IClickTreeListener listener) {
         this.treeList = treeList;
         this.clickListener = listener;
+
+        for(int i = 0; i < getItemCount(); i++) {
+            if(AppContext.getInstance().getCurrentUser().getUserSetting().getSelectedTree().getId() == treeList.get(i).getId()) {
+                selectedPosition = i;
+                break;
+            }
+        }
     }
 
     @NonNull
