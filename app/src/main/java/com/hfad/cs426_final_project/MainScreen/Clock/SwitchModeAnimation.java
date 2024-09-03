@@ -6,31 +6,29 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
-public class SwitchMode{
+public class SwitchModeAnimation {
     onModeClickListener onModeClickListener;
     private ImageView timer, stopwatch;
     public ImageView thumb;
     private ImageView track;
-    private ClockSetting setting;
-    private int selectedMode; // 0: timer ; 1: stopwatch
+    private Clock.ClockMode selectedMode;
 
-    public SwitchMode(ImageView timer, ImageView stopwatch, ImageView thumb, ImageView track, ClockSetting clockSetting) {
+    public SwitchModeAnimation(ImageView timer, ImageView stopwatch, ImageView thumb, ImageView track, Clock.ClockMode mClockMode) {
         this.timer = timer;
         this.stopwatch = stopwatch;
         this.thumb = thumb;
         this.track = track;
-        this.setting = clockSetting;
         this.onModeClickListener = null;
         setupOnClickListener();
+        this.selectedMode = mClockMode;
     }
 
     private void setupOnClickListener() {
         timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTranslateAnimation(setting.getType(),timer);
-                setting.setType(Clock.ClockMode.TIMER);
-                selectedMode = 0;
+                startTranslateAnimation(selectedMode,timer);
+                selectedMode = Clock.ClockMode.TIMER;
                 onModeClickListener.onModeClick(selectedMode);
             }
         });
@@ -38,15 +36,14 @@ public class SwitchMode{
         stopwatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTranslateAnimation(setting.getType(),stopwatch);
-                setting.setType(Clock.ClockMode.STOPWATCH);
-                selectedMode = 1;
+                startTranslateAnimation(selectedMode,stopwatch);
+                selectedMode = Clock.ClockMode.STOPWATCH;
                 onModeClickListener.onModeClick(selectedMode);
             }
         });
     }
 
-    private void startTranslateAnimation(Clock.ClockMode selectedMode, View destination){
+    void startTranslateAnimation(Clock.ClockMode selectedMode, View destination){
 
         float thumb_x = thumb.getX();
         float thumb_y = thumb.getY();
@@ -54,12 +51,14 @@ public class SwitchMode{
         Log.d("Thumb", "thumb_x: " + thumb_x + " thumb_y: " + thumb_y);
 
         int[] absolute_coordinate_source = new int[2];
+
         View source;
-        if(selectedMode == Clock.ClockMode.TIMER){
+        if(selectedMode == Clock.ClockMode.TIMER) {
             source = timer;
         }
-        else
+        else {
             source = stopwatch;
+        }
 
         source.getLocationOnScreen(absolute_coordinate_source);
         int x_source = absolute_coordinate_source[0];

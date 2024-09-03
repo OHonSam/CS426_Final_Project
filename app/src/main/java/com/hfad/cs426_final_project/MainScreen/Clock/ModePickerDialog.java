@@ -25,7 +25,7 @@ public class ModePickerDialog extends DialogFragment {
     public static String TAG = "ModePickerDialog";
     private TimerOptionFragment timerOptionFragment;
     private StopwatchOptionFragment stopwatchOptionFragment;
-    private SwitchMode switchMode;
+    private SwitchModeAnimation switchModeAnimation;
     private boolean isCurDeepMode;
     private Clock.ClockMode curMode;
     private boolean isCurCountExceed;
@@ -50,22 +50,28 @@ public class ModePickerDialog extends DialogFragment {
 
         appContext = AppContext.getInstance();
 
-        //TODO: fix switchMode
-        switchMode = new SwitchMode(timer, stopwatch, thumb, track, appContext.getCurrentUser().getClockSetting());
-
         this.isCurCountExceed = appContext.getCurrentUser().getClockSetting().getIsCountExceedTime();
         this.isCurDeepMode = appContext.getCurrentUser().getClockSetting().getIsDeepMode();
         this.curMode = appContext.getCurrentUser().getClockSetting().getType();
+
+        switchModeAnimation = new SwitchModeAnimation(timer, stopwatch, thumb, track, curMode);
 
         if (curMode == Clock.ClockMode.TIMER)
             replaceFragment(timerOptionFragment);
         else
             replaceFragment(stopwatchOptionFragment);
 
-        switchMode.addSwitchListener(new onModeClickListener() {
+        // Delay the movement of the thumb until the layout is complete
+        view.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            if (curMode == Clock.ClockMode.STOPWATCH) {
+                switchModeAnimation.startTranslateAnimation(Clock.ClockMode.TIMER, stopwatch);
+            }
+        });
+
+        switchModeAnimation.addSwitchListener(new onModeClickListener() {
             @Override
-            public void onModeClick(int id) {
-                if (id == 0) {
+            public void onModeClick(Clock.ClockMode selectedMode) {
+                if (selectedMode == Clock.ClockMode.TIMER) {
                     curMode = Clock.ClockMode.TIMER;
                     replaceFragment(timerOptionFragment);
                     appContext.getCurrentClock().setClockMode(Clock.ClockMode.TIMER);
