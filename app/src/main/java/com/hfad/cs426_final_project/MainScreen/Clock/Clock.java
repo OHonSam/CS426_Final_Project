@@ -48,6 +48,16 @@ public class Clock {
     // We can't use AppContext.getClockSetting().getType() as there is switch mode in the app
     // mClockMode is to display and it may differ from the Firebase-fetched clock setting type until onDismiss of DialogFragment
 
+    public boolean getIsEndSession() {
+        return isEndSession;
+    }
+
+    public void setIsEndSession(boolean isEndSession) {
+        this.isEndSession = isEndSession;
+    }
+
+    private boolean isEndSession;
+
     private ClockSetting clockSetting;
     public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, int initialTime, int timeLimit) {
         this.context = context;
@@ -77,6 +87,7 @@ public class Clock {
                 deepModeHandler.postDelayed(this, 1000);
             }
         };
+        this.isEndSession = false;
     }
 
     public ClockSetting getClockSetting() {
@@ -124,8 +135,8 @@ public class Clock {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                int minutes = seconds / 60;
-                int secs = seconds % 60;
+                int minutes = Math.abs(seconds) / 60;
+                int secs = Math.abs(seconds) % 60;
 
                 // Ensure that the maximum time is 120:00 (7200 seconds)
                 if (minutes > 120) {
@@ -133,8 +144,14 @@ public class Clock {
                     secs = 0;
                 }
 
-                String time = String.format(Locale.getDefault(),
-                        "%02d:%02d", minutes, secs);
+                String time;
+                if (isEndSession && clockSetting.getIsCountExceedTime()) {
+                    time = String.format(Locale.getDefault(),
+                            "-%02d:%02d", minutes, secs);
+                } else {
+                    time = String.format(Locale.getDefault(),
+                            "%02d:%02d", minutes, secs);
+                }
                 timeView.setText(time);
 
                 if (running) {
@@ -153,14 +170,20 @@ public class Clock {
                     } else {
                         seconds--;
                         if (seconds < 0) {
-                            stop();
-                            // Notify or vibrate when the timer reaches the limit
-                            notifyOrVibrate(context);
+                            if (!clockSetting.getIsCountExceedTime()) {
+                                stop();
+                                // Notify or vibrate when the timer reaches the limit
+                                notifyOrVibrate(context);
 
-                            // handle timer end (e.g., navigate to CongratulationScreen)
-                            Intent intent = new Intent(context, CongratulationScreenActivity.class);
-                            context.startActivity(intent);
-                            reset();
+                                // handle timer end (e.g., navigate to CongratulationScreen)
+                                Intent intent = new Intent(context, CongratulationScreenActivity.class);
+                                context.startActivity(intent);
+                                reset();
+                            }
+                            else {
+                                isEndSession = true;
+                                startButton.setText("End Session");
+                            }
                         }
                     }
                 }
@@ -169,6 +192,8 @@ public class Clock {
             }
         });
     }
+
+
 
     public void enableDeepModeCount() {
         runningOutside = true;

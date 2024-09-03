@@ -47,6 +47,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
@@ -412,7 +413,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 3600);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 5);
         appContext.setCurrentClock(clock);
         appContext.getCurrentClock().run();
     }
@@ -421,18 +422,27 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // If the stopwatch is not running then start it
+                // If the clock is not running then start it
+                if (clock.getClockSetting().getIsCountExceedTime() && clock.getIsEndSession()) {
+                    clock.setIsEndSession(false);
+                    redirectToCongratulationScreen();
+                    clock.reset();
+                }
+
                 if (!clock.isRunning()) {
                     clock.start();
-                }
-                else {
+                } else {
                     clock.stop();
                 }
+
             }
         });
-
     }
 
+    public void redirectToCongratulationScreen() {
+        Intent intent = new Intent(this, CongratulationScreenActivity.class);
+        startActivity(intent);
+    }
 
     private void setupNewTagListener() {
         View.OnTouchListener newTagTouchListener = new View.OnTouchListener() {
