@@ -37,18 +37,27 @@ public class Clock {
     private int timeLimit;
     private MyButton startButton;
     private Context context;
+
     // We can't use AppContext.getClockSetting().getType() as there is switch mode in the app
     // mClockMode is to display and it may differ from the Firebase-fetched clock setting type until onDismiss of DialogFragment
-    private ClockMode mClockMode;
+    private ClockSetting clockSetting;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockMode mClockMode, int initialTime, int timeLimit) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, int initialTime, int timeLimit) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
-        this.mClockMode = mClockMode;
-        this.seconds = (this.mClockMode == ClockMode.STOPWATCH) ? initialTime : timeLimit ;
+        this.clockSetting = clockSetting;
+        this.seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? initialTime : timeLimit;
         this.timeLimit = timeLimit;
         this.handler = new Handler();
+    }
+
+    public ClockSetting getClockSetting() {
+        return clockSetting;
+    }
+
+    public void setClockSetting(ClockSetting clockSetting) {
+        this.clockSetting = clockSetting;
     }
 
     public boolean isRunning() {
@@ -61,7 +70,7 @@ public class Clock {
         startButton.setBackgroundTintList(ContextCompat.getColorStateList (startButton.getContext(), R.color.secondary_50));
 
         Intent serviceIntent = new Intent(context, ClockService.class);
-        serviceIntent.putExtra("isTimer", mClockMode == ClockMode.TIMER);
+        serviceIntent.putExtra("isTimer", clockSetting.getType() == ClockMode.TIMER);
         serviceIntent.putExtra("timeLimit", timeLimit);
         ContextCompat.startForegroundService(context, serviceIntent);
     }
@@ -76,11 +85,11 @@ public class Clock {
     }
 
     public void reset() {
-        seconds = (mClockMode == ClockMode.STOPWATCH) ? 0 : timeLimit;
+        seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? 0 : timeLimit;
     }
 
     public void setClockMode(ClockMode mClockMode) {
-        this.mClockMode = mClockMode;
+        this.clockSetting.setType(mClockMode);
         reset(); // Reset the clock when the mode changes
         // Update the UI to reflect the new clock mode
     }
@@ -103,7 +112,7 @@ public class Clock {
                 timeView.setText(time);
 
                 if (running) {
-                    if (mClockMode == ClockMode.STOPWATCH) {
+                    if (clockSetting.getType() == ClockMode.STOPWATCH) {
                         seconds++;
                         if (timeLimit > 0 && seconds > timeLimit) {
                             stop();

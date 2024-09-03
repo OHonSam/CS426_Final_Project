@@ -2,10 +2,9 @@ package com.hfad.cs426_final_project.MainScreen.Clock;
 
 public class ClockSetting {
     private Clock.ClockMode clockMode;
-
     private boolean isDeepMode;
-
     private boolean isCountExceedTime;
+
     public ClockSetting(){
         this.clockMode = Clock.ClockMode.TIMER;
         this.isDeepMode = false;
@@ -32,7 +31,9 @@ public class ClockSetting {
         isDeepMode = deepMode;
     }
     
-    public boolean getIsCountExceedTime() {return isCountExceedTime;}
+    public boolean getIsCountExceedTime() {
+        return isCountExceedTime;
+    }
     public void setIsCountExceedTime(boolean countExceedTime) {
         isCountExceedTime = countExceedTime;
     }

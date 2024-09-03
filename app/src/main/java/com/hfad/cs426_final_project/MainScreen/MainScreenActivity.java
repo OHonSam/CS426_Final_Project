@@ -347,7 +347,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting().getType(), 0, 5);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 5);
         appContext.setCurrentClock(clock);
         appContext.getCurrentClock().run();
     }
