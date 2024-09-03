@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 import java.util.Locale;
@@ -23,25 +25,30 @@ public class Clock {
     private int seconds;
     //Is the stopwatch running?
     private boolean running;
+    private final Handler handler;
 
     private static final String CHANNEL_ID = "clock_channel_id";
     private static final int NOTIFICATION_ID = 1;
 
     public static enum ClockMode {
         STOPWATCH,
-        TIMER
+        TIMER;
     }
 
-    private final Handler handler;
     private TextView timeView;
     private int timeLimit;
     private MyButton startButton;
     private Context context;
+    private final int TIME_LIMIT_OUTSIDE = 10;
 
+    private int secondOutside;
+    private boolean runningOutside = false;
+    private Handler deepModeHandler;
+    private Runnable runnable;
     // We can't use AppContext.getClockSetting().getType() as there is switch mode in the app
     // mClockMode is to display and it may differ from the Firebase-fetched clock setting type until onDismiss of DialogFragment
-    private ClockSetting clockSetting;
 
+    private ClockSetting clockSetting;
     public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, int initialTime, int timeLimit) {
         this.context = context;
         this.timeView = timeView;
@@ -50,6 +57,26 @@ public class Clock {
         this.seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? initialTime : timeLimit;
         this.timeLimit = timeLimit;
         this.handler = new Handler();
+        this.deepModeHandler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                // print notification
+                if (runningOutside && running) {
+                    Log.d("ClockOutside", "Seconds:" + secondOutside);
+                    secondOutside--;
+                    if (secondOutside < 0) {
+                        Intent intent = new Intent(context, CongratulationScreenActivity.class);
+                        context.startActivity(intent);
+
+                        runningOutside = false;
+                        stop();
+                        reset();
+                    }
+                }
+                deepModeHandler.postDelayed(this, 1000);
+            }
+        };
     }
 
     public ClockSetting getClockSetting() {
@@ -91,7 +118,6 @@ public class Clock {
     public void setClockMode(ClockMode mClockMode) {
         this.clockSetting.setType(mClockMode);
         reset(); // Reset the clock when the mode changes
-        // Update the UI to reflect the new clock mode
     }
 
     public void run() {
@@ -142,6 +168,19 @@ public class Clock {
                 handler.postDelayed(this, 1000);
             }
         });
+    }
+
+    public void enableDeepModeCount() {
+        secondOutside = TIME_LIMIT_OUTSIDE;
+        runningOutside = true;
+        if (clockSetting.getIsDeepModeTimer() || clockSetting.getIsDeepModeStopwatch()) {
+            deepModeHandler.post(runnable);
+        }
+    }
+
+    public void disableDeepModeCount() {
+        runningOutside = false;
+        deepModeHandler.removeCallbacks(runnable);
     }
 
     private void notifyOrVibrate(Context context) {

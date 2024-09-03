@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.MenuItem;
@@ -116,9 +117,22 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        clock.disableDeepModeCount();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        clock.enableDeepModeCount();
+        Log.d("ClockOutside", "OnPause invoked");
+    }
+
+    @Override
     protected void onDestroy() {
-        appContext.saveUserInfo();
         super.onDestroy();
+        appContext.saveUserInfo();
     }
 
     private void getUIReferences() {
@@ -347,7 +361,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 5);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 3600);
         appContext.setCurrentClock(clock);
         appContext.getCurrentClock().run();
     }
@@ -377,4 +391,5 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 .fitCenter() // Or use centerCrop() if you want to crop the image to fit
                 .into(imgTree);
     }
+
 }
