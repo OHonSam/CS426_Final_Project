@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 import java.util.Locale;
@@ -31,7 +32,7 @@ public class Clock {
 
     public static enum ClockMode {
         STOPWATCH,
-        TIMER
+        TIMER;
     }
 
     private TextView timeView;
