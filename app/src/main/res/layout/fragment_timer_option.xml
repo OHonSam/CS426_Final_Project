@@ -40,14 +40,14 @@
         app:layout_constraintTop_toBottomOf="@+id/deepFocusTitleTextView" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/deepFocusSwitchButton"
+        android:id="@+id/deepFocusSwitchButton_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/deepFocusDescriptionTextView"
-        app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.SwitchCompat>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/line"

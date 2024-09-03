@@ -1,7 +1,5 @@
 package com.hfad.cs426_final_project;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 
@@ -24,7 +22,7 @@ public class AppContext {
     private User currentUser;
     private List<Tree> treeList;
 
-    private Clock clock;
+    private Clock currentClock;
 
     private AppContext() {
         treeList = new ArrayList<Tree>();
@@ -130,9 +128,9 @@ public class AppContext {
     }
 
     public Clock getCurrentClock() {
-        return clock;
+        return currentClock;
     }
     public void setCurrentClock(Clock currentClock) {
-        this.clock = currentClock;
+        this.currentClock = currentClock;
     }
 }
