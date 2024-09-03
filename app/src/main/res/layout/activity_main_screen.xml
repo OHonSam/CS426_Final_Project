@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="40dp"
                 android:layout_marginVertical="20dp"
-                android:background="@drawable/rounded_white_bar"
+                android:background="@drawable/rec_green_bar"
                 android:textAlignment="center"
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="6dp"
@@ -237,7 +237,7 @@
             app:layout_constraintBottom_toBottomOf="parent" >
 
             <LinearLayout
-                android:id="@+id/add_tag_container"
+                android:id="@+id/new_tag_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -246,13 +246,13 @@
 
 
                 <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-                    android:id="@+id/add_tag_image"
+                    android:id="@+id/new_tag_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_add_tag"/>
 
                 <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                    android:id="@+id/add_tag_button"
+                    android:id="@+id/new_tag_button"
                     style="@style/BodyText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

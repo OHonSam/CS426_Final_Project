@@ -138,4 +138,14 @@ public class User {
         }
         return listOwnTreeID.contains(tree.getId());
     }
+
+    public boolean hasTag(String tagName) {
+        if(ownTags == null)
+            return false;
+        List<String> listTag = new ArrayList<>();
+        for(Tag t : ownTags) {
+            listTag.add(t.getName());
+        }
+        return listTag.contains(tagName);
+    }
 }

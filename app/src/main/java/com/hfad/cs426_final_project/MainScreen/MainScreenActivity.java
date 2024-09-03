@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +18,14 @@ import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -44,6 +48,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
@@ -58,9 +63,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private AppContext appContext;
     private ImageView imgTree;
     TextView timeView;
-    MyButton startButton, todoButton, musicButton;
-    ClickableImageView todoImage, musicImage;
-    LinearLayout todoContainer, musicContainer;
+    MyButton startButton, todoButton, musicButton, newTagButton;
+    ClickableImageView todoImage, musicImage, newTagImage;
+    LinearLayout todoContainer, musicContainer, newTagContainer;
 
     ConstraintLayout popupMusicContainer;
 
@@ -89,6 +94,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupSearchTag();
         setupMusicListener();
         setupTodoListener();
+        setupNewTagListener();
         setupTree();
     }
 
@@ -105,12 +111,17 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.nav_view_screen_choices);
         drawer = findViewById(R.id.drawer_layout_main_screen);
+
         todoImage = findViewById(R.id.todo_image);
         todoButton = findViewById(R.id.todo_button);
         todoContainer = findViewById(R.id.todo_container);
         musicContainer = findViewById(R.id.music_container);
         musicImage =findViewById(R.id.music_image);
         musicButton=findViewById(R.id.music_button);
+        newTagImage = findViewById(R.id.new_tag_image);
+        newTagButton = findViewById(R.id.new_tag_button);
+        newTagContainer = findViewById(R.id.new_tag_container);
+
         popupMusicContainer = findViewById(R.id.main);
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
@@ -303,10 +314,16 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupSearchTag() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+        List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
+        String[] tagNames = new String[tagList.size()];
+
+        for (int i = 0; i < tagList.size(); i++) {
+            tagNames[i] = tagList.get(i).getName();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                R.array.spinner_items, // Use the array defined in strings.xml
-                android.R.layout.simple_spinner_item // Use a built-in layout for the items
+                android.R.layout.simple_spinner_item, // Layout for each item in the dropdown
+                tagNames // The array of tag names
         );
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -348,6 +365,78 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
+    }
+
+    private void setupNewTagListener() {
+        View.OnTouchListener newTagTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                boolean isPressed = (event.getAction() == MotionEvent.ACTION_DOWN);
+
+                // Handle pressed state for musicImage if it's the musicButton or musicImage
+                newTagImage.setPressed(isPressed);
+                newTagButton.onTouchEvent(event); // Pass the event to musicButton
+
+                return true; // Indicate the touch was handled
+            }
+        };
+        View.OnClickListener tagClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddTagDialog();
+            }
+        };
+        // Set the listener to the views
+        newTagContainer.setOnTouchListener(newTagTouchListener);
+        newTagImage.setOnTouchListener(newTagTouchListener);
+        newTagButton.setOnTouchListener(newTagTouchListener);
+
+        newTagContainer.setOnClickListener(tagClickListener);
+        newTagImage.setOnClickListener(tagClickListener);
+        newTagButton.setOnClickListener(tagClickListener);
+    }
+
+    private void showAddTagDialog() {
+        // Inflate the dialog layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_add_tag, null);
+
+        // Initialize the dialog components
+        EditText etTagName = dialogView.findViewById(R.id.etTagName);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+        Button btnAdd = dialogView.findViewById(R.id.btnAdd);
+
+        // Create the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        final AlertDialog dialog = builder.create();
+
+        // Set click listeners for the buttons
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnAdd.setOnClickListener(v -> {
+            String tagName = etTagName.getText().toString().trim();
+            if (!tagName.isEmpty()) {
+                if(!appContext.getCurrentUser().hasTag(tagName)) {
+                    // Add the tag logic
+                    Tag newTag = new Tag(appContext.getCurrentUser().getOwnTags().size(), tagName);
+                    appContext.getCurrentUser().getOwnTags().add(newTag);
+                    setupSearchTag();
+                    // For example: addTag(tagName);
+                    Toast.makeText(this, "Tag added: " + tagName, Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+                else {
+                    Toast.makeText(this, "This tag has existed", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Please enter a tag name", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Show the dialog
+        dialog.show();
     }
 
     private void setupTree() {
