@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project;
 
 import androidx.annotation.NonNull;
+import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,6 +21,8 @@ public class AppContext {
     private static AppContext instance;
     private User currentUser;
     private List<Tree> treeList;
+
+    private Clock currentClock;
 
     private AppContext() {
         treeList = new ArrayList<Tree>();
@@ -122,5 +125,12 @@ public class AppContext {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child("User" + currentUser.getId());
             userRef.setValue(currentUser);
         }
+    }
+
+    public Clock getCurrentClock() {
+        return currentClock;
+    }
+    public void setCurrentClock(Clock currentClock) {
+        this.currentClock = currentClock;
     }
 }

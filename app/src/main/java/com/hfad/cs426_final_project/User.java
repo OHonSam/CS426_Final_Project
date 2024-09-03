@@ -4,6 +4,7 @@ import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.DataStorage.UserSetting;
+import com.hfad.cs426_final_project.MainScreen.Clock.ClockSetting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class User {
     private List<Tag> ownTags = new ArrayList<>();
     private List<UserTask> ownUserTasks = new ArrayList<>();
 
+    private ClockSetting clockSetting;
+
     public User() {}
 
     // Use for adding a new user (when signing up)
@@ -39,12 +42,13 @@ public class User {
 
         Tree tree = new Tree(); // default tree
         ownTrees.add(tree);
+
+        this.clockSetting = new ClockSetting();
     }
 
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
@@ -52,7 +56,6 @@ public class User {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -60,7 +63,6 @@ public class User {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -68,7 +70,6 @@ public class User {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -76,7 +77,6 @@ public class User {
     public long getLastAccessDate() {
         return lastAccessDate;
     }
-
     public void setLastAccessDate(long lastAccessDate) {
         this.lastAccessDate = lastAccessDate;
     }
@@ -84,15 +84,20 @@ public class User {
     public int getStreak() {
         return streak;
     }
-
     public void setStreak(int streak) {
         this.streak = streak;
+    }
+
+    public ClockSetting getClockSetting() {
+        return clockSetting;
+    }
+    public void setClockSetting(ClockSetting clockSetting) {
+        this.clockSetting = clockSetting;
     }
 
     public int getSun() {
         return sun;
     }
-
     public void setSun(int sun) {
         this.sun = sun;
     }
@@ -100,7 +105,6 @@ public class User {
     public UserSetting getUserSetting() {
         return userSetting;
     }
-
     public void setUserSetting(UserSetting userSetting) {
         this.userSetting = userSetting;
     }
@@ -108,7 +112,6 @@ public class User {
     public List<Tree> getOwnTrees() {
         return ownTrees;
     }
-
     public void setOwnTrees(List<Tree> ownTrees) {
         this.ownTrees = ownTrees;
     }
@@ -116,7 +119,6 @@ public class User {
     public List<Tag> getOwnTags() {
         return ownTags;
     }
-
     public void setOwnTags(List<Tag> ownTags) {
         this.ownTags = ownTags;
     }
@@ -124,7 +126,6 @@ public class User {
     public List<UserTask> getOwnTasks() {
         return ownUserTasks;
     }
-
     public void setOwnTasks(List<UserTask> ownUserTasks) {
         this.ownUserTasks = ownUserTasks;
     }

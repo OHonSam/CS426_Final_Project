@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -46,12 +47,15 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
+import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 import com.hfad.cs426_final_project.WelcomeScreenActivity;
@@ -63,9 +67,12 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private AppContext appContext;
     private ImageView imgTree;
     TextView timeView;
-    MyButton startButton, todoButton, musicButton, newTagButton;
+    MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
     ClickableImageView todoImage, musicImage, newTagImage;
     LinearLayout todoContainer, musicContainer, newTagContainer;
+    Clock clock;
+
+    ModePickerDialog modePickerDialog;
 
     ConstraintLayout popupMusicContainer;
 
@@ -91,11 +98,48 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         musicManager = new MusicManager(this, musicImage);
 
+
         setupSearchTag();
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
+
+        setupClockMode();
+        setupClock();
+
+        setupStartButton();
         setupTree();
+    }
+
+    private void setupClockMode() {
+        clockMode = findViewById(R.id.clockMode);
+        clockMode.setOnClickListener(v -> {
+            showModePickerDialog();
+        });
+    }
+
+    private void showModePickerDialog() {
+        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
+            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
+//        modePickerDialog.setOnDismissListener(new ModePickerDialog.onDismissListener() {
+//            @Override
+//            public void onDismiss(ModePickerDialog modePickerDialog) {
+//                //clock.updateSetting(modePickerDialog.);
+//            }
+//        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        clock.disableDeepModeCount();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        clock.enableDeepModeCount();
+        Log.d("ClockOutside", "OnPause invoked");
     }
 
     @Override
@@ -123,6 +167,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         newTagContainer = findViewById(R.id.new_tag_container);
 
         popupMusicContainer = findViewById(R.id.main);
+        modePickerDialog = new ModePickerDialog();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
@@ -367,6 +412,38 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoImage.setOnTouchListener(todoTouchListener);
     }
 
+    private void setupClock() {
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 5);
+        appContext.setCurrentClock(clock);
+        appContext.getCurrentClock().run();
+    }
+
+    private void setupStartButton() {
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // If the clock is not running then start it
+                if (clock.getClockSetting().getIsCountExceedTime() && clock.getIsEndSession()) {
+                    clock.setIsEndSession(false);
+                    redirectToCongratulationScreen();
+                    clock.reset();
+                }
+
+                if (!clock.isRunning()) {
+                    clock.start();
+                } else {
+                    clock.stop();
+                }
+
+            }
+        });
+    }
+
+    public void redirectToCongratulationScreen() {
+        Intent intent = new Intent(this, CongratulationScreenActivity.class);
+        startActivity(intent);
+    }
+
     private void setupNewTagListener() {
         View.OnTouchListener newTagTouchListener = new View.OnTouchListener() {
             @Override
@@ -447,4 +524,5 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 .fitCenter() // Or use centerCrop() if you want to crop the image to fit
                 .into(imgTree);
     }
+
 }
