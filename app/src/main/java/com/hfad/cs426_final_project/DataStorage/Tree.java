@@ -15,11 +15,13 @@ public class Tree {
     private int id;
     private String imgUri;
     private int cost;
+    private boolean favourite;
 
     public Tree() {
         // default
         id = 0;
         cost = 120;
+        favourite = false;
         fetchUri();
     }
 
@@ -45,6 +47,14 @@ public class Tree {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
     public Task<Void> fetchUri() {

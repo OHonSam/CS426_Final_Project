@@ -11,22 +11,17 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -52,7 +47,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.DataStorage.Tag;
-import com.hfad.cs426_final_project.MainScreen.BottomSheet.BottomSheetSelectionTree;
+import com.hfad.cs426_final_project.MainScreen.BottomSheet.BottomSheetMainScreen;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
@@ -116,7 +111,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         imgTree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetSelectionTree bottomSheet = new BottomSheetSelectionTree();
+                BottomSheetMainScreen bottomSheet = new BottomSheetMainScreen();
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
             }
         });
@@ -144,6 +139,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     protected void onResume() {
         super.onResume();
         clock.disableDeepModeCount();
+        updateTagDisplay();
     }
 
     @Override
@@ -377,6 +373,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 appContext.getCurrentUser().setFocusTag(tagList.get(position));
+                updateTagDisplay();
             }
 
             @Override
@@ -455,7 +452,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         View.OnClickListener tagClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddTagDialog();
+                Intent intent = new Intent(MainScreenActivity.this, AddNewTagActivity.class);
+                startActivity(intent);
             }
         };
         // Set the listener to the views
@@ -468,49 +466,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         newTagButton.setOnClickListener(tagClickListener);
     }
 
-    private void showAddTagDialog() {
-        // Inflate the dialog layout
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_add_tag, null);
-
-        // Initialize the dialog components
-        EditText etTagName = dialogView.findViewById(R.id.etTagName);
-        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
-        Button btnAdd = dialogView.findViewById(R.id.btnAdd);
-
-        // Create the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(dialogView);
-
-        final AlertDialog dialog = builder.create();
-
-        // Set click listeners for the buttons
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        btnAdd.setOnClickListener(v -> {
-            String tagName = etTagName.getText().toString().trim();
-            if (!tagName.isEmpty()) {
-                if(!appContext.getCurrentUser().hasTag(tagName)) {
-                    // Add the tag logic
-                    Tag newTag = new Tag(appContext.getCurrentUser().getOwnTags().size(), tagName);
-                    appContext.getCurrentUser().getOwnTags().add(newTag);
-                    setupSearchTag();
-                    // For example: addTag(tagName);
-                    Toast.makeText(this, "Tag added: " + tagName, Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }
-                else {
-                    Toast.makeText(this, "This tag has existed", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "Please enter a tag name", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Show the dialog
-        dialog.show();
-    }
-
     public void setupTree() {
         Uri treeURI = Uri.parse(appContext.getCurrentUser().getUserSetting().getSelectedTree().getImgUri());
         Glide.with(this)
@@ -520,7 +475,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 .into(imgTree);
     }
 
-    public void updateSpinner() {
+    public void updateTagDisplay() {
         TagAdapterSpinner tagAdapterSpinner = (TagAdapterSpinner) searchTagSpinner.getAdapter();
         int position = tagAdapterSpinner.getPosition(appContext.getCurrentUser().getFocusTag());
         searchTagSpinner.setSelection(position);

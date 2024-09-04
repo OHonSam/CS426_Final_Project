@@ -1,8 +1,10 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,6 +47,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tagNameTextView.setText(tag.getName());
+        holder.ivTagColor.setColorFilter(Color.parseColor(tag.getColorHex()));
         if (selectedPosition == position) {
             holder.cvTag.setCardBackgroundColor(ResourcesCompat.getColor(holder.itemView.getContext().getResources(), R.color.primary_20, null));
         } else {
@@ -77,11 +80,13 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
         final TextView tagNameTextView;
+        ImageView ivTagColor;
         CardView cvTag;
 
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
             tagNameTextView = itemView.findViewById(R.id.tvTagName);
+            ivTagColor = itemView.findViewById(R.id.ivTagColor);
             cvTag = itemView.findViewById(R.id.cvTag);
         }
     }

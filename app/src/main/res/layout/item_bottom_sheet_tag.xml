@@ -13,12 +13,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="4dp"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="10dp">
 
+        <ImageView
+            android:id="@+id/ivTagColor"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:src="@drawable/circle"/>
         <TextView
             android:id="@+id/tvTagName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@android:color/black"
             android:text="Study"
             style="@style/BodyText"/>

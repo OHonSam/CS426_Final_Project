@@ -5,45 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/primary_50">
-        <View
-            android:layout_width="50dp"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:background="@color/primary_70" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="16dp">
-            <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_border_rec"
-                android:backgroundTint="@color/white"
-                android:text="Plating Settings"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                style="@style/Title"/>
-            <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_border_rec"
-                android:backgroundTint="@color/app_primary"
-                android:text="My Favourite"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                style="@style/Title"/>
-        </LinearLayout>
-    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -98,6 +59,7 @@
             android:orientation="horizontal"
             android:padding="16dp">
             <ImageView
+                android:id="@+id/heart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -139,6 +101,7 @@
                     android:gravity="center"
                     android:orientation="horizontal">
                     <ImageView
+                        android:id="@+id/tagColorDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/circle"/>

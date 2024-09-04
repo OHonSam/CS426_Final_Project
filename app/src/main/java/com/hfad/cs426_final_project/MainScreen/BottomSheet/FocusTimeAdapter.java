@@ -67,6 +67,10 @@ public class FocusTimeAdapter extends RecyclerView.Adapter<FocusTimeAdapter.Focu
         notifyItemChanged(position);
     }
 
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
+
     @Override
     public int getItemCount() {
         return Integer.MAX_VALUE; // Infinite scrolling

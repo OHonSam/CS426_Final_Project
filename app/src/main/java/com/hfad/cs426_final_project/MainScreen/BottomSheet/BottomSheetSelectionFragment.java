@@ -1,5 +1,8 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,23 +27,24 @@ import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
-public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
+public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
     View mView;
     MainScreenActivity mainScreenActivity;
     private AppContext appContext;
 
     private RecyclerView rcvTree, rcvFocusTime, rcvTag;
-    private ImageView ivTreeSelected;
+    private ImageView ivTreeSelected, tagColorDisplay;
     private TextView tvFocusTime, tvTag;
+    private ImageView ivHeart;
 
-    public BottomSheetSelectionTree() {
+    public BottomSheetSelectionFragment() {
         // Required empty public constructor
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.bottom_sheet_tree_selection, container, false); // Use the correct layout resource ID
+        mView = inflater.inflate(R.layout.fragment_bottom_sheet_selection, container, false); // Use the correct layout resource ID
         mainScreenActivity = (MainScreenActivity) getActivity();
 
         appContext = AppContext.getInstance();
@@ -49,7 +54,7 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
         initRCVTreeSelection();
         initRCVFocusTime();
         initRCVTag();
-
+        setupFavouriteHeart();
         return mView;
     }
 
@@ -58,8 +63,10 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
         rcvFocusTime = mView.findViewById(R.id.rcvFocusedTime);
         rcvTag = mView.findViewById(R.id.rcvTag);
         ivTreeSelected = mView.findViewById(R.id.selectedTree);
+        tagColorDisplay = mView.findViewById(R.id.tagColorDisplay);
         tvFocusTime = mView.findViewById(R.id.tvFocusedTime);
         tvTag = mView.findViewById(R.id.tvTag);
+        ivHeart = mView.findViewById(R.id.heart);
     }
 
     private void setupSelectionArea() {
@@ -70,6 +77,7 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
                 .into(ivTreeSelected);
         tvFocusTime.setText(String.valueOf((appContext.getCurrentUser().getFocusTime() / 5) * 5));
         tvTag.setText(appContext.getCurrentUser().getFocusTag().getName());
+        tagColorDisplay.setColorFilter(Color.parseColor(appContext.getCurrentUser().getFocusTag().getColorHex()));
     }
 
     private void initRCVTreeSelection() {
@@ -111,9 +119,7 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
         });
         rcvFocusTime.setAdapter(adapter);
 
-        // Optionally, start from the middle position to simulate endless scroll
-        int initialPosition = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % 12 + 1; // Assuming there are 12 items (10-120)
-        rcvFocusTime.scrollToPosition(initialPosition);
+        rcvFocusTime.scrollToPosition(adapter.getSelectedPosition() - 2);
     }
 
     private void initRCVTag() {
@@ -124,11 +130,33 @@ public class BottomSheetSelectionTree extends BottomSheetDialogFragment {
             @Override
             public void onClickTag(Tag tag) {
                 appContext.getCurrentUser().setFocusTag(tag);
-                mainScreenActivity.updateSpinner();
+                mainScreenActivity.updateTagDisplay();
 
                 tvTag.setText(tag.getName());
+                tagColorDisplay.setColorFilter(Color.parseColor(tag.getColorHex()));
             }
         });
         rcvTag.setAdapter(tagAdapter);
     }
+
+    private void setupFavouriteHeart() {
+        Drawable currentDrawable = ivHeart.getDrawable();
+        Drawable unfilledHeart = ResourcesCompat.getDrawable(getResources(), R.drawable.heart_unfilled, null);
+        Drawable filledHeart = ResourcesCompat.getDrawable(getResources(), R.drawable.heart, null);
+
+        ivHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentDrawable != null && currentDrawable.getConstantState().equals(unfilledHeart.getConstantState())) {
+                    ivHeart.setImageDrawable(filledHeart);
+                    appContext.getCurrentUser().setFavourite(appContext.getCurrentUser().getUserSetting().getSelectedTree());
+                }
+                else {
+                    ivHeart.setImageDrawable(unfilledHeart);
+                    appContext.getCurrentUser().removeFavourite(appContext.getCurrentUser().getUserSetting().getSelectedTree());
+                }
+            }
+        });
+    }
+
 }

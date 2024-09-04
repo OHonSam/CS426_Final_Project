@@ -170,4 +170,22 @@ public class User {
         }
         return listTag.contains(tagName);
     }
+
+    public void setFavourite(Tree tree) {
+        for(int i = 0; i < ownTrees.size(); i++) {
+            if(ownTrees.get(i).getId() == tree.getId()) {
+                ownTrees.get(i).setFavourite(true);
+                return;
+            }
+        }
+    }
+
+    public void removeFavourite(Tree tree) {
+        for(int i = 0; i < ownTrees.size(); i++) {
+            if(ownTrees.get(i).getId() == tree.getId()) {
+                ownTrees.get(i).setFavourite(false);
+                return;
+            }
+        }
+    }
 }
