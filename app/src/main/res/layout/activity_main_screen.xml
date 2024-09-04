@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textSize="56sp"
-            android:text="60:00"
+            android:text="Time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tree_container" />
