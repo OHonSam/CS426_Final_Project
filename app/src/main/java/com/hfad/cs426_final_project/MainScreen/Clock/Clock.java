@@ -189,7 +189,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 60;
+        seconds -= 1;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
