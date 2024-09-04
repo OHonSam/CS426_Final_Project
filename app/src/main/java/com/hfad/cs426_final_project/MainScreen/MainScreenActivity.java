@@ -86,6 +86,7 @@ public class MainScreenActivity extends BaseScreenActivity {
 
         setupClockModePickerDialog();
         setupClock();
+        setupClockMode();
 
         setupTree();
         setupBottomSheet();
