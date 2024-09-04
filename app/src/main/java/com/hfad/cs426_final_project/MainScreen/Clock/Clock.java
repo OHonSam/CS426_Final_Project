@@ -156,6 +156,7 @@ public class Clock {
         });
     }
 
+
     private void updateTimeTextFromProgressBar(int progress) {
         int totalMinutes = progress * PROGRESS_INTERVAL_LEN;
         String timeString = String.format("%02d:00", totalMinutes);
