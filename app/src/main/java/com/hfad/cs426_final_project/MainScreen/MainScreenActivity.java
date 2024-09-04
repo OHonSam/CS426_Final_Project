@@ -64,28 +64,26 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private AppContext appContext;
     private ImageView imgTree;
-    TextView timeView;
-    MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
-    ClickableImageView todoImage, musicImage, newTagImage, progressBarButton;
-    LinearLayout todoContainer, musicContainer, newTagContainer;
-    Clock clock;
+    private TextView timeView;
+    private MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
+    private ClickableImageView todoImage, musicImage, newTagImage, progressBarButton;
+    private LinearLayout todoContainer, musicContainer, newTagContainer;
+    private ConstraintLayout popupMusicContainer;
 
-    ModePickerDialog modePickerDialog;
-
-    ConstraintLayout popupMusicContainer;
-
+    private Clock clock;
+    private ModePickerDialog modePickerDialog;
     private MusicManager musicManager;
+    private Spinner searchTagSpinner;
 
     Spinner searchTagSpinner;
     BottomSheetMainScreen bottomSheet;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
+    private DrawerLayout drawer;
 
-    Toolbar toolbar;
-    NavigationView navigationView;
-    DrawerLayout drawer;
-
-    CircularSeekBar progressBar;
-    private final int interval = 5;
+    private CircularSeekBar progressBar;
     private final int totalInterval = 24;
+    private final int interval = 5;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -95,22 +93,19 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         getUIReferences();
 
         appContext = AppContext.getInstance();
+        musicManager = new MusicManager(this, musicImage);
 
         setupToolbar();
         setupNavigationDrawer();
 
-        musicManager = new MusicManager(this, musicImage);
-
-        setupSearchTag(); // Spinner
+        setupSearchTag();
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
 
-        setupClockMode();
         setupClock();
+        setupClockMode();
 
-        setupStartButton();
-        setupCircularSeekBar();
         setupTree();
         setupBottomSheet();
     }
@@ -126,7 +121,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClockMode() {
-        clockMode = findViewById(R.id.clockMode);
         clockMode.setOnClickListener(v -> {
             showModePickerDialog();
         });
@@ -135,12 +129,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private void showModePickerDialog() {
         if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
             modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
-//        modePickerDialog.setOnDismissListener(new ModePickerDialog.onDismissListener() {
-//            @Override
-//            public void onDismiss(ModePickerDialog modePickerDialog) {
-//                //clock.updateSetting(modePickerDialog.);
-//            }
-//        });
     }
 
     @Override
@@ -154,12 +142,11 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     protected void onPause() {
         super.onPause();
         clock.enableDeepModeCount();
-        Log.d("ClockOutside", "OnPause invoked");
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onSaveInstanceState(Bundle outState)  {
+        super.onSaveInstanceState(outState);
         appContext.saveUserInfo();
     }
 
@@ -183,6 +170,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         popupMusicContainer = findViewById(R.id.main);
         progressBar = findViewById(R.id.progress_bar);
+        clockMode = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
@@ -414,35 +402,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 5);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar);
         appContext.setCurrentClock(clock);
-        appContext.getCurrentClock().run();
-    }
-
-    private void setupStartButton() {
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // If the clock is not running then start it
-                if (clock.getClockSetting().getIsCountExceedTime() && clock.getIsEndSession()) {
-                    clock.setIsEndSession(false);
-                    redirectToCongratulationScreen();
-                    clock.reset();
-                }
-
-                if (!clock.isRunning()) {
-                    clock.start();
-                } else {
-                    clock.stop();
-                }
-
-            }
-        });
-    }
-
-    public void redirectToCongratulationScreen() {
-        Intent intent = new Intent(this, CongratulationScreenActivity.class);
-        startActivity(intent);
     }
 
     private void setupNewTagListener() {
@@ -497,44 +458,4 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     public void navigateBottomSheetSelectionFragment() {
         bottomSheet.navigateSelectionFragment();
     }
-
-    private void setupCircularSeekBar() {
-        progressBar.setMax(totalInterval);
-        progressBar.setProgress(0);
-
-        updateTimeText(0);
-        progressBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(CircularSeekBar circularSeekBar, float progress, boolean fromUser) {
-                if (fromUser) {
-                    int roundedProgress = Math.round(progress);
-
-                    roundedProgress = Math.min(Math.max(roundedProgress, 0), totalInterval);
-                    circularSeekBar.setProgress(roundedProgress);
-                    updateTimeText(roundedProgress);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(CircularSeekBar seekBar) {
-                // Not needed for this implementation
-            }
-
-            @Override
-            public void onStopTrackingTouch(CircularSeekBar seekBar) {
-                // Not needed for this implementation
-            }
-        });
-    }
-
-    private void updateTimeText(int progress) {
-        int totalMinutes = progress * interval;
-        int hours = totalMinutes / 60;
-        int minutes = totalMinutes % 60;
-
-        String timeString = String.format("%02d:%02d:00", hours, minutes);
-
-        timeView.setText(timeString);
-    }
-
 }
