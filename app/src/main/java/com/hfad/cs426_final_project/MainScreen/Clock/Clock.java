@@ -106,12 +106,25 @@ public class Clock {
     }
 
     private void initProgressBar() {
+        int minInterval = 10; // Minimum interval in minutes
+        int maxInterval = 120; // Maximum interval in minutes
+
+        // Set the total intervals between min and max in steps of the 'interval' value
+        //totalInterval = (maxInterval - minInterval) / interval + 2;
+
         progressBar.setMax(totalInterval);
-        int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / interval;
-        progressBar.setProgress(progressIntervalIndex);
-        updateTimeTextFromProgressBar(progressIntervalIndex);
+        int initialProgressIntervalIndex = (clockSetting.getTargetTime() / 60) / interval;
+
+        // Ensure that the initial progress is at least the minimum interval
+        if (initialProgressIntervalIndex < (minInterval / interval)) {
+            initialProgressIntervalIndex = minInterval / interval;
+        }
+
+        progressBar.setProgress(initialProgressIntervalIndex);
+        updateTimeTextFromProgressBar(initialProgressIntervalIndex);
         handleProgressBarChanges();
     }
+
 
     private void handleProgressBarChanges() {
         progressBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
@@ -119,7 +132,12 @@ public class Clock {
             public void onProgressChanged(CircularSeekBar circularSeekBar, float progress, boolean fromUser) {
                 if (fromUser) {
                     int roundedProgress = Math.round(progress);
-                    roundedProgress = Math.min(Math.max(roundedProgress, 0), totalInterval);
+
+                    // Ensure progress respects the minimum and maximum constraints
+                    int minInterval = 10; // Minimum interval in minutes
+                    int maxInterval = 120; // Maximum interval in minutes
+
+                    roundedProgress = Math.max(Math.min(roundedProgress, (maxInterval / interval)), (minInterval / interval));
                     circularSeekBar.setProgress(roundedProgress);
                     setTargetTime(roundedProgress * interval * 60);
                     updateTimeTextFromProgressBar(roundedProgress);
@@ -133,6 +151,7 @@ public class Clock {
             public void onStopTrackingTouch(CircularSeekBar seekBar) { }
         });
     }
+
 
     private void updateTimeTextFromProgressBar(int progress) {
         int totalMinutes = progress * interval;
@@ -159,7 +178,7 @@ public class Clock {
 
     private void handleTimerTick() {
         seconds -= 60;
-        if (seconds <= 0) {
+        if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
                 reset();
@@ -258,11 +277,16 @@ public class Clock {
     }
 
     private void startForegroundService() {
-        Intent serviceIntent = new Intent(context, ClockService.class);
-        serviceIntent.putExtra("isTimer", clockSetting.getType() == ClockMode.TIMER);
-        serviceIntent.putExtra("timeLimit", clockSetting.getTargetTime());
-        ContextCompat.startForegroundService(context, serviceIntent);
+        if (clockSetting.getTargetTime() > 0) {
+            Intent serviceIntent = new Intent(context, ClockService.class);
+            serviceIntent.putExtra("isTimer", clockSetting.getType() == ClockMode.TIMER);
+            serviceIntent.putExtra("timeLimit", clockSetting.getTargetTime());
+            ContextCompat.startForegroundService(context, serviceIntent);
+        } else {
+            Log.d("ClockService", "Target time is 0, not starting the service.");
+        }
     }
+
 
     private void stopForegroundService() {
         Intent serviceIntent = new Intent(context, ClockService.class);
