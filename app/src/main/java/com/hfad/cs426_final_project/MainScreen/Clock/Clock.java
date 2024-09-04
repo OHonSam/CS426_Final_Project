@@ -9,7 +9,6 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
@@ -32,8 +31,10 @@ public class Clock {
     private static final String CHANNEL_ID = "clock_channel_id";
     private static final int NOTIFICATION_ID = 1;
     private final int TIME_LIMIT_OUTSIDE = 10;
-    private int totalInterval = 24;
-    private int interval = 5;
+    private final int TOTAL_PROGRESS_INTERVAL = 24;
+    private final int PROGRESS_INTERVAL_LEN = 5;
+    private final int PROGRESS_MINUTES_MIN = 10;
+    private final int PROGRESS_MINUTES_MAX = 120;
 
     //Number of seconds displayed on the stopwatch.
     private int seconds;
@@ -106,18 +107,13 @@ public class Clock {
     }
 
     private void initProgressBar() {
-        int minInterval = 10; // Minimum interval in minutes
-        int maxInterval = 120; // Maximum interval in minutes
-
-        // Set the total intervals between min and max in steps of the 'interval' value
-        //totalInterval = (maxInterval - minInterval) / interval + 2;
-
-        progressBar.setMax(totalInterval);
-        int initialProgressIntervalIndex = (clockSetting.getTargetTime() / 60) / interval;
+        progressBar.setMax(TOTAL_PROGRESS_INTERVAL);
+        int initialTargetMinutes = clockSetting.getTargetTime() / 60;
+        int initialProgressIntervalIndex = initialTargetMinutes / PROGRESS_INTERVAL_LEN;
 
         // Ensure that the initial progress is at least the minimum interval
-        if (initialProgressIntervalIndex < (minInterval / interval)) {
-            initialProgressIntervalIndex = minInterval / interval;
+        if (initialProgressIntervalIndex < (PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN)) {
+            initialProgressIntervalIndex = PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN;
         }
 
         progressBar.setProgress(initialProgressIntervalIndex);
@@ -132,14 +128,10 @@ public class Clock {
             public void onProgressChanged(CircularSeekBar circularSeekBar, float progress, boolean fromUser) {
                 if (fromUser) {
                     int roundedProgress = Math.round(progress);
-
-                    // Ensure progress respects the minimum and maximum constraints
-                    int minInterval = 10; // Minimum interval in minutes
-                    int maxInterval = 120; // Maximum interval in minutes
-
-                    roundedProgress = Math.max(Math.min(roundedProgress, (maxInterval / interval)), (minInterval / interval));
+                    // Ensure progress value within the allowed range (from min to max interval index).
+                    roundedProgress = Math.max(Math.min(roundedProgress, (PROGRESS_MINUTES_MAX / PROGRESS_INTERVAL_LEN)), (PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN));
                     circularSeekBar.setProgress(roundedProgress);
-                    setTargetTime(roundedProgress * interval * 60);
+                    setTargetTime(roundedProgress * PROGRESS_INTERVAL_LEN * 60);
                     updateTimeTextFromProgressBar(roundedProgress);
                 }
             }
@@ -152,9 +144,8 @@ public class Clock {
         });
     }
 
-
     private void updateTimeTextFromProgressBar(int progress) {
-        int totalMinutes = progress * interval;
+        int totalMinutes = progress * PROGRESS_INTERVAL_LEN;
         String timeString = String.format("%02d:00", totalMinutes);
         timeView.setText(timeString);
     }
@@ -170,14 +161,18 @@ public class Clock {
                     } else {
                         handleTimerTick();
                     }
+
+                    // Post the next tick only if still running
+                    if (running) {
+                        handler.postDelayed(this, 1000);
+                    }
                 }
-                handler.postDelayed(this, 1000);
             }
         };
     }
 
     private void handleTimerTick() {
-        seconds -= 60;
+        seconds -= 1;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
@@ -194,7 +189,7 @@ public class Clock {
     }
 
     private void handleStopwatchTick() {
-        seconds+=60;
+        seconds += 1;
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
             reset();
@@ -258,8 +253,8 @@ public class Clock {
     }
 
     public void start() {
+        // Ensure no previous running clock
         handler.removeCallbacks(runnableClock);
-
         running = true;
         handler.post(runnableClock);
         Log.d("ClockTest", "start handler");
@@ -271,7 +266,6 @@ public class Clock {
     public void stop() {
         running = false;
         handler.removeCallbacks(runnableClock);
-        Log.d("ClockTest", "stop handler");
         updateStartButton("Plant", R.color.primary_20);
         stopForegroundService();
     }
@@ -296,14 +290,15 @@ public class Clock {
     public void reset() {
         seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? 0 : clockSetting.getTargetTime();
         progressBar.setDisablePointer(false);
+
+        int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / PROGRESS_INTERVAL_LEN;
+        progressBar.setProgress(progressIntervalIndex);
+        updateTimeTextFromProgressBar(progressIntervalIndex);
     }
 
     public void giveUp() {
         stop();
         reset();
-        int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / interval;
-        progressBar.setProgress(progressIntervalIndex);
-        updateTimeTextFromProgressBar(progressIntervalIndex);
         redirectToFailScreenActivity();
     }
 

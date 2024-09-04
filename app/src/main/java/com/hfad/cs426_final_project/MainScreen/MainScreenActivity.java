@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.MenuItem;
@@ -42,7 +41,6 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.AppContext;
-import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
@@ -104,7 +102,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupNewTagListener();
 
         setupClock();
-        setupClockMode();
+        setupClockModePickerDialog();
 
         setupTree();
         setupBottomSheet();
@@ -118,17 +116,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
             }
         });
-    }
-
-    private void setupClockMode() {
-        clockMode.setOnClickListener(v -> {
-            showModePickerDialog();
-        });
-    }
-
-    private void showModePickerDialog() {
-        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
-            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
     @Override
@@ -262,6 +249,30 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void setupClock() {
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar);
+        appContext.setCurrentClock(clock);
+    }
+
+    private void setupClockModePickerDialog() {
+        enableClockModePickerDialog(); // Initially enable the click listener
+    }
+
+    private void disableClockModePickerDialog() {
+        clockMode.setOnClickListener(null);
+    }
+
+    private void enableClockModePickerDialog() {
+        clockMode.setOnClickListener(v -> {
+            showModePickerDialog();
+        });
+    }
+
+    private void showModePickerDialog() {
+        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
+            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -399,11 +410,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
-    }
-
-    private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar);
-        appContext.setCurrentClock(clock);
     }
 
     private void setupNewTagListener() {

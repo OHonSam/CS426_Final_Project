@@ -1,11 +1,11 @@
 package com.hfad.cs426_final_project.MainScreen.Clock;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
@@ -14,63 +14,70 @@ import com.hfad.cs426_final_project.R;
 import java.util.Locale;
 
 public class ClockService extends Service {
-
     public static final String CHANNEL_ID = "ClockServiceChannel";
+    private static final int NOTIFICATION_ID = 1;
+
     private Handler handler;
     private Runnable runnable;
     private int seconds = 0;
     private boolean isTimer; // true for timer, false for stopwatch
-    private int timeLimit; // Used when isTimer is true
+    private int targetTime; // Used when isTimer is true
 
     @Override
     public void onCreate() {
         super.onCreate();
         handler = new Handler();
+        createNotificationChannel();
     }
 
+    @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         isTimer = intent.getBooleanExtra("isTimer", false);
-        timeLimit = intent.getIntExtra("timeLimit", 0);
-        seconds = isTimer ? timeLimit : 0;
+        targetTime = intent.getIntExtra("timeLimit", 0);
+        seconds = isTimer ? targetTime : 0;
 
-        createNotificationChannel();
-        startForeground(1, buildNotification(getTimeString()));
-
-        startTimer();
+        startForeground(NOTIFICATION_ID, buildNotification(getFormattedTimeString()));
+        startClock();
 
         return START_STICKY;
     }
 
-    private void startTimer() {
+    private void startClock() {
         runnable = new Runnable() {
             @Override
             public void run() {
-                String timeString = getTimeString();
-                Notification notification = buildNotification(timeString);
-                NotificationManager manager = getSystemService(NotificationManager.class);
-                if (manager != null) {
-                    manager.notify(1, notification);
-                }
+                updateNotification();
 
                 if (isTimer) {
                     if (seconds <= 0) {
                         stopSelf();
-                        // Optionally notify user that timer has finished
                     } else {
                         seconds--;
                         handler.postDelayed(this, 1000);
                     }
                 } else {
-                    seconds++;
-                    handler.postDelayed(this, 1000);
+                    if (seconds >= targetTime) {
+                        stopSelf();
+                    } else {
+                        seconds++;
+                        handler.postDelayed(this, 1000);
+                    }
                 }
             }
         };
         handler.post(runnable);
     }
 
-    private String getTimeString() {
+    private void updateNotification() {
+        Notification notification = buildNotification(getFormattedTimeString());
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        if (manager != null) {
+            manager.notify(NOTIFICATION_ID, notification);
+        }
+    }
+
+    private String getFormattedTimeString() {
         int minutes = seconds / 60;
         int secs = seconds % 60;
         return String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
