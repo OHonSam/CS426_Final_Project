@@ -76,6 +76,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     CircularSeekBar progressBar;
     private final int interval = 5;
     private final int totalInterval = 24;
+    private final int interval = 5;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -92,6 +93,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         setupNewTagListener();
         setupClockModePickerDialog();
         setupClock();
+        setupClockMode();
 
         setupTree();
         setupBottomSheet();
