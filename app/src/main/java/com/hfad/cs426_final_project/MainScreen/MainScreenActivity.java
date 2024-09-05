@@ -94,7 +94,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
 
         setupClockModePickerDialog();
         setupClock();
-        setupClockModePickerDialog();
 
         setupTree();
         setupBottomSheet();
@@ -190,7 +189,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle);
         appContext.setCurrentClock(clock);
     }
 
@@ -199,11 +198,11 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     private void disableClockModePickerDialog() {
-        clockMode.setOnClickListener(null);
+        btnClockModePicker.setOnClickListener(null);
     }
 
     private void enableClockModePickerDialog() {
-        clockMode.setOnClickListener(v -> {
+        btnClockModePicker.setOnClickListener(v -> {
             showModePickerDialog();
         });
     }
