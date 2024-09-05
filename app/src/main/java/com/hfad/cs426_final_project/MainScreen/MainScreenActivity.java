@@ -212,21 +212,16 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
             modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
-    private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar);
-        appContext.setCurrentClock(clock);
-    }
-
     private void setupClockModePickerDialog() {
         enableClockModePickerDialog(); // Initially enable the click listener
     }
 
     private void disableClockModePickerDialog() {
-        clockMode.setOnClickListener(null);
+        btnClockModePicker.setOnClickListener(null);
     }
 
     private void enableClockModePickerDialog() {
-        clockMode.setOnClickListener(v -> {
+        btnClockModePicker.setOnClickListener(v -> {
             showModePickerDialog();
         });
     }
