@@ -63,7 +63,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private AppContext appContext;
     private ImageView imgTree;
     private TextView timeView;
-    private MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
+    private MyButton startButton, todoButton, musicButton, newTagButton, btnClockModePicker;
     private ClickableImageView todoImage, musicImage, newTagImage, progressBarButton;
     private LinearLayout todoContainer, musicContainer, newTagContainer;
     private ConstraintLayout popupMusicContainer;
@@ -78,10 +78,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
 
     private CircularSeekBar progressBar;
-    private final int totalInterval = 24;
-    private final int interval = 5;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -101,8 +100,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         setupTodoListener();
         setupNewTagListener();
 
-        setupClock();
         setupClockModePickerDialog();
+        setupClock();
 
         setupTree();
         setupBottomSheet();
@@ -157,7 +156,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         popupMusicContainer = findViewById(R.id.main);
         progressBar = findViewById(R.id.progress_bar);
-        clockMode = findViewById(R.id.clockMode);
+        btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
@@ -169,7 +168,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupNavigationDrawer() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+        toggle = new ActionBarDrawerToggle(this,
                 drawer,
                 toolbar,
                 R.string.nav_open_drawer,
@@ -252,7 +251,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle);
         appContext.setCurrentClock(clock);
     }
 
@@ -261,11 +260,11 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void disableClockModePickerDialog() {
-        clockMode.setOnClickListener(null);
+        btnClockModePicker.setOnClickListener(null);
     }
 
     private void enableClockModePickerDialog() {
-        clockMode.setOnClickListener(v -> {
+        btnClockModePicker.setOnClickListener(v -> {
             showModePickerDialog();
         });
     }
