@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
@@ -38,6 +37,8 @@ public class Clock {
     private final int PROGRESS_INTERVAL_LEN = 5;
     private final int PROGRESS_MINUTES_MIN = 10;
     private final int PROGRESS_MINUTES_MAX = 120;
+
+
 
     //Number of seconds displayed on the stopwatch.
     private int seconds;
