@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -133,14 +134,23 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
                 Tree curTree = appContext.getCurrentUser().getUserSetting().getSelectedTree();
                 Tag curTag = appContext.getCurrentUser().getFocusTag();
                 int curFocusTime = appContext.getCurrentUser().getFocusTime();
+                Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.selectionContainer);
 
                 if (currentDrawable != null && currentDrawable.getConstantState().equals(unfilledHeart.getConstantState())) {
                     ivHeart.setImageDrawable(filledHeart);
                     appContext.getCurrentUser().addFavourite(curTree, curTag, curFocusTime);
+
+                    if (currentFragment instanceof BottomSheetFavouriteFragment) {
+                        navigateFavouriteFragment();
+                    }
                 }
                 else {
                     ivHeart.setImageDrawable(unfilledHeart);
                     appContext.getCurrentUser().removeFavourite(curTree, curTag, curFocusTime);
+
+                    if (currentFragment instanceof BottomSheetFavouriteFragment) {
+                        navigateFavouriteFragment();
+                    }
                 }
             }
         });

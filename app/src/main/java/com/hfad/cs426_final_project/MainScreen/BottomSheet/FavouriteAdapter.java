@@ -1,10 +1,8 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,6 +17,8 @@ import com.bumptech.glide.request.target.Target;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.DataStorage.Favourite;
+import com.hfad.cs426_final_project.DataStorage.Tag;
+import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
@@ -34,6 +34,17 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         this.activity = activity;
         this.favouritesList = favouritesList;
         this.clickListener = listener;
+
+        Tree tree = AppContext.getInstance().getCurrentUser().getUserSetting().getSelectedTree();
+        Tag tag = AppContext.getInstance().getCurrentUser().getFocusTag();
+        int focusTime = AppContext.getInstance().getCurrentUser().getFocusTime();
+
+        for(int i = 0; i < favouritesList.size(); i++) {
+            if(favouritesList.get(i).sameFavourite(tree, tag, focusTime)) {
+                selectedPosition = i;
+                break;
+            }
+        }
     }
 
     @NonNull
@@ -51,7 +62,12 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         holder.ivEditFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.navigateBottomSheetSelection();
+                AppContext.getInstance().getCurrentUser().setFocusTag(favourite.getTag());
+                AppContext.getInstance().getCurrentUser().setFocusTime(favourite.getFocusTime());
+                AppContext.getInstance().getCurrentUser().getUserSetting().setSelectedTree(favourite.getTree());
+
+                activity.updateBottomSheetSelection();
+                activity.navigateBottomSheetSelectionFragment();
             }
         });
 
