@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
@@ -190,7 +191,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 1;
+        seconds -= 60;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
