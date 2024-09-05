@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
@@ -109,6 +108,7 @@ public class Clock {
             }
         });
     }
+
 
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
