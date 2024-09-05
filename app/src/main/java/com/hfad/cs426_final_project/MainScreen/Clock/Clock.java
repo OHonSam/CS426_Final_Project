@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
@@ -41,6 +43,8 @@ public class Clock {
     //Is the stopwatch running?
     private boolean running;
     private boolean isEndSession;
+    private int secondsOutside;
+    private boolean runningOutside = false;
 
     private final Handler handler;
     private Runnable runnableClock;
@@ -50,14 +54,13 @@ public class Clock {
     private TextView timeView;
     private MyButton startButton;
     private Context context;
-    private int secondsOutside;
-    private boolean runningOutside = false;
+    private MyButton btnClockModePicker;
 
     private ClockSetting clockSetting;
-
     private CircularSeekBar progressBar;
+    private ActionBarDrawerToggle toggle;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ActionBarDrawerToggle toggle) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
@@ -69,6 +72,8 @@ public class Clock {
         this.runnableClock = createClockRunnable();
         this.runnableDeepMode = createDeepModeRunnable();
         this.progressBar = progressBar;
+        this.btnClockModePicker = btnClockModePicker;
+        this.toggle = toggle;
         initProgressBar();
         setupStartButton();
     }
@@ -172,7 +177,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 1;
+        seconds -= 60;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
@@ -189,7 +194,7 @@ public class Clock {
     }
 
     private void handleStopwatchTick() {
-        seconds += 1;
+        seconds += 60;
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
             reset();
@@ -257,7 +262,9 @@ public class Clock {
         handler.removeCallbacks(runnableClock);
         running = true;
         handler.post(runnableClock);
-        Log.d("ClockTest", "start handler");
+        btnClockModePicker.setVisibility(View.GONE);
+        toggle.setDrawerIndicatorEnabled(false);
+        toggle.setDrawerSlideAnimationEnabled(false);
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
         startForegroundService();
@@ -294,6 +301,9 @@ public class Clock {
         int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / PROGRESS_INTERVAL_LEN;
         progressBar.setProgress(progressIntervalIndex);
         updateTimeTextFromProgressBar(progressIntervalIndex);
+        btnClockModePicker.setVisibility(View.VISIBLE);
+        toggle.setDrawerIndicatorEnabled(true);
+        toggle.setDrawerSlideAnimationEnabled(true);
     }
 
     public void giveUp() {
