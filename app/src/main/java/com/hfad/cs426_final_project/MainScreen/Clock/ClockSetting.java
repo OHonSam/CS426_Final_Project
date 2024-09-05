@@ -14,7 +14,7 @@ public class ClockSetting {
         this.isDeepModeTimer = false;
         this.isDeepModeStopwatch = false;
         this.isCountExceedTime = false;
-        this.targetTime = 300; // by default 5 minutes
+        this.targetTime = 600; // by default 10 minutes
     }
 
     public ClockSetting(Clock.ClockMode clockMode, boolean isDeepModeTimer, boolean isDeepModeStopwatch, boolean isCountExceedTime, int targetTime) {

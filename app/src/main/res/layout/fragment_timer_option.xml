@@ -25,7 +25,7 @@
         android:layout_marginTop="13dp"
         android:fontFamily="@font/poppins_medium"
         android:text="@string/deep_focus"
-        android:textSize="16.62sp"
+        android:textSize="15sp"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/deepFocusImageView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="59dp"
         android:fontFamily="@font/poppins_light"
-        android:textSize="16.62sp"
+        android:textSize="15sp"
         android:text="@string/deep_focus_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deepFocusTitleTextView" />
@@ -77,7 +77,7 @@
         android:layout_marginStart="13dp"
         android:layout_marginTop="13dp"
         android:fontFamily="@font/poppins_medium"
-        android:textSize="16.62sp"
+        android:textSize="15sp"
         android:textColor="@color/black"
         android:text="@string/count_exceed_time"
         app:layout_constraintStart_toEndOf="@+id/countExceedTimeImageView"
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="59dp"
         android:fontFamily="@font/poppins_light"
-        android:textSize="16.62sp"
+        android:textSize="15sp"
         android:text="@string/count_exceed_time_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/countExceedTimeTitleTextView" />

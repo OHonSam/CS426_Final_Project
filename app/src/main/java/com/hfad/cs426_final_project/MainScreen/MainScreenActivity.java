@@ -73,7 +73,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private MusicManager musicManager;
     private Spinner searchTagSpinner;
 
-    Spinner searchTagSpinner;
     BottomSheetMainScreen bottomSheet;
     private Toolbar toolbar;
     private NavigationView navigationView;
