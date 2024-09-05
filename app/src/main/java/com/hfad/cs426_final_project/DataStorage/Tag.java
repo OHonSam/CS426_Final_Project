@@ -40,4 +40,8 @@ public class Tag {
     public void setColorHex(String colorHex) {
         this.colorHex = colorHex;
     }
+
+    public boolean sameID(Tag tag) {
+        return this.id == tag.id;
+    }
 }

@@ -1,7 +1,6 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,14 +27,11 @@ import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
-    View mView;
-    MainScreenActivity mainScreenActivity;
+    private View mView;
+    private MainScreenActivity mainScreenActivity;
     private AppContext appContext;
 
     private RecyclerView rcvTree, rcvFocusTime, rcvTag;
-    private ImageView ivTreeSelected, tagColorDisplay;
-    private TextView tvFocusTime, tvTag;
-    private ImageView ivHeart;
 
     public BottomSheetSelectionFragment() {
         // Required empty public constructor
@@ -50,11 +46,9 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
         appContext = AppContext.getInstance();
 
         initUI();
-        setupSelectionArea();
         initRCVTreeSelection();
         initRCVFocusTime();
         initRCVTag();
-        setupFavouriteHeart();
         return mView;
     }
 
@@ -62,22 +56,6 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
         rcvTree = mView.findViewById(R.id.rcv_treeSelection);
         rcvFocusTime = mView.findViewById(R.id.rcvFocusedTime);
         rcvTag = mView.findViewById(R.id.rcvTag);
-        ivTreeSelected = mView.findViewById(R.id.selectedTree);
-        tagColorDisplay = mView.findViewById(R.id.tagColorDisplay);
-        tvFocusTime = mView.findViewById(R.id.tvFocusedTime);
-        tvTag = mView.findViewById(R.id.tvTag);
-        ivHeart = mView.findViewById(R.id.heart);
-    }
-
-    private void setupSelectionArea() {
-        Glide.with(mainScreenActivity)
-                .load(Uri.parse(appContext.getCurrentUser().getUserSetting().getSelectedTree().getImgUri()))
-                .override(Target.SIZE_ORIGINAL) // or specify your desired dimensions
-                .fitCenter() // Or use centerCrop() if you want to crop the image to fit
-                .into(ivTreeSelected);
-        tvFocusTime.setText(String.valueOf((appContext.getCurrentUser().getFocusTime() / 5) * 5));
-        tvTag.setText(appContext.getCurrentUser().getFocusTag().getName());
-        tagColorDisplay.setColorFilter(Color.parseColor(appContext.getCurrentUser().getFocusTag().getColorHex()));
     }
 
     private void initRCVTreeSelection() {
@@ -94,11 +72,7 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
                 mainScreenActivity.setupTree();
 
                 // change in selection area
-                Glide.with(mainScreenActivity)
-                        .load(Uri.parse(tree.getImgUri()))
-                        .override(Target.SIZE_ORIGINAL) // or specify your desired dimensions
-                        .fitCenter() // Or use centerCrop() if you want to crop the image to fit
-                        .into(ivTreeSelected);
+                mainScreenActivity.updateBottomSheetSelection();
             }
         }); // Replace with actual data source
         rcvTree.setAdapter(treeAdapter);
@@ -114,7 +88,8 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
                 // setUser focus time
                 appContext.getCurrentUser().setFocusTime(focusTime);
 
-                tvFocusTime.setText(String.valueOf(focusTime));
+                // change in selection area
+                mainScreenActivity.updateBottomSheetSelection();
             }
         });
         rcvFocusTime.setAdapter(adapter);
@@ -132,31 +107,13 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
                 appContext.getCurrentUser().setFocusTag(tag);
                 mainScreenActivity.updateTagDisplay();
 
-                tvTag.setText(tag.getName());
-                tagColorDisplay.setColorFilter(Color.parseColor(tag.getColorHex()));
+                // change in selection area
+                mainScreenActivity.updateBottomSheetSelection();
             }
         });
         rcvTag.setAdapter(tagAdapter);
     }
 
-    private void setupFavouriteHeart() {
-        Drawable currentDrawable = ivHeart.getDrawable();
-        Drawable unfilledHeart = ResourcesCompat.getDrawable(getResources(), R.drawable.heart_unfilled, null);
-        Drawable filledHeart = ResourcesCompat.getDrawable(getResources(), R.drawable.heart, null);
 
-        ivHeart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentDrawable != null && currentDrawable.getConstantState().equals(unfilledHeart.getConstantState())) {
-                    ivHeart.setImageDrawable(filledHeart);
-                    appContext.getCurrentUser().setFavourite(appContext.getCurrentUser().getUserSetting().getSelectedTree());
-                }
-                else {
-                    ivHeart.setImageDrawable(unfilledHeart);
-                    appContext.getCurrentUser().removeFavourite(appContext.getCurrentUser().getUserSetting().getSelectedTree());
-                }
-            }
-        });
-    }
 
 }

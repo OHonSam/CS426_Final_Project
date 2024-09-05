@@ -75,6 +75,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private MusicManager musicManager;
 
     Spinner searchTagSpinner;
+    BottomSheetMainScreen bottomSheet;
 
     Toolbar toolbar;
     NavigationView navigationView;
@@ -111,7 +112,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         imgTree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetMainScreen bottomSheet = new BottomSheetMainScreen();
+                bottomSheet = new BottomSheetMainScreen();
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
             }
         });
@@ -479,5 +480,9 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         TagAdapterSpinner tagAdapterSpinner = (TagAdapterSpinner) searchTagSpinner.getAdapter();
         int position = tagAdapterSpinner.getPosition(appContext.getCurrentUser().getFocusTag());
         searchTagSpinner.setSelection(position);
+    }
+
+    public void updateBottomSheetSelection() {
+        bottomSheet.updateSelectionArea();
     }
 }

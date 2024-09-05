@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+    <View
+        android:id="@+id/favouriteBackgroundView"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@drawable/background_favourite_white"/>
+
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/ivEditFavourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit_favourite"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="12dp"/>
+
+    <ImageView
+        android:id="@+id/ivTreeDisplay"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="fitCenter"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/ivEditFavourite"
+        android:layout_marginHorizontal="16dp"
+        android:src="@drawable/tree"/>
+
+    <TextView
+        android:id="@+id/Focus_Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Focus Time: "
+        style="@style/SubHead"
+        android:layout_toEndOf="@+id/ivTreeDisplay"
+        android:layout_marginTop="24dp"/>
+    <TextView
+        android:id="@+id/tvFocusTimeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/Focus_Time"
+        android:layout_alignTop="@+id/Focus_Time"
+        android:gravity="bottom"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        style="@style/Title"
+        android:text="20"/>
+
+    <TextView
+        android:id="@+id/Tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tag: "
+        style="@style/SubHead"
+        android:layout_toEndOf="@+id/ivTreeDisplay"
+        android:layout_below="@+id/Focus_Time"
+        android:layout_marginTop="16dp"/>
+    <TextView
+        android:id="@+id/tvTagNameDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/Tag"
+        android:layout_alignTop="@+id/Tag"
+        android:gravity="bottom"
+        android:paddingTop="4dp"
+        android:layout_marginStart="4dp"
+        style="@style/BodyText"
+        android:text="Social"/>
+    <ImageView
+        android:id="@+id/tagColorView"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/tvTagNameDisplay"
+        android:layout_alignTop="@+id/tvTagNameDisplay"
+        android:layout_alignBottom="@+id/tvTagNameDisplay"
+        android:src="@drawable/circle"/>
+</RelativeLayout>

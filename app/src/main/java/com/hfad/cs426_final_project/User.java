@@ -1,5 +1,6 @@
 package com.hfad.cs426_final_project;
 
+import com.hfad.cs426_final_project.DataStorage.Favourite;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.DataStorage.Tree;
@@ -18,6 +19,7 @@ public class User {
 
     private int focusTime;
     private Tag focusTag;
+    private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
     private int sun; // money
     private UserSetting userSetting;
@@ -40,6 +42,7 @@ public class User {
         this.lastAccessDate = System.currentTimeMillis();
         this.focusTag = new Tag();
         this.focusTime = 10;
+        this.favouriteList = new ArrayList<>();
         this.streak = 1;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
@@ -99,6 +102,14 @@ public class User {
 
     public void setFocusTag(Tag focusTag) {
         this.focusTag = focusTag;
+    }
+
+    public List<Favourite> getFavouriteList() {
+        return favouriteList;
+    }
+
+    public void setFavouriteList(List<Favourite> favouriteList) {
+        this.favouriteList = favouriteList;
     }
 
     public int getStreak() {
@@ -171,21 +182,26 @@ public class User {
         return listTag.contains(tagName);
     }
 
-    public void setFavourite(Tree tree) {
-        for(int i = 0; i < ownTrees.size(); i++) {
-            if(ownTrees.get(i).getId() == tree.getId()) {
-                ownTrees.get(i).setFavourite(true);
+    public void addFavourite(Tree tree, Tag tag, int focusTime) {
+        Favourite favourite = new Favourite(tree, tag, focusTime);
+        favouriteList.add(favourite);
+    }
+
+    public void removeFavourite(Tree tree, Tag tag, int focusTime) {
+        for (int i = 0; i < favouriteList.size(); i++) {
+            if(favouriteList.get(i).sameFavourite(tree, tag, focusTime)) {
+                favouriteList.remove(i);
                 return;
             }
         }
     }
 
-    public void removeFavourite(Tree tree) {
-        for(int i = 0; i < ownTrees.size(); i++) {
-            if(ownTrees.get(i).getId() == tree.getId()) {
-                ownTrees.get(i).setFavourite(false);
-                return;
+    public boolean isFavourite(Tree tree, Tag tag, int focusTime) {
+        for (int i = 0; i < favouriteList.size(); i++) {
+            if(favouriteList.get(i).sameFavourite(tree, tag, focusTime)) {
+                return true;
             }
         }
+        return false;
     }
 }

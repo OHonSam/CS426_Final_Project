@@ -3,6 +3,7 @@ package com.hfad.cs426_final_project.DataStorage;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,13 +16,11 @@ public class Tree {
     private int id;
     private String imgUri;
     private int cost;
-    private boolean favourite;
 
     public Tree() {
         // default
         id = 0;
         cost = 120;
-        favourite = false;
         fetchUri();
     }
 
@@ -49,14 +48,6 @@ public class Tree {
         this.cost = cost;
     }
 
-    public boolean isFavourite() {
-        return favourite;
-    }
-
-    public void setFavourite(boolean favourite) {
-        this.favourite = favourite;
-    }
-
     public Task<Void> fetchUri() {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("Trees/tree" + id + ".png");
@@ -66,5 +57,9 @@ public class Tree {
             taskCompletionSource.setResult(null);
         }).addOnFailureListener(taskCompletionSource::setException);
         return taskCompletionSource.getTask();
+    }
+
+    public boolean sameID(Tree tree) {
+        return this.id == tree.id;
     }
 }
