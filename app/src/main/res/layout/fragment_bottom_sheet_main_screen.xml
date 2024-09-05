@@ -77,13 +77,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:padding="10dp"
                 android:src="@drawable/heart_unfilled"/>
             <ImageView
                 android:id="@+id/selectedTree"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/tree"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="8dp"
                 android:scaleType="fitCenter"/>
             <LinearLayout
                 android:layout_width="wrap_content"

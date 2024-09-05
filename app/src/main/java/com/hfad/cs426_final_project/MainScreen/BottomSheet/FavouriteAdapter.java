@@ -1,8 +1,10 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,17 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.DataStorage.Favourite;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 import java.util.List;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHolder> {
+    private MainScreenActivity activity;
     private final List<Favourite> favouritesList;
     private final IClickFavouriteListener clickListener;
     private int selectedPosition = -1;
 
-    public FavouriteAdapter(List<Favourite> favouritesList, IClickFavouriteListener listener) {
+    public FavouriteAdapter(MainScreenActivity activity, List<Favourite> favouritesList, IClickFavouriteListener listener) {
+        this.activity = activity;
         this.favouritesList = favouritesList;
         this.clickListener = listener;
     }
@@ -39,6 +46,14 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
     @Override
     public void onBindViewHolder(@NonNull FavouriteViewHolder holder, int position) {
         Favourite favourite = favouritesList.get(position);
+
+        // Edit button
+        holder.ivEditFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.navigateBottomSheetSelection();
+            }
+        });
 
         // Set tree image
         Glide.with(holder.itemView.getContext())
@@ -80,6 +95,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         if(selectedPosition == position)
             selectedPosition = -1;
         favouritesList.remove(position);
+        AppContext.getInstance().getCurrentUser().setFavouriteList(favouritesList);
+        activity.updateBottomSheetSelection();
         notifyItemRemoved(position);
     }
 
@@ -93,6 +110,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
     }
 
     static class FavouriteViewHolder extends RecyclerView.ViewHolder {
+        ClickableImageView ivEditFavourite;
         View favouriteBackgroundView;
         ImageView ivTreeDisplay;
         TextView tvFocusTimeDisplay, tvTagNameDisplay;
@@ -100,6 +118,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
         public FavouriteViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivEditFavourite = itemView.findViewById(R.id.ivEditFavourite);
             favouriteBackgroundView = itemView.findViewById(R.id.favouriteBackgroundView);
             ivTreeDisplay = itemView.findViewById(R.id.ivTreeDisplay);
             tvFocusTimeDisplay = itemView.findViewById(R.id.tvFocusTimeDisplay);

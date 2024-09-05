@@ -46,7 +46,7 @@ public class BottomSheetFavouriteFragment extends BottomSheetDialogFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mainScreenActivity, LinearLayoutManager.VERTICAL, false);
         rcvFavouriteList.setLayoutManager(layoutManager);
 
-        FavouriteAdapter favouriteAdapter = new FavouriteAdapter(appContext.getCurrentUser().getFavouriteList(), new FavouriteAdapter.IClickFavouriteListener() {
+        FavouriteAdapter favouriteAdapter = new FavouriteAdapter(mainScreenActivity, appContext.getCurrentUser().getFavouriteList(), new FavouriteAdapter.IClickFavouriteListener() {
             @Override
             public void onClickFavourite(Favourite favourite) {
                 appContext.getCurrentUser().setFocusTag(favourite.getTag());

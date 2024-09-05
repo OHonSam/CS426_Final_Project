@@ -485,4 +485,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     public void updateBottomSheetSelection() {
         bottomSheet.updateSelectionArea();
     }
+
+    public void navigateBottomSheetSelection() {
+        bottomSheet.navigateSelectionFragment();
+    }
 }
