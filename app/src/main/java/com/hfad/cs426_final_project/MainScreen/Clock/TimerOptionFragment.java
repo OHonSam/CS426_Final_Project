@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
 
 public class TimerOptionFragment extends Fragment {
@@ -18,9 +19,7 @@ public class TimerOptionFragment extends Fragment {
     private SwitchCompat countExceedSwitch;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timer_option, container, false);
 
         // Retrieve arguments
@@ -29,16 +28,22 @@ public class TimerOptionFragment extends Fragment {
             boolean isCurCountExceed = args.getBoolean("isCurCountExceed", false);
             boolean isCurDeepMode = args.getBoolean("isCurDeepModeTimer", false);
 
-            // Initialize SwitchCompat components with the correct states
+            // Initialize switches
             deepFocusSwitch = view.findViewById(R.id.deepFocusSwitchButton_timer);
             countExceedSwitch = view.findViewById(R.id.countExceedTimeSwitchButton);
 
+            // Set switch states
             deepFocusSwitch.setChecked(isCurDeepMode);
             countExceedSwitch.setChecked(isCurCountExceed);
-        }
 
+            // Check if clock is disabled
+            boolean isModePickerDialogEnabled = AppContext.getInstance().getCurrentClock().getClockSetting().isModePickerDialogEnabled();
+            deepFocusSwitch.setEnabled(isModePickerDialogEnabled);
+            countExceedSwitch.setEnabled(isModePickerDialogEnabled);
+        }
         return view;
     }
+
 
     public boolean isDeepFocusEnabled() {
         return deepFocusSwitch != null && deepFocusSwitch.isChecked();

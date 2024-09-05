@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
@@ -37,6 +36,8 @@ public class Clock {
     private final int PROGRESS_INTERVAL_LEN = 5;
     private final int PROGRESS_MINUTES_MIN = 10;
     private final int PROGRESS_MINUTES_MAX = 120;
+
+
 
     //Number of seconds displayed on the stopwatch.
     private int seconds;
@@ -90,15 +91,17 @@ public class Clock {
                     return;
                 }
 
-                // If the clock is not running then start it
                 if (!isRunning()) {
+                    // Start the clock and disable interaction
                     start();
+                    clockSetting.setModePickerDialogEnabled(false); // DISABLE the clock
                 } else {
                     giveUp();
                 }
             }
         });
     }
+
 
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
@@ -262,7 +265,7 @@ public class Clock {
         handler.removeCallbacks(runnableClock);
         running = true;
         handler.post(runnableClock);
-        btnClockModePicker.setVisibility(View.GONE);
+
         toggle.setDrawerIndicatorEnabled(false);
         toggle.setDrawerSlideAnimationEnabled(false);
         updateStartButton("Give Up", R.color.secondary_50);
@@ -301,10 +304,15 @@ public class Clock {
         int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / PROGRESS_INTERVAL_LEN;
         progressBar.setProgress(progressIntervalIndex);
         updateTimeTextFromProgressBar(progressIntervalIndex);
-        btnClockModePicker.setVisibility(View.VISIBLE);
+
+
         toggle.setDrawerIndicatorEnabled(true);
         toggle.setDrawerSlideAnimationEnabled(true);
+
+        // Ensure the clock is enabled after reset
+        clockSetting.setModePickerDialogEnabled(true);
     }
+
 
     public void giveUp() {
         stop();

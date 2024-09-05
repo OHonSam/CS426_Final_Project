@@ -25,16 +25,18 @@
         android:layout_marginTop="13dp"
         android:fontFamily="@font/poppins_medium"
         android:text="@string/deep_focus"
-        android:textSize="14.7sp"
+        android:textSize="16.62sp"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/deepFocusImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/deepFocusDescriptionTextView"
-        android:layout_width="180dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="59dp"
         android:fontFamily="@font/poppins_light"
+        android:textSize="16.62sp"
         android:text="@string/deep_focus_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deepFocusTitleTextView" />
@@ -43,9 +45,9 @@
         android:id="@+id/deepFocusSwitchButton_stopwatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="250dp"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deepFocusDescriptionTextView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

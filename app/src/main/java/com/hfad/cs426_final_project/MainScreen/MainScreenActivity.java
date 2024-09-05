@@ -120,9 +120,15 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Re-enable clock interaction when the user returns to this activity
+        clock.getClockSetting().setModePickerDialogEnabled(true);
+
+        // Disable deep mode count (if applicable)
         clock.disableDeepModeCount();
         updateTagDisplay();
     }
+
 
     @Override
     protected void onPause() {
