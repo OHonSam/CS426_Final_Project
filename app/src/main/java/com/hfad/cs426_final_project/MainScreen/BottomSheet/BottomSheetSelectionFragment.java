@@ -1,24 +1,16 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.DataStorage.Tag;
@@ -86,7 +78,7 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
             @Override
             public void onClickFocusTime(int focusTime) {
                 // setUser focus time
-                appContext.getCurrentUser().setFocusTime(focusTime);
+                appContext.getCurrentUser().setFocusTimeMinutes(focusTime);
 
                 // change in selection area
                 mainScreenActivity.updateBottomSheetSelection();

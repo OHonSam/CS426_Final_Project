@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.MenuItem;
@@ -42,7 +41,6 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.AppContext;
-import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
@@ -59,27 +57,29 @@ import com.hfad.cs426_final_project.WelcomeScreenActivity;
 import java.util.List;
 import java.util.Objects;
 
+import me.tankery.lib.circularseekbar.CircularSeekBar;
+
 public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private AppContext appContext;
     private ImageView imgTree;
-    TextView timeView;
-    MyButton startButton, todoButton, musicButton, newTagButton, clockMode;
-    ClickableImageView todoImage, musicImage, newTagImage;
-    LinearLayout todoContainer, musicContainer, newTagContainer;
-    Clock clock;
+    private TextView timeView;
+    private MyButton startButton, todoButton, musicButton, newTagButton, btnClockModePicker;
+    private ClickableImageView todoImage, musicImage, newTagImage, progressBarButton;
+    private LinearLayout todoContainer, musicContainer, newTagContainer;
+    private ConstraintLayout popupMusicContainer;
 
-    ModePickerDialog modePickerDialog;
-
-    ConstraintLayout popupMusicContainer;
-
+    private Clock clock;
+    private ModePickerDialog modePickerDialog;
     private MusicManager musicManager;
+    private Spinner searchTagSpinner;
 
-    Spinner searchTagSpinner;
     BottomSheetMainScreen bottomSheet;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
 
-    Toolbar toolbar;
-    NavigationView navigationView;
-    DrawerLayout drawer;
+    private CircularSeekBar progressBar;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -89,21 +89,19 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         getUIReferences();
 
         appContext = AppContext.getInstance();
+        musicManager = new MusicManager(this, musicImage);
 
         setupToolbar();
         setupNavigationDrawer();
 
-        musicManager = new MusicManager(this, musicImage);
-
-        setupSearchTag(); // Spinner
+        setupSearchTag();
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
 
-        setupClockMode();
+        setupClockModePickerDialog();
         setupClock();
 
-        setupStartButton();
         setupTree();
         setupBottomSheet();
     }
@@ -118,41 +116,28 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         });
     }
 
-    private void setupClockMode() {
-        clockMode = findViewById(R.id.clockMode);
-        clockMode.setOnClickListener(v -> {
-            showModePickerDialog();
-        });
-    }
-
-    private void showModePickerDialog() {
-        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
-            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
-//        modePickerDialog.setOnDismissListener(new ModePickerDialog.onDismissListener() {
-//            @Override
-//            public void onDismiss(ModePickerDialog modePickerDialog) {
-//                //clock.updateSetting(modePickerDialog.);
-//            }
-//        });
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Re-enable clock interaction when the user returns to this activity
+        clock.getClockSetting().setModePickerDialogEnabled(true);
+
+        // Disable deep mode count (if applicable)
         clock.disableDeepModeCount();
         updateTagDisplay();
     }
+
 
     @Override
     protected void onPause() {
         super.onPause();
         clock.enableDeepModeCount();
-        Log.d("ClockOutside", "OnPause invoked");
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onSaveInstanceState(Bundle outState)  {
+        super.onSaveInstanceState(outState);
         appContext.saveUserInfo();
     }
 
@@ -175,6 +160,8 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         newTagContainer = findViewById(R.id.new_tag_container);
 
         popupMusicContainer = findViewById(R.id.main);
+        progressBar = findViewById(R.id.progress_bar);
+        btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
@@ -186,7 +173,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupNavigationDrawer() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+        toggle = new ActionBarDrawerToggle(this,
                 drawer,
                 toolbar,
                 R.string.nav_open_drawer,
@@ -266,6 +253,30 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void setupClock() {
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle);
+        appContext.setCurrentClock(clock);
+    }
+
+    private void setupClockModePickerDialog() {
+        enableClockModePickerDialog(); // Initially enable the click listener
+    }
+
+    private void disableClockModePickerDialog() {
+        btnClockModePicker.setOnClickListener(null);
+    }
+
+    private void enableClockModePickerDialog() {
+        btnClockModePicker.setOnClickListener(v -> {
+            showModePickerDialog();
+        });
+    }
+
+    private void showModePickerDialog() {
+        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
+            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -403,38 +414,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
-    }
-
-    private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), 0, 5);
-        appContext.setCurrentClock(clock);
-        appContext.getCurrentClock().run();
-    }
-
-    private void setupStartButton() {
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // If the clock is not running then start it
-                if (clock.getClockSetting().getIsCountExceedTime() && clock.getIsEndSession()) {
-                    clock.setIsEndSession(false);
-                    redirectToCongratulationScreen();
-                    clock.reset();
-                }
-
-                if (!clock.isRunning()) {
-                    clock.start();
-                } else {
-                    clock.stop();
-                }
-
-            }
-        });
-    }
-
-    public void redirectToCongratulationScreen() {
-        Intent intent = new Intent(this, CongratulationScreenActivity.class);
-        startActivity(intent);
     }
 
     private void setupNewTagListener() {

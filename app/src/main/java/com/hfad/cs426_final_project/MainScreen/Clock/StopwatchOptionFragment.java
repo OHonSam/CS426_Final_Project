@@ -11,15 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
 
 public class StopwatchOptionFragment extends Fragment {
     private SwitchCompat deepFocusSwitch;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stopwatch_option, container, false);
 
         // Retrieve arguments
@@ -27,14 +26,17 @@ public class StopwatchOptionFragment extends Fragment {
         if (args != null) {
             boolean isCurDeepMode = args.getBoolean("isCurDeepModeStopwatch", false);
 
-            // Initialize SwitchCompat components with the correct states
+            // Initialize switch
             deepFocusSwitch = view.findViewById(R.id.deepFocusSwitchButton_stopwatch);
-
             deepFocusSwitch.setChecked(isCurDeepMode);
-        }
 
+            // Check if clock is disabled
+            boolean isModePickerDialogEnabled = AppContext.getInstance().getCurrentClock().getClockSetting().isModePickerDialogEnabled();
+            deepFocusSwitch.setEnabled(isModePickerDialogEnabled);
+        }
         return view;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

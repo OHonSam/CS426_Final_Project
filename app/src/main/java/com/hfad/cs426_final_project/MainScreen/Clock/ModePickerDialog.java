@@ -65,6 +65,15 @@ public class ModePickerDialog extends DialogFragment {
         stopwatchOptionFragment.setArguments(argsStopwatch);
 
         switchModeAnimation = new SwitchModeAnimation(timer, stopwatch, thumb, track, curMode);
+        // Check the clock state
+        boolean isModePickerDialogEnabled = AppContext.getInstance().getCurrentClock().getClockSetting().isModePickerDialogEnabled();
+
+        if (!isModePickerDialogEnabled) {
+            // If the clock is disabled, prevent interaction
+            timer.setEnabled(false);
+            stopwatch.setEnabled(false);
+            // Add any other components you want to disable
+        }
 
         if (curMode == Clock.ClockMode.TIMER)
             replaceFragment(timerOptionFragment);
