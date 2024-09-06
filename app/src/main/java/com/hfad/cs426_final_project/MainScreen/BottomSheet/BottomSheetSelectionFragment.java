@@ -78,7 +78,7 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
             @Override
             public void onClickFocusTime(int focusTime) {
                 // setUser focus time
-                appContext.getCurrentUser().setFocusTimeMinutes(focusTime);
+                appContext.getCurrentUser().updateFocusTimeMinutes(focusTime);
 
                 // change in selection area
                 mainScreenActivity.updateBottomSheetSelection();

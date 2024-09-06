@@ -50,7 +50,7 @@ public class BottomSheetFavouriteFragment extends BottomSheetDialogFragment {
             @Override
             public void onClickFavourite(Favourite favourite) {
                 appContext.getCurrentUser().setFocusTag(favourite.getTag());
-                appContext.getCurrentUser().setFocusTimeMinutes(favourite.getFocusTime());
+                appContext.getCurrentUser().updateFocusTimeMinutes(favourite.getFocusTime());
                 appContext.getCurrentUser().getUserSetting().setSelectedTree(favourite.getTree());
 
                 mainScreenActivity.updateBottomSheetSelection();

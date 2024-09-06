@@ -5,6 +5,7 @@ import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.DataStorage.UserSetting;
+import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ClockSetting;
 
 import java.util.ArrayList;
@@ -86,12 +87,20 @@ public class User {
         this.lastAccessDate = lastAccessDate;
     }
 
-    public int getFocusTimeMinutes() {
-        return AppContext.getInstance().getCurrentClock().getTargetTime() / 60;
+    public int retrieveFocusTimeMinutes() {
+        Clock clock = AppContext.getInstance().getCurrentClock();
+        if (clock != null)
+            return clock.getTargetTime() / 60;
+        else
+            return AppContext.getInstance().getCurrentUser().getClockSetting().getTargetTime() / 60;
     }
 
-    public void setFocusTimeMinutes(int focusTime) {
-        AppContext.getInstance().getCurrentClock().setTargetTime(focusTime * 60);
+    public void updateFocusTimeMinutes(int focusTimeMinutes) {
+        Clock clock = AppContext.getInstance().getCurrentClock();
+        if (clock != null)
+            clock.setTargetTime(focusTimeMinutes * 60);
+        else
+            AppContext.getInstance().getCurrentUser().getClockSetting().setTargetTime(focusTimeMinutes * 60);
     }
 
     public Tag getFocusTag() {

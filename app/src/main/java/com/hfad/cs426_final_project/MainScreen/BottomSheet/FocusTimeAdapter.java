@@ -29,7 +29,7 @@ public class FocusTimeAdapter extends RecyclerView.Adapter<FocusTimeAdapter.Focu
         this.clickListener = listener;
 
         int initialPosition = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % 12 + 1;
-        selectedPosition = (AppContext.getInstance().getCurrentUser().getFocusTimeMinutes() - 10) / 5;
+        selectedPosition = (AppContext.getInstance().getCurrentUser().retrieveFocusTimeMinutes() - 10) / 5;
         selectedPosition += initialPosition;
     }
 
