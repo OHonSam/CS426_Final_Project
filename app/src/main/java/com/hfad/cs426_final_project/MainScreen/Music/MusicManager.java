@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.R;
 
@@ -46,7 +47,7 @@ public class MusicManager {
     // Save the selected music in SharedPreferences
     public void saveMusicSelection() {
         if (curSavedMusicResId == -1) return; // No music was selected, so don't save
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME + "_" + AppContext.getInstance().getCurrentUser().getId(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(KEY_SELECTED_MUSIC, curSavedMusicResId);
         editor.apply();
@@ -54,7 +55,7 @@ public class MusicManager {
 
     // Load the saved music selection from SharedPreferences
     public int loadSavedMusicSelection() {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME + "_" + AppContext.getInstance().getCurrentUser().getId(), Context.MODE_PRIVATE);
         return prefs.getInt(KEY_SELECTED_MUSIC, -1);  // Return -1 if no music was saved
     }
 
