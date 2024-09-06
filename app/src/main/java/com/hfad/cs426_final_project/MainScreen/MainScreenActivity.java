@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -93,6 +94,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         setupToolbar();
         setupNavigationDrawer();
+        setupBackPressed();
 
         setupSearchTag();
         setupMusicListener();
@@ -104,16 +106,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         setupTree();
         setupBottomSheet();
-    }
-
-    private void setupBottomSheet() {
-        imgTree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheet = new BottomSheetMainScreen();
-                bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
-            }
-        });
     }
 
     @Override
@@ -144,7 +136,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        musicManager.releaseMusic();
     }
 
     private void getUIReferences() {
@@ -194,8 +185,25 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
 
         ViewGroup.LayoutParams params = navigationView.getLayoutParams();
         params.width = (int) (getResources().getDisplayMetrics().widthPixels / 2);
+
         navigationView.setLayoutParams(params);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_main_focus_screen); // change
+    }
+
+    private void setupBackPressed() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    // If drawer is not open, proceed with default back action
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 
     @Override
@@ -211,9 +219,24 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-        startActivity(intent);
+
+        item.setChecked(true);
         drawer.closeDrawer(GravityCompat.START);
+
+        startActivity(intent);
+        finish();
+
         return true;
+    }
+
+    private void setupBottomSheet() {
+        imgTree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheet = new BottomSheetMainScreen();
+                bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+            }
+        });
     }
 
     private void showSignOutDialog() {
@@ -228,6 +251,7 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                musicManager.releaseMusic();
                 // Sign out logic here
                 Intent intent = new Intent(MainScreenActivity.this, WelcomeScreenActivity.class);
                 startActivity(intent);
@@ -250,15 +274,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         // Create and show the dialog
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private void setupClock() {
