@@ -73,7 +73,7 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
     public void updateSelectionArea() {
         Tree curTree = appContext.getCurrentUser().getUserSetting().getSelectedTree();
         Tag curTag = appContext.getCurrentUser().getFocusTag();
-        int curFocusTime = appContext.getCurrentUser().getFocusTime();
+        int curFocusTime = appContext.getCurrentUser().getFocusTimeMinutes();
 
         Glide.with(mainScreenActivity)
                 .load(Uri.parse(curTree.getImgUri()))
@@ -133,7 +133,7 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
                 Drawable currentDrawable = ivHeart.getDrawable();
                 Tree curTree = appContext.getCurrentUser().getUserSetting().getSelectedTree();
                 Tag curTag = appContext.getCurrentUser().getFocusTag();
-                int curFocusTime = appContext.getCurrentUser().getFocusTime();
+                int curFocusTime = appContext.getCurrentUser().getFocusTimeMinutes();
                 Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.selectionContainer);
 
                 if (currentDrawable != null && currentDrawable.getConstantState().equals(unfilledHeart.getConstantState())) {

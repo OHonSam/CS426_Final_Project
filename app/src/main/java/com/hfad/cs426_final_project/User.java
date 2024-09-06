@@ -17,7 +17,6 @@ public class User {
     private String name;
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
-    private int focusTime;
     private Tag focusTag;
     private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
@@ -41,7 +40,6 @@ public class User {
         // default
         this.lastAccessDate = System.currentTimeMillis();
         this.focusTag = new Tag();
-        this.focusTime = 10;
         this.favouriteList = new ArrayList<>();
         this.streak = 1;
         this.sun = 0;
@@ -88,12 +86,12 @@ public class User {
         this.lastAccessDate = lastAccessDate;
     }
 
-    public int getFocusTime() {
-        return focusTime;
+    public int getFocusTimeMinutes() {
+        return AppContext.getInstance().getCurrentClock().getTargetTime() / 60;
     }
 
-    public void setFocusTime(int focusTime) {
-        this.focusTime = focusTime;
+    public void setFocusTimeMinutes(int focusTime) {
+        AppContext.getInstance().getCurrentClock().setTargetTime(focusTime * 60);
     }
 
     public Tag getFocusTag() {

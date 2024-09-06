@@ -37,7 +37,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
         Tree tree = AppContext.getInstance().getCurrentUser().getUserSetting().getSelectedTree();
         Tag tag = AppContext.getInstance().getCurrentUser().getFocusTag();
-        int focusTime = AppContext.getInstance().getCurrentUser().getFocusTime();
+        int focusTime = AppContext.getInstance().getCurrentUser().getFocusTimeMinutes();
 
         for(int i = 0; i < favouritesList.size(); i++) {
             if(favouritesList.get(i).sameFavourite(tree, tag, focusTime)) {
@@ -63,7 +63,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
             @Override
             public void onClick(View v) {
                 AppContext.getInstance().getCurrentUser().setFocusTag(favourite.getTag());
-                AppContext.getInstance().getCurrentUser().setFocusTime(favourite.getFocusTime());
+                AppContext.getInstance().getCurrentUser().setFocusTimeMinutes(favourite.getFocusTime());
                 AppContext.getInstance().getCurrentUser().getUserSetting().setSelectedTree(favourite.getTree());
 
                 activity.updateBottomSheetSelection();
