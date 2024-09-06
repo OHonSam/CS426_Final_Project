@@ -60,6 +60,25 @@ public class AppContext {
         });
     }
 
+    private void fetchOwnTrees() {
+        fetchOwnTreeUriSequentially(0); // Start fetching URIs from the first tree
+    }
+
+    private void fetchOwnTreeUriSequentially(int index) {
+        if (index >= currentUser.getOwnTrees().size()) {
+            // All trees have been processed
+            return;
+        }
+
+        Tree tree = currentUser.getOwnTrees().get(index);
+        tree.fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                fetchOwnTreeUriSequentially(index + 1);
+            }
+        });
+    }
+
     public static synchronized AppContext getInstance() {
         if (instance == null) {
             instance = new AppContext();
@@ -73,6 +92,7 @@ public class AppContext {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+        fetchOwnTrees();
     }
 
     public List<Tree> getTreeList() {

@@ -1,5 +1,6 @@
 package com.hfad.cs426_final_project;
 
+import com.hfad.cs426_final_project.DataStorage.Favourite;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.DataStorage.Tree;
@@ -16,6 +17,9 @@ public class User {
     private String name;
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
+    private int focusTime;
+    private Tag focusTag;
+    private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
     private int sun; // money
     private UserSetting userSetting;
@@ -36,6 +40,9 @@ public class User {
 
         // default
         this.lastAccessDate = System.currentTimeMillis();
+        this.focusTag = new Tag();
+        this.focusTime = 10;
+        this.favouriteList = new ArrayList<>();
         this.streak = 1;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
@@ -81,6 +88,30 @@ public class User {
         this.lastAccessDate = lastAccessDate;
     }
 
+    public int getFocusTime() {
+        return focusTime;
+    }
+
+    public void setFocusTime(int focusTime) {
+        this.focusTime = focusTime;
+    }
+
+    public Tag getFocusTag() {
+        return focusTag;
+    }
+
+    public void setFocusTag(Tag focusTag) {
+        this.focusTag = focusTag;
+    }
+
+    public List<Favourite> getFavouriteList() {
+        return favouriteList;
+    }
+
+    public void setFavouriteList(List<Favourite> favouriteList) {
+        this.favouriteList = favouriteList;
+    }
+
     public int getStreak() {
         return streak;
     }
@@ -123,10 +154,11 @@ public class User {
         this.ownTags = ownTags;
     }
 
-    public List<UserTask> getOwnTasks() {
+    public List<UserTask> getOwnUserTasks() {
         return ownUserTasks;
     }
-    public void setOwnTasks(List<UserTask> ownUserTasks) {
+
+    public void setOwnUserTasks(List<UserTask> ownUserTasks) {
         this.ownUserTasks = ownUserTasks;
     }
 
@@ -148,5 +180,28 @@ public class User {
             listTag.add(t.getName());
         }
         return listTag.contains(tagName);
+    }
+
+    public void addFavourite(Tree tree, Tag tag, int focusTime) {
+        Favourite favourite = new Favourite(tree, tag, focusTime);
+        favouriteList.add(favourite);
+    }
+
+    public void removeFavourite(Tree tree, Tag tag, int focusTime) {
+        for (int i = 0; i < favouriteList.size(); i++) {
+            if(favouriteList.get(i).sameFavourite(tree, tag, focusTime)) {
+                favouriteList.remove(i);
+                return;
+            }
+        }
+    }
+
+    public boolean isFavourite(Tree tree, Tag tag, int focusTime) {
+        for (int i = 0; i < favouriteList.size(); i++) {
+            if(favouriteList.get(i).sameFavourite(tree, tag, focusTime)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

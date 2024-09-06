@@ -25,20 +25,23 @@
             android:exported="false">
         </activity>
         <activity
+            android:name=".MainScreen.AddNewTagActivity"
+            android:exported="false" />
+        <activity
             android:name=".WelcomeScreenActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".StoreScreen.StoreScreenActivity"
             android:exported="false" />
         <activity
             android:name=".MainScreen.MainScreenActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".LoginScreenActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".SignUpScreenActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true">

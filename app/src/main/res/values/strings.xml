@@ -26,4 +26,6 @@
     <string name="count_exceed_time_description">Count up after Timer Mode ends</string>
     <string name="congratulation">Congratulations!</string>
     <string name="congratulation_message">You have successfully completed the task</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
