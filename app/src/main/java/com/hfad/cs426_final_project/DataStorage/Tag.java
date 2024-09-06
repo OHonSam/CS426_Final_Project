@@ -17,6 +17,23 @@ public class Tag {
         this.colorHex = colorHex;
     }
 
+    public Tag(int id) {
+        this.id = id;
+        if (id == 1) {
+            this.name = "Work";
+        } else if (id == 2) {
+            this.name = "Study";
+        } else if (id == 3) {
+            this.name = "Exercise";
+        } else if (id == 4) {
+            this.name = "Relax";
+        } else if (id == 5) {
+            this.name = "Sleep";
+        } else {
+            this.name = "Other";
+        }
+    }
+
     public int getId() {
         return id;
     }

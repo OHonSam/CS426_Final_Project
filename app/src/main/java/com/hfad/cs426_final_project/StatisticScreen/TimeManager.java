@@ -1,12 +1,18 @@
 package com.hfad.cs426_final_project.StatisticScreen;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class TimeManager {
     private Calendar currentDate;
     private String currentPeriod;
+
+    public TimeManager() {
+        currentDate = Calendar.getInstance();
+        currentPeriod = "Day";
+    }
 
     public String getCurrentPeriod() {
         return currentPeriod;
@@ -16,14 +22,13 @@ public class TimeManager {
         return currentDate;
     }
 
-    public TimeManager() {
-        currentDate = Calendar.getInstance();
-        currentPeriod = "Day";
+    public void setCurrentDate(Calendar currentDate) {
+        this.currentDate = currentDate;
     }
 
     public void handleSelection(String period) {
         currentPeriod = period;
-        currentDate = Calendar.getInstance();
+        resetDateBasedOnPeriod();
     }
 
     public void navigateTime(int direction) {
@@ -41,12 +46,13 @@ public class TimeManager {
                 currentDate.add(Calendar.YEAR, direction);
                 break;
         }
+        resetDateBasedOnPeriod();
     }
 
     public String getFormattedTimeSelection() {
         SimpleDateFormat sdf;
-        String dateStr;
         Calendar now = Calendar.getInstance();
+        String dateStr = "";
 
         switch (currentPeriod) {
             case "Day":
@@ -69,8 +75,6 @@ public class TimeManager {
             case "Year":
                 dateStr = String.valueOf(currentDate.get(Calendar.YEAR));
                 break;
-            default:
-                dateStr = "";
         }
 
         return dateStr;
@@ -91,6 +95,25 @@ public class TimeManager {
                 return currentDate.get(Calendar.YEAR) >= now.get(Calendar.YEAR);
             default:
                 return false;
+        }
+    }
+
+    public LocalDateTime getCurrentDateTime() {
+        return LocalDateTime.ofInstant(currentDate.toInstant(), currentDate.getTimeZone().toZoneId());
+    }
+
+    private void resetDateBasedOnPeriod() {
+        switch (currentPeriod) {
+            case "Week":
+                currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                break;
+            case "Month":
+                currentDate.set(Calendar.DAY_OF_MONTH, 1);
+                break;
+            case "Year":
+                currentDate.set(Calendar.MONTH, Calendar.JANUARY);
+                currentDate.set(Calendar.DAY_OF_MONTH, 1);
+                break;
         }
     }
 

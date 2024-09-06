@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_50"
+    android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -21,20 +21,15 @@
             android:paddingHorizontal="18dp"
             android:paddingVertical="16dp"
             android:layout_alignParentStart="true"/>
-        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-            android:id="@+id/overview_btn"
+        <TextView
+            android:id="@+id/Overview"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/button_border"
-            android:paddingVertical="0dp"
-            android:backgroundTint="@color/primary_20"
+            android:layout_height="wrap_content"
             android:text="Overview"
-            style="@style/BodyText"
-            android:textAllCaps="false"
-            android:drawableEnd="@drawable/dropdown"
-            android:drawablePadding="8dp"
-            android:paddingHorizontal="10dp"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:elegantTextHeight="true"
+            style="@style/SubHead"
+            android:textColor="@color/white"/>
         <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
             android:id="@+id/share_btn"
             android:layout_width="wrap_content"
@@ -46,7 +41,7 @@
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/time_land_container"
+        android:id="@+id/time_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background"
@@ -102,17 +97,15 @@
         android:id="@+id/time_selection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/time_picker"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/hexagonalLandView">
+        app:layout_constraintEnd_toEndOf="parent">
         <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingVertical="10dp"
-            android:tint="@color/black"
             android:paddingHorizontal="18dp"
             android:src="@drawable/arrow_left"
             android:layout_alignParentStart="true"
@@ -122,10 +115,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="August 31, 2024(Today)"
+            android:text="August 31, 2024"
+            android:elegantTextHeight="true"
             android:textColor="@color/black"
             android:textSize="16sp"
-            style="@style/ButtonText">
+            style="@style/ButtonText"
+            android:clickable="true"
+            android:focusable="true"
+            android:drawableEnd="@drawable/return_btn"
+            android:drawablePadding="3dp">
         </TextView>
         <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
             android:id="@+id/forward_btn"
@@ -133,24 +131,181 @@
             android:layout_height="wrap_content"
             android:paddingVertical="10dp"
             android:paddingHorizontal="18dp"
-            android:tint="@color/black"
             android:src="@drawable/arrow_right"
             android:layout_alignParentEnd="true"
             />
         </RelativeLayout>
-        <com.hfad.cs426_final_project.StatisticScreen.HexagonalLandView
-        android:id="@+id/hexagonalLandView"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layout_constraintTop_toBottomOf="@id/time_selection"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <RelativeLayout
+            android:id="@+id/tree_count"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingEnd="30dp"
+            android:paddingVertical="20dp"
+            app:layout_constraintTop_toBottomOf="@id/time_selection">
+            <TextView
+                android:id="@+id/num_live_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="@color/black"
+                style="@style/SubTitle"
+                android:drawableStart="@drawable/live_tree"
+                android:drawablePadding="3dp"
+                android:paddingEnd="50dp"/>
+            <TextView
+                android:id="@+id/num_dead_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000"
+                android:textColor="@color/black"
+                style="@style/SubTitle"
+                android:drawableStart="@drawable/dead_tree"
+                android:drawablePadding="3dp"
+                android:layout_toEndOf="@+id/num_live_tree"/>
+        </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
-    <com.hfad.cs426_final_project.StatisticScreen.AnimatedLineChart
-        android:id="@+id/line_chart"
+    <ScrollView
+        android:layout_height="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/time_land_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_container"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Focus time distribution"
+                style="@style/SubTitle"/>
+
+            <!-- Focus time distribution card -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/statistic_card">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+                    <TextView
+                        android:id="@+id/total_focused_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 hours 30 mins"
+                        android:elegantTextHeight="true"
+                        android:textColor="@color/secondary_40"
+                        style="@style/SubTitle"
+                        android:layout_alignParentStart="true"/>
+
+                    <TextView
+                        style="@style/LabelSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/total_focused_time"
+                        android:elegantTextHeight="true"
+                        android:text="Total focused time"
+                        android:paddingTop="3dp"/>
+                    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+                        android:id="@+id/view_by_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/button_border"
+                        android:paddingVertical="0dp"
+                        android:backgroundTint="@color/primary_20"
+                        android:text="Line chart"
+                        android:textAllCaps="false"
+                        android:elegantTextHeight="true"
+                        android:drawableEnd="@drawable/dropdown"
+                        android:drawablePadding="6dp"
+                        android:paddingHorizontal="10dp"
+                        style="@style/SubTitle"
+                        android:layout_alignParentEnd="true"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View by"
+                        android:paddingHorizontal="10dp"
+                        style="@style/LabelSmall"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@+id/view_by_button"/>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/focus_time_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_below="@id/view_by_button"
+                        android:layout_marginTop="12dp"/>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+            <!-- Tag distribution card -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/statistic_card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tag distribution"
+                        style="@style/SubTitle"/>
+
+                    <!-- Placeholder for pie chart -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@android:color/transparent"
+                        android:layout_marginTop="8dp"/>
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Favorite types of tree card -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/statistic_card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Favorite types of tree"
+                        style="@style/SubTitle"/>
+
+                    <!-- Placeholder for tree types list -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="179 x 21 Coming soon..."
+                        style="@style/BodyText"/>
+
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
