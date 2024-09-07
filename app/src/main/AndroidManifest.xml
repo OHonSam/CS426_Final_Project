@@ -16,14 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CS426_Final_Project"
         tools:targetApi="31">
+        <activity
+            android:name=".BaseScreenActivity"
+            android:exported="false" />
 
         <service
             android:name=".MainScreen.Clock.ClockService"
             android:exported="false" />
+
         <activity
             android:name=".CongratulationScreenActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".MainScreen.AddNewTagActivity"
             android:exported="false" />

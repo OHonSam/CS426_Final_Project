@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
@@ -22,15 +21,8 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -39,9 +31,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
@@ -52,20 +44,18 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 import com.hfad.cs426_final_project.WelcomeScreenActivity;
 
 import java.util.List;
-import java.util.Objects;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
-public class MainScreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainScreenActivity extends BaseScreenActivity {
     private AppContext appContext;
     private ImageView imgTree;
     private TextView timeView;
     private MyButton startButton, todoButton, musicButton, newTagButton, btnClockModePicker;
-    private ClickableImageView todoImage, musicImage, newTagImage, progressBarButton;
+    private ClickableImageView todoImage, musicImage, newTagImage;
     private LinearLayout todoContainer, musicContainer, newTagContainer;
     private ConstraintLayout popupMusicContainer;
 
@@ -75,26 +65,22 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
     private Spinner searchTagSpinner;
 
     BottomSheetMainScreen bottomSheet;
-    private Toolbar toolbar;
-    private NavigationView navigationView;
-    private DrawerLayout drawer;
-    private ActionBarDrawerToggle toggle;
 
     private CircularSeekBar progressBar;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main_screen;
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_screen);
         getUIReferences();
 
         appContext = AppContext.getInstance();
         musicManager = new MusicManager(this, musicImage);
-
-        setupToolbar();
-        setupNavigationDrawer();
-        setupBackPressed();
 
         setupSearchTag();
         setupMusicListener();
@@ -142,9 +128,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         imgTree = findViewById(R.id.tree);
         timeView = findViewById(R.id.time_view);
         startButton = findViewById(R.id.plant_button);
-        toolbar = findViewById(R.id.toolbar);
-        navigationView = findViewById(R.id.nav_view_screen_choices);
-        drawer = findViewById(R.id.drawer_layout_main_screen);
 
         todoImage = findViewById(R.id.todo_image);
         todoButton = findViewById(R.id.todo_button);
@@ -163,72 +146,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        toolbar.setTitle("");
-    }
-
-    private void setupNavigationDrawer() {
-        toggle = new ActionBarDrawerToggle(this,
-                drawer,
-                toolbar,
-                R.string.nav_open_drawer,
-                R.string.nav_close_drawer);
-
-        // Set the color of the drawer toggle icon
-        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.black));
-
-        // Add the toggle to the DrawerLayout
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        ViewGroup.LayoutParams params = navigationView.getLayoutParams();
-        params.width = (int) (getResources().getDisplayMetrics().widthPixels / 2);
-
-        navigationView.setLayoutParams(params);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_main_focus_screen); // change
-    }
-
-    private void setupBackPressed() {
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                } else {
-                    // If drawer is not open, proceed with default back action
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        });
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        Fragment fragment = null;
-        Intent intent = new Intent(this, MainScreenActivity.class);
-
-        if (id == R.id.nav_store_screen)
-            intent = new Intent(this, StoreScreenActivity.class);
-        else if (id == R.id.nav_sign_out) {
-            showSignOutDialog();
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        }
-
-        item.setChecked(true);
-        drawer.closeDrawer(GravityCompat.START);
-
-        startActivity(intent);
-        finish();
-
-        return true;
-    }
-
     private void setupBottomSheet() {
         imgTree.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,43 +154,6 @@ public class MainScreenActivity extends AppCompatActivity implements NavigationV
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
             }
         });
-    }
-
-    private void showSignOutDialog() {
-        // Create an AlertDialog.Builder object
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Set the dialog title and message
-        builder.setTitle("Sign Out");
-        builder.setMessage("Are you sure you want to sign out?");
-
-        // Set the "OK" button with a click listener
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                musicManager.releaseMusic();
-                // Sign out logic here
-                Intent intent = new Intent(MainScreenActivity.this, WelcomeScreenActivity.class);
-                startActivity(intent);
-                finish();
-
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
-            }
-        });
-
-        // Set the "Cancel" button with a click listener
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Dismiss the dialog
-                dialog.dismiss();
-            }
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     private void setupClock() {
