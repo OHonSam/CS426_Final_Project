@@ -70,4 +70,14 @@ public class MyButton extends AppCompatButton {
         }
         return super.onTouchEvent(event);
     }
+
+    public void setActivate() {
+        this.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+        this.setTextColor(ResourcesCompat.getColor(getResources(), R.color.black, null));
+    }
+
+    public void setInActivate() {
+        this.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary_70, null));
+        this.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+    }
 }

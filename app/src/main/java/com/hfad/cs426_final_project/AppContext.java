@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project;
 
 import androidx.annotation.NonNull;
+import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,6 +21,8 @@ public class AppContext {
     private static AppContext instance;
     private User currentUser;
     private List<Tree> treeList;
+
+    private Clock currentClock;
 
     private AppContext() {
         treeList = new ArrayList<Tree>();
@@ -57,6 +60,25 @@ public class AppContext {
         });
     }
 
+    private void fetchOwnTrees() {
+        fetchOwnTreeUriSequentially(0); // Start fetching URIs from the first tree
+    }
+
+    private void fetchOwnTreeUriSequentially(int index) {
+        if (index >= currentUser.getOwnTrees().size()) {
+            // All trees have been processed
+            return;
+        }
+
+        Tree tree = currentUser.getOwnTrees().get(index);
+        tree.fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                fetchOwnTreeUriSequentially(index + 1);
+            }
+        });
+    }
+
     public static synchronized AppContext getInstance() {
         if (instance == null) {
             instance = new AppContext();
@@ -70,6 +92,7 @@ public class AppContext {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+        fetchOwnTrees();
     }
 
     public List<Tree> getTreeList() {
@@ -122,5 +145,12 @@ public class AppContext {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child("User" + currentUser.getId());
             userRef.setValue(currentUser);
         }
+    }
+
+    public Clock getCurrentClock() {
+        return currentClock;
+    }
+    public void setCurrentClock(Clock currentClock) {
+        this.currentClock = currentClock;
     }
 }

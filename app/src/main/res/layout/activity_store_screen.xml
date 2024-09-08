@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout_main_screen"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".StoreScreen.StoreScreenActivity"
-        android:orientation="vertical">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".StoreScreen.StoreScreenActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,5 +99,5 @@
             android:padding="16dp"
             android:background="@color/darkgray"
             tools:listitem="@layout/store_item_tree"/>
-    </LinearLayout>
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>
+

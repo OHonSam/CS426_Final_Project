@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
@@ -18,7 +17,7 @@ import com.hfad.cs426_final_project.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoreScreenActivity extends AppCompatActivity {
+public class StoreScreenActivity extends BaseScreenActivity {
     private AppContext appContext;
     private User currentUser;
     private List<Tree> treeList;
@@ -29,18 +28,22 @@ public class StoreScreenActivity extends AppCompatActivity {
     private TextView tvSunDisplay;
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.activity_store_screen;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_store_screen);
+
+        initUI();
 
         appContext = AppContext.getInstance();
         currentUser = appContext.getCurrentUser();
         treeList = appContext.getTreeList();
 
-        initUI();
         updateSunDisplay();
-
-        initTreeRecylerView();
+        initTreeRecyclerView();
         initOwnCheckBox();
     }
 
@@ -48,13 +51,14 @@ public class StoreScreenActivity extends AppCompatActivity {
         rcvTreeList = findViewById(R.id.rcvTreeList);
         ownTreeCheckBox = findViewById(R.id.ownTreeCheckBox);
         tvSunDisplay = findViewById(R.id.sunDisplay_storeScreen);
+        navigationView = findViewById(R.id.nav_view_screen_choices);
     }
 
     public void updateSunDisplay() {
         tvSunDisplay.setText(String.valueOf(currentUser.getSun()));
     }
 
-    private void initTreeRecylerView() {
+    private void initTreeRecyclerView() {
         rcvTreeList.setLayoutManager(new GridLayoutManager(this, 3));
         treeAdapter = new TreeAdapter(this, filterTrees(treeList, ownTreeCheckBox.isChecked()), currentUser);
         rcvTreeList.setAdapter(treeAdapter);
@@ -76,6 +80,4 @@ public class StoreScreenActivity extends AppCompatActivity {
         }
         return filteredList;
     }
-
-
 }

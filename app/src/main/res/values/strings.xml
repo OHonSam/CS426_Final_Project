@@ -2,8 +2,30 @@
     <string name="app_name">Forest</string>
     <string name="start">Plant</string>
     <string name="stop">Stop</string>
+    <string name="return_home">Return home</string>
+    <string name="view_report">View report</string>
     <string name="intro_to_app">Focus for your future</string>
 
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
+    <string-array name="spinner_items">
+        <item>Study</item>
+        <item>Rest</item>
+        <item>Housework</item>
+        <item>Game</item>
+        <item>Book</item>
+    </string-array>
+    <string name="stopwatch">Stopwatch</string>
+    <string name="timer">Timer</string>
+
+    <string name="dialog_start_game">dialog_start_game</string>
+    <string name="cancel">cancel</string>
+    <string name="deep_focus">Deep focus</string>
+    <string name="deep_focus_description">You will  be guided back if you leave the app. Pro version users can set Allow List</string>
+    <string name="count_exceed_time">Count exceeded time</string>
+    <string name="count_exceed_time_description">Count up after Timer Mode ends</string>
+    <string name="congratulation">Congratulations!</string>
+    <string name="congratulation_message">You have successfully completed the task</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

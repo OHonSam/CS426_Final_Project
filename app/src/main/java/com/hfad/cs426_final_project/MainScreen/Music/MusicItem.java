@@ -18,6 +18,7 @@ public class MusicItem {
         List<MusicItem> musicList = new ArrayList<>();
         musicList.add(new MusicItem("Forest Rain", R.raw.forest_rain));
         musicList.add(new MusicItem("Ocean Waves", R.raw.ocean_waves));
+        musicList.add(new MusicItem("Morning Bird", R.raw.morning_bird));
         return musicList;
     }
 
