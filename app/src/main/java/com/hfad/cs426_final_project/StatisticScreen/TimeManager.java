@@ -26,7 +26,7 @@ public class TimeManager {
         this.currentDate = currentDate;
     }
 
-    public void handleSelection(String period) {
+    public void updatePeriodSelection(String period) {
         currentPeriod = period;
         resetDateBasedOnPeriod();
     }

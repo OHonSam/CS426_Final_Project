@@ -174,7 +174,7 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -206,6 +206,7 @@
                         android:layout_alignParentStart="true"/>
 
                     <TextView
+                        android:id="@+id/total_focused_time_label"
                         style="@style/LabelSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -219,8 +220,8 @@
                         android:layout_height="30dp"
                         android:background="@drawable/button_border"
                         android:paddingVertical="0dp"
-                        android:backgroundTint="@color/primary_20"
-                        android:text="Line chart"
+                        android:backgroundTint="@color/primary_10"
+                        android:text="Bar chart"
                         android:textAllCaps="false"
                         android:elegantTextHeight="true"
                         android:drawableEnd="@drawable/dropdown"
@@ -241,11 +242,16 @@
                         android:id="@+id/focus_time_chart"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:layout_below="@id/view_by_button"
-                        android:layout_marginTop="12dp"/>
-
+                        android:layout_alignTop="@id/total_focused_time_label"
+                        android:layout_marginTop="20dp" />
                 </RelativeLayout>
             </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tag distribution"
+                style="@style/SubTitle"/>
 
             <!-- Tag distribution card -->
             <FrameLayout
@@ -259,13 +265,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tag distribution"
-                        style="@style/SubTitle"/>
-
                     <!-- Placeholder for pie chart -->
                     <View
                         android:layout_width="match_parent"

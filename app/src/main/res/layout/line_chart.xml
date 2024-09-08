@@ -7,14 +7,4 @@
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/noDataText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="No data"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
 </merge>
