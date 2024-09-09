@@ -31,7 +31,7 @@
 
         <activity
             android:name=".CongratulationScreenActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".WelcomeScreenActivity"
             android:exported="false" />
