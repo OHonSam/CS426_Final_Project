@@ -8,7 +8,8 @@
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="Enter your email"
+        style="@style/Title"
         android:paddingStart="16dp"
         android:background="@drawable/button_border"
         android:backgroundTint="@color/white"/>
@@ -18,8 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:text="*Invalid email address"
         android:textColor="@color/red"
-        android:visibility="gone" />
+        style="@style/SmallText_bold"
+        android:visibility="gone"/>
 </LinearLayout>

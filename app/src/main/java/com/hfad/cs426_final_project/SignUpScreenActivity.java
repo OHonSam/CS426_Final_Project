@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,6 +98,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    updateUserName(name);
                                     addUserToDBAndNavigateMainScreen(email, password, name);
                                 } else {
                                     Toast.makeText(SignUpScreenActivity.this, "Authentication failed.",
@@ -114,6 +117,15 @@ public class SignUpScreenActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void updateUserName(String name) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .build();
+        if(user != null)
+            user.updateProfile(profileUpdates);
     }
 
     private void addUserToDBAndNavigateMainScreen(String email, String password, String name) {
