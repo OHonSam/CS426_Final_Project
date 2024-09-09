@@ -115,7 +115,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="August 31, 2024"
             android:elegantTextHeight="true"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -147,7 +146,6 @@
                 android:id="@+id/num_live_tree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100"
                 android:textColor="@color/black"
                 style="@style/SubTitle"
                 android:drawableStart="@drawable/live_tree"
@@ -157,7 +155,6 @@
                 android:id="@+id/num_dead_tree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1000"
                 android:textColor="@color/black"
                 style="@style/SubTitle"
                 android:drawableStart="@drawable/dead_tree"
@@ -171,6 +168,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_container"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -199,7 +197,6 @@
                         android:id="@+id/total_focused_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0 hours 30 mins"
                         android:elegantTextHeight="true"
                         android:textColor="@color/secondary_40"
                         style="@style/SubTitle"
@@ -220,8 +217,8 @@
                         android:layout_height="30dp"
                         android:background="@drawable/button_border"
                         android:paddingVertical="0dp"
-                        android:backgroundTint="@color/primary_10"
-                        android:text="Bar chart"
+                        android:backgroundTint="@color/primary_40"
+                        android:text="Line chart"
                         android:textAllCaps="false"
                         android:elegantTextHeight="true"
                         android:drawableEnd="@drawable/dropdown"
@@ -241,9 +238,9 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/focus_time_chart"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="210dp"
                         android:layout_alignTop="@id/total_focused_time_label"
-                        android:layout_marginTop="20dp" />
+                        android:layout_marginTop="11dp" />
                 </RelativeLayout>
             </FrameLayout>
 
@@ -259,48 +256,86 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/statistic_card">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/firework"
+                    android:layout_marginStart="20dp"/>
+                <TextView
+                    android:id="@+id/tag_distribution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Study"
+                    android:elegantTextHeight="true"
+                    android:textColor="@color/primary_20"
+                    style="@style/SubTitle"
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="5dp"/>
+                <TextView
+                    android:id="@+id/tag_distribution_label"
+                    android:layout_gravity="center|top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tag focused most and completed"
+                    android:elegantTextHeight="true"
+                    android:textColor="@color/black"
+                    style="@style/LabelSmall"
+                    android:layout_marginTop="25dp"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/firework"
+                    android:rotation="-60"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"/>
 
                 <LinearLayout
+                    android:id="@+id/statistic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <!-- Placeholder for pie chart -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:background="@android:color/transparent"
-                        android:layout_marginTop="8dp"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="70dp">
 
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/tag_distribution_chart"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_weight="1"/>
+
+                    <LinearLayout
+                        android:id="@+id/tag_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="10dp"/>
                 </LinearLayout>
             </FrameLayout>
 
             <!-- Favorite types of tree card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favourite types of tree"
+                style="@style/SubTitle"/>
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/statistic_card">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/coming_soon"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Favorite types of tree"
-                        style="@style/SubTitle"/>
-
-                    <!-- Placeholder for tree types list -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="179 x 21 Coming soon..."
-                        style="@style/BodyText"/>
-
-                </LinearLayout>
+                    android:text="Coming soon..."
+                    android:elegantTextHeight="true"
+                    android:textColor="@color/secondary_40"
+                    style="@style/SubTitle"
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="15dp"/>
             </FrameLayout>
 
         </LinearLayout>

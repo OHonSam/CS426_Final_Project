@@ -24,7 +24,7 @@ public class AddNewTagActivity extends AppCompatActivity {
     ColorPickerView colorPickerView;
     View chosenColorView;
 
-    String chosenColor;
+    int chosenColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class AddNewTagActivity extends AppCompatActivity {
             @Override
             public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
                 chosenColorView.setBackgroundColor(envelope.getColor());
-                chosenColor = "#" + envelope.getHexCode();
+                chosenColor = envelope.getColor();
             }
         });
     }

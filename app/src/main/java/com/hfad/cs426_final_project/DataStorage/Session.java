@@ -88,15 +88,9 @@ public class Session {
         this.tag = tag;
     }
 
-    private LocalDateTime getDateTimeFromTimestamp() {
+    public LocalDateTime getDateTimeFromTimestamp() {
         return Instant.ofEpochMilli(this.timestamp)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
-    }
-
-    public int getYear() {
-        return Instant.ofEpochSecond(this.timestamp)
-                .atZone(ZoneId.systemDefault())
-                .getYear();
     }
 }
