@@ -27,6 +27,9 @@
             android:name=".ProfileScreen.ProfileScreenActivity"
             android:exported="false" />
         <activity
+            android:name=".ToDoScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".BaseScreenActivity"
             android:exported="false" />
 

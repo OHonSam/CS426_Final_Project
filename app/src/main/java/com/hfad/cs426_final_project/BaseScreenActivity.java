@@ -91,6 +91,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_profile_setting).setChecked(true);
         } else if (curLayoutId == R.layout.activity_statistic_screen) {
             navigationView.getMenu().findItem(R.id.nav_statistic_screen).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_to_do_screen) {
+            navigationView.getMenu().findItem(R.id.nav_to_do_screen).setChecked(true);
         }
     }
 
@@ -131,6 +133,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, RankingScreenActivity.class);
         } else if (id == R.id.nav_statistic_screen) {
             intent = new Intent(this, StatisticScreenActivity.class);
+        } else if (id == R.id.nav_to_do_screen) {
+            intent = new Intent(this, ToDoScreenActivity.class);
         }
 
         // If an intent is created, start the new activity
