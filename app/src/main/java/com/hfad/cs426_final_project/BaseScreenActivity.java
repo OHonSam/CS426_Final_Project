@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -42,6 +43,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
 
         setupToolbar();
         setupNavigationDrawer();
+        setupCustomToggle();
     }
 
     private void loadChildActivityLayout(int layoutId) {
@@ -69,7 +71,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     }
 
     private void setupNavigationDrawer() {
-        configureDrawerToggle();
+//        configureDrawerToggle();
         setNavigationViewSize();
         navigationView.setNavigationItemSelectedListener(this);
         highlightCurrentMenuItem();
@@ -154,6 +156,19 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         toolbar.setPopupTheme(R.style.AppTheme);
 
+    }
+
+    private void setupCustomToggle() {
+        ImageView toggleIcon = findViewById(R.id.toggle_icon);
+        toggleIcon.setOnClickListener(v -> {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+        toggleIcon.bringToFront();
     }
 }
 
