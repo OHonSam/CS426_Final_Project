@@ -157,7 +157,7 @@ public class MainScreenActivity extends BaseScreenActivity {
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggleIcon);
         appContext.setCurrentClock(clock);
     }
 

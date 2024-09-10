@@ -33,8 +33,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
     protected ActionBarDrawerToggle toggle;
+    protected ImageView toggleIcon;
     private Toolbar toolbar;
-    private ImageView toggleIcon;
 
 
     @Override

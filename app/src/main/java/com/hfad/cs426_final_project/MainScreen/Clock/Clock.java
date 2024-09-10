@@ -9,9 +9,9 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -59,9 +59,9 @@ public class Clock {
 
     private ClockSetting clockSetting;
     private CircularSeekBar progressBar;
-    private ActionBarDrawerToggle toggle;
+    private ImageView toggleIcon;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ActionBarDrawerToggle toggle) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ImageView toggleIcon) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
@@ -74,7 +74,7 @@ public class Clock {
         this.runnableDeepMode = createDeepModeRunnable();
         this.progressBar = progressBar;
         this.btnClockModePicker = btnClockModePicker;
-        this.toggle = toggle;
+        this.toggleIcon = toggleIcon;
         initProgressBar();
         setupStartButton();
     }
@@ -266,8 +266,8 @@ public class Clock {
         running = true;
         handler.post(runnableClock);
 
-        toggle.setDrawerIndicatorEnabled(false);
-        toggle.setDrawerSlideAnimationEnabled(false);
+        toggleIcon.setVisibility(View.GONE);
+
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
         startForegroundService();
@@ -306,8 +306,7 @@ public class Clock {
         updateTimeTextFromProgressBar(progressIntervalIndex);
 
 
-        toggle.setDrawerIndicatorEnabled(true);
-        toggle.setDrawerSlideAnimationEnabled(true);
+        toggleIcon.setVisibility(View.VISIBLE);
 
         // Ensure the clock is enabled after reset
         clockSetting.setModePickerDialogEnabled(true);
