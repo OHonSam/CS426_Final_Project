@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.FailScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 import java.util.Locale;
@@ -114,7 +115,7 @@ public class Clock {
 
     private void redirectToFailScreenActivity() {
         // TODO: Redirect to FailScreenActivity
-        Intent intent = new Intent(context, CongratulationScreenActivity.class);
+        Intent intent = new Intent(context, FailScreenActivity.class);
         context.startActivity(intent);
     }
 
@@ -123,7 +124,8 @@ public class Clock {
         int initialTargetMinutes = clockSetting.getTargetTime() / 60;
         int initialProgressIntervalIndex = initialTargetMinutes / PROGRESS_INTERVAL_LEN;
 
-        // Ensure that the initial progress is at least the minimum interval
+        // Ensure that the initial prog
+        // ress is at least the minimum interval
         if (initialProgressIntervalIndex < (PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN)) {
             initialProgressIntervalIndex = PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN;
         }

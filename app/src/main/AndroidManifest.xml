@@ -32,6 +32,9 @@
         <activity
             android:name=".BaseScreenActivity"
             android:exported="false" />
+        <activity
+            android:name=".FailScreenActivity"
+            android:exported="false" />
 
         <service
             android:name=".MainScreen.Clock.ClockService"
