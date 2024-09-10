@@ -23,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
+import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 
 import java.util.Objects;
@@ -120,6 +121,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, StoreScreenActivity.class);
         } else if (id == R.id.nav_main_focus_screen) {
             intent = new Intent(this, MainScreenActivity.class);
+        } else if (id == R.id.nav_ranking_screen) {
+            intent = new Intent(this, RankingScreenActivity.class);
         } else if (id == R.id.nav_sign_out) {
             showSignOutDialog();
             drawer.closeDrawer(GravityCompat.START);

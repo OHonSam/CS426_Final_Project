@@ -12,12 +12,14 @@
         android:background="@color/blue_deep_sea"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingVertical="4dp">
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ranking"
+            android:elegantTextHeight="true"
             style="@style/SubHead"
             android:textColor="@color/white"
             android:layout_centerInParent="true" />
@@ -71,13 +73,14 @@
 
     <RelativeLayout
         android:id="@+id/attributes"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
         android:background="@drawable/button_border"
         android:backgroundTint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="14dp"
         app:layout_constraintTop_toBottomOf="@+id/period_picker">
 
         <TextView
@@ -110,8 +113,8 @@
 
     <ListView
         android:id="@+id/ranking_list"
-        android:layout_width="360dp"
         android:layout_height="0dp"
+        android:layout_width="match_parent"
         android:layout_marginTop="23dp"
         android:divider="@drawable/ranking_divider"
         android:scrollbars="none"
@@ -120,5 +123,6 @@
         app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/attributes"
+        android:layout_marginHorizontal="14dp"
         app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
