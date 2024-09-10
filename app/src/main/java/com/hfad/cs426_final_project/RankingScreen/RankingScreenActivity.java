@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -20,6 +21,7 @@ public class RankingScreenActivity extends BaseScreenActivity {
     private ListView listView;
     private MaterialButtonToggleGroup periodPicker;
     private MyButton rankingModeBtn;
+    private TextView rankingModeText;
     private User currentUser;
 
     @Override
@@ -36,6 +38,7 @@ public class RankingScreenActivity extends BaseScreenActivity {
 
     private void initializeComponents() {
         rankingModeBtn = findViewById(R.id.ranking_mode_btn);
+        rankingModeText = findViewById(R.id.ranking_mode_text);
         initializeRankingList();
     }
 
@@ -69,9 +72,11 @@ public class RankingScreenActivity extends BaseScreenActivity {
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_item_streak) {
                 rankingModeBtn.setText("Streak");
+                rankingModeText.setText("Streak");
                 return true;
             } else if (item.getItemId() == R.id.menu_item_time_focused) {
                 rankingModeBtn.setText("Time Focused");
+                rankingModeText.setText("Time Focused");
                 return true;
             } else {
                 return false;
