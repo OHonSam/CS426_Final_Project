@@ -29,7 +29,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 public class Clock {
     public static enum ClockMode {
         STOPWATCH,
-        TIMER;
+        TIMER
     }
 
     private OnClockListener onClockListener;
@@ -127,8 +127,7 @@ public class Clock {
         int initialTargetMinutes = clockSetting.getTargetTime() / 60;
         int initialProgressIntervalIndex = initialTargetMinutes / PROGRESS_INTERVAL_LEN;
 
-        // Ensure that the initial prog
-        // ress is at least the minimum interval
+        // Ensure that the initial progress is at least the minimum interval
         if (initialProgressIntervalIndex < (PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN)) {
             initialProgressIntervalIndex = PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN;
         }
