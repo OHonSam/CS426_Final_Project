@@ -8,6 +8,7 @@
     import android.view.View;
     import android.view.animation.Animation;
     import android.widget.LinearLayout;
+    import android.widget.PopupMenu;
     import android.widget.TextView;
     import android.widget.Toast;
 
@@ -18,11 +19,15 @@
 
     import com.github.mikephil.charting.animation.ChartAnimator;
     import com.github.mikephil.charting.animation.Easing;
+    import com.github.mikephil.charting.charts.BarChart;
     import com.github.mikephil.charting.charts.LineChart;
     import com.github.mikephil.charting.charts.PieChart;
     import com.github.mikephil.charting.components.MarkerView;
     import com.github.mikephil.charting.components.XAxis;
     import com.github.mikephil.charting.components.YAxis;
+    import com.github.mikephil.charting.data.BarData;
+    import com.github.mikephil.charting.data.BarDataSet;
+    import com.github.mikephil.charting.data.BarEntry;
     import com.github.mikephil.charting.data.Entry;
     import com.github.mikephil.charting.data.LineData;
     import com.github.mikephil.charting.data.LineDataSet;
@@ -37,6 +42,7 @@
     import com.github.mikephil.charting.utils.Utils;
     import com.google.android.material.button.MaterialButtonToggleGroup;
     import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
+    import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
     import com.hfad.cs426_final_project.DataStorage.Tag;
     import com.hfad.cs426_final_project.R;
     import com.google.firebase.database.DataSnapshot;
@@ -70,11 +76,13 @@
         private TextView timeSelectionText, totalFocusTimeText, numLiveTree, numDeadTree;
         private TimeManager timeManager;
         private LineChart focusTimeLineChart;
+        private BarChart focusTimeBarChart;
+        private MyButton viewByButton;
+        private boolean isLineChartVisible = true;
         private PieChart tagDistributionChart;
         private List<Session> sessions = new ArrayList<>();
         int numHourIntervals = 4;
         int numDayIntervals = 7;
-        @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_statistic_screen);
@@ -107,10 +115,15 @@
             tagDistributionChart = findViewById(R.id.tag_distribution_chart);
             tagDistributionChart.setNoDataText("");
 
+            focusTimeBarChart = findViewById(R.id.focus_time_bar_chart);
+            viewByButton = findViewById(R.id.view_by_button);
+
+
             fetchDataForChart(new OnDataFetchedCallback() {
                 @Override
                 public void onDataFetched() {
                     initializeChart();
+                    setupViewByButton();
                     updateTimeSelection();
                 }
             });
@@ -118,7 +131,9 @@
 
         private void initializeChart() {
             initializeFocusTimeLineChart();
+            initializeFocusTimeBarChart();
             initializeTagDistributionChart();
+
         }
 
         private void fetchDataForChart(OnDataFetchedCallback callback) {
@@ -159,6 +174,7 @@
             focusTimeLineChart.setDrawGridBackground(false);
             focusTimeLineChart.getLegend().setEnabled(false);
 
+
             // Customize X-axis
             XAxis xAxis = focusTimeLineChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -166,12 +182,11 @@
             xAxis.setGranularity(1f);
             xAxis.setTextColor(ContextCompat.getColor(this, R.color.primary_50));
             xAxis.setTextSize(8f);
-            xAxis.setLabelRotationAngle(45f);
+            focusTimeLineChart.setExtraOffsets(20, 0, 20, 0);
 
             // Disable Y-axis
             focusTimeLineChart.getAxisLeft().setEnabled(false);
             focusTimeLineChart.getAxisRight().setEnabled(false);
-
             // Set custom marker view
             FocusTimeMarkerView mv = new FocusTimeMarkerView(this, R.layout.custom_marker_view);
             mv.setChartView(focusTimeLineChart);
@@ -190,6 +205,81 @@
             });
         }
 
+        private void initializeFocusTimeBarChart() {
+            focusTimeBarChart.getDescription().setEnabled(false);
+            focusTimeBarChart.setTouchEnabled(true);
+            focusTimeBarChart.setDragEnabled(true);
+            focusTimeBarChart.setScaleEnabled(true);
+            focusTimeBarChart.setPinchZoom(false);
+            focusTimeBarChart.setDrawGridBackground(false);
+            focusTimeBarChart.getLegend().setEnabled(false);
+
+            XAxis xAxis = focusTimeBarChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawGridLines(false);
+            xAxis.setGranularity(1f);
+            xAxis.setTextColor(ContextCompat.getColor(this, R.color.primary_50));
+            xAxis.setTextSize(8f);
+
+            focusTimeBarChart.setExtraOffsets(5, 5, 0, 0);
+
+            focusTimeBarChart.getAxisLeft().setEnabled(false);
+            focusTimeBarChart.getAxisRight().setEnabled(false);
+
+            FocusTimeMarkerView mv = new FocusTimeMarkerView(this, R.layout.custom_marker_view);
+            mv.setChartView(focusTimeBarChart);
+            focusTimeBarChart.setMarker(mv);
+
+            focusTimeBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                @Override
+                public void onValueSelected(Entry e, Highlight h) {
+                    focusTimeBarChart.highlightValue(h);
+                }
+
+                @Override
+                public void onNothingSelected() {
+                    focusTimeBarChart.highlightValue(null);
+                }
+            });
+        }
+
+        private void setupViewByButton() {
+            viewByButton.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(StatisticScreenActivity.this, viewByButton);
+                popup.getMenuInflater().inflate(R.menu.statistic_screen_view_by, popup.getMenu());
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.menu_line_chart) {
+                        showLineChart();
+                        return true;
+                    } else if (item.getItemId() == R.id.menu_bar_chart) {
+                        showBarChart();
+                        return true;
+                    }
+                    return false;
+                });
+                popup.show();
+            });
+        }
+
+        private void showLineChart() {
+            focusTimeLineChart.setVisibility(View.VISIBLE);
+            focusTimeBarChart.setVisibility(View.GONE);
+            viewByButton.setText("Line chart");
+            viewByButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary_10));
+            focusTimeLineChart.animateX(1500, Easing.EaseInCubic);
+            isLineChartVisible = true;
+        }
+
+        private void showBarChart() {
+            focusTimeLineChart.setVisibility(View.GONE);
+            focusTimeBarChart.setVisibility(View.VISIBLE);
+            viewByButton.setText("Bar chart");
+            viewByButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary_30));
+            focusTimeBarChart.animateY(1500, Easing.EaseInCubic);
+            focusTimeBarChart.invalidate();
+            isLineChartVisible = false;
+        }
+
         private void initializeTagDistributionChart() {
             tagDistributionChart.getDescription().setEnabled(false);
             tagDistributionChart.setDrawHoleEnabled(false);
@@ -201,75 +291,79 @@
 
         private void updateCharts(List<Session> sessions) {
             String currentSelection = timeManager.getCurrentPeriod();
-            List<Entry> entries = new ArrayList<>();
+            List<Entry> lineEntries = new ArrayList<>();
+            List<BarEntry> barEntries = new ArrayList<>();
             List<String> xAxisLabels = new ArrayList<>();
 
             // Sort sessions by timestamp
             sessions.sort(Comparator.comparing(Session::getTimestamp));
 
             // Use the common method to update charts for the selected period
-            updateChartsForPeriod(currentSelection, sessions, entries, xAxisLabels);
+            updateChartsForPeriod(currentSelection, sessions, lineEntries, barEntries, xAxisLabels);
         }
 
-        private void updateChartsForPeriod(String period, List<Session> sessions, List<Entry> entries, List<String> xAxisLabels) {
+        private void updateChartsForPeriod(String period, List<Session> sessions, List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
             // Update focus time data
-            calculateFocusTimeData(period, sessions, entries, xAxisLabels);
-            updateFocusTimeChart(entries, xAxisLabels);
+            calculateFocusTimeData(period, sessions, lineEntries, barEntries, xAxisLabels);
+            updateFocusTimeCharts(lineEntries, barEntries, xAxisLabels);
 
             // Update tag distribution chart
             List<Session> filteredSessions = calculateTagDistributionData(period, sessions);
             updateTagDistributionChart(filteredSessions);
         }
 
-
-        private void updateFocusTimeChart(List<Entry> entries, List<String> xAxisLabels) {
-            boolean allZero = entries.stream().allMatch(entry -> entry.getY() == 0f);
+        private void updateFocusTimeCharts(List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
+            boolean allZero = lineEntries.stream().allMatch(entry -> entry.getY() == 0f);
 
             if (allZero) {
                 focusTimeLineChart.clear();
+                focusTimeBarChart.clear();
                 focusTimeLineChart.setNoDataText("No data available");
+                focusTimeBarChart.setNoDataText("No data available");
                 focusTimeLineChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.primary_50));
+                focusTimeBarChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.primary_50));
                 focusTimeLineChart.invalidate();
+                focusTimeBarChart.invalidate();
             } else {
-                LineDataSet dataSet = new LineDataSet(entries, "Focus Time");
-                dataSet.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                dataSet.setCircleColor(ContextCompat.getColor(this, R.color.secondary_90));
-                dataSet.setCircleRadius(6f);
-                dataSet.setDrawValues(false);
-                dataSet.setHighlightEnabled(true);
-                dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-
-                LineData lineData = new LineData(dataSet);
-                focusTimeLineChart.setData(lineData);
-                focusTimeLineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
-
-                // Animate chart drawing
-                focusTimeLineChart.animateX(1000, Easing.Linear);
-
-                // Animate data points one by one
-                ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-                animator.setDuration(1000);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        dataSet.setDrawCircles(false);
-                        lineData.notifyDataChanged();
-                        focusTimeLineChart.notifyDataSetChanged();
-                        focusTimeLineChart.invalidate();
-
-                        float percent = (float) animation.getAnimatedValue();
-                        int count = (int) (dataSet.getEntryCount() * percent);
-
-                        for (int i = 0; i < count; i++) {
-                            dataSet.setDrawCircles(true);
-                        }
-                    }
-                });
-                animator.start();
+                updateLineChart(lineEntries, xAxisLabels);
+                updateBarChart(barEntries, xAxisLabels);
             }
         }
 
-        private void calculateFocusTimeData(String period, List<Session> sessions, List<Entry> entries, List<String> xAxisLabels) {
+
+        private void updateLineChart(List<Entry> entries, List<String> xAxisLabels) {
+            LineDataSet dataSet = new LineDataSet(entries, "Focus Time");
+            dataSet.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            dataSet.setCircleColor(ContextCompat.getColor(this, R.color.secondary_90));
+            dataSet.setCircleRadius(6f);
+            dataSet.setDrawValues(false);
+            dataSet.setHighlightEnabled(true);
+            dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+
+            LineData lineData = new LineData(dataSet);
+            focusTimeLineChart.setData(lineData);
+            focusTimeLineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
+
+            // Animate chart drawing
+            focusTimeLineChart.animateX(2000, Easing.EaseInCubic);
+        }
+
+        private void updateBarChart(List<BarEntry> entries, List<String> xAxisLabels) {
+            BarDataSet dataSet = new BarDataSet(entries, "Focus Time");
+            dataSet.setColor(ContextCompat.getColor(this, R.color.primary_30));
+            dataSet.setValueTextColor(Color.WHITE);
+            dataSet.setValueTextSize(10f);
+            dataSet.setDrawValues(false);
+
+            BarData barData = new BarData(dataSet);
+            focusTimeBarChart.setData(barData);
+            focusTimeBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
+
+            focusTimeBarChart.animateY(1500, Easing.EaseInCubic);
+            focusTimeBarChart.invalidate();
+        }
+
+        private void calculateFocusTimeData(String period, List<Session> sessions, List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
             HashMap<Integer, Float> intervalFocusTime = new HashMap<>();
             LocalDateTime startTime = getStartOfPeriod(period);
             LocalDateTime endTime = getEndOfPeriod(period);
@@ -301,7 +395,8 @@
 
             for (int i = 0; i < getNumInterval(period); i++) {
                 float focusTime = intervalFocusTime.getOrDefault(i, 0f);
-                entries.add(new Entry(i, focusTime));
+                lineEntries.add(new Entry(i, focusTime));
+                barEntries.add(new BarEntry(i, focusTime));
                 xAxisLabels.add(formatIntervalLabel(i, period, intervalDuration));
             }
         }
