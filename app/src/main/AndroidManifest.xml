@@ -27,6 +27,7 @@
         <activity
             android:name=".TimelineScreen.TimelineScreenActivity"
             android:exported="false" />
+
         <activity
             android:name=".CongratulationScreenActivity"
             android:exported="false" />
