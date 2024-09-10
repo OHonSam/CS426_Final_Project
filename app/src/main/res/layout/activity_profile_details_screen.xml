@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileScreen.ProfileDetailsScreenActivity"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_back"
+            android:layout_margin="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile Details"
+            style="@style/SubHead"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/profileImg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_avatar"
+            android:layout_centerInParent="true"
+            android:layout_marginVertical="16dp"/>
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            android:layout_alignTop="@+id/profileImg"
+            android:layout_alignStart="@+id/profileImg"
+            android:layout_marginTop="75dp"
+            android:layout_marginStart="75dp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <EditText
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/white"
+            android:paddingTop="36dp"
+            android:paddingStart="64dp"
+            android:hint="Enter your name"
+            style="@style/Title"/>
+        <ImageView
+            android:id="@+id/accountIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_account"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            style="@style/SubTitle"
+            android:layout_toEndOf="@+id/accountIcon"
+            android:layout_margin="8dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <com.hfad.cs426_final_project.SmartEditText.EmailEditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/white"
+            android:paddingTop="24dp"
+            android:paddingStart="48dp"
+            style="@style/Title"/>
+        <ImageView
+            android:id="@+id/mailIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mail"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            style="@style/SubTitle"
+            android:layout_toEndOf="@+id/mailIcon"
+            android:layout_margin="8dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:padding="16dp">
+        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:id="@+id/btnSaveChanges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/primary_20"
+            android:text="Save Changes"
+            android:textAllCaps="false"
+            style="@style/ButtonText"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+</LinearLayout>

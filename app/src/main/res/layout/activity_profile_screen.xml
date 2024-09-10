@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileScreen.ProfileScreenActivity"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:gravity="center"
+        style="@style/Headline"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <ImageView
+            android:id="@+id/profileImg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/button_border"
+            android:src="@drawable/default_avatar"
+            android:scaleType="fitCenter"/>
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name abc"
+            style="@style/SubHead"
+            android:layout_toEndOf="@+id/profileImg"
+            android:layout_marginStart="30dp"/>
+        <TextView
+            android:id="@+id/tvMail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="thanh@gmail.com"
+            style="@style/BodyText"
+            android:layout_below="@+id/tvName"
+            android:layout_alignStart="@+id/tvName"
+            android:layout_marginTop="8dp"/>
+
+    </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PROFILE"
+        style="@style/SubTitle"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"/>
+    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+        android:id="@+id/btnProfileDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/button_border"
+        android:text="Profile Details"
+        style="@style/Title"
+        android:textAllCaps="false"
+        android:gravity="start"
+        android:drawableStart="@drawable/ic_account"
+        android:drawablePadding="16dp"
+        android:backgroundTint="@color/white"
+        android:drawableEnd="@drawable/ic_right_arrow"
+        android:padding="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SETTINGS"
+        style="@style/SubTitle"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+        android:id="@+id/btnChangePassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/button_border"
+        android:text="Change Password"
+        style="@style/Title"
+        android:textAllCaps="false"
+        android:gravity="start"
+        android:drawableStart="@drawable/ic_lock"
+        android:drawablePadding="16dp"
+        android:backgroundTint="@color/white"
+        android:drawableEnd="@drawable/ic_right_arrow"
+        android:padding="16dp"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:padding="16dp">
+        <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:id="@+id/btnLogOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/red"
+            android:text="Log out"
+            android:textAllCaps="false"
+            style="@style/ButtonText"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</LinearLayout>

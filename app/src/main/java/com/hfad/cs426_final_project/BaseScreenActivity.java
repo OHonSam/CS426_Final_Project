@@ -24,6 +24,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
+import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 
 import java.util.Objects;
@@ -89,6 +90,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_store_screen).setChecked(true);
         } else if (curLayoutId == R.layout.activity_ranking_screen) {
             navigationView.getMenu().findItem(R.id.nav_ranking_screen).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_profile_screen) {
+            navigationView.getMenu().findItem(R.id.nav_profile_setting).setChecked(true);
         }
     }
 
@@ -123,12 +126,10 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, StoreScreenActivity.class);
         } else if (id == R.id.nav_main_focus_screen) {
             intent = new Intent(this, MainScreenActivity.class);
+        } else if (id == R.id.nav_profile_setting) {
+            intent = new Intent(this, ProfileScreenActivity.class);
         } else if (id == R.id.nav_ranking_screen) {
             intent = new Intent(this, RankingScreenActivity.class);
-        } else if (id == R.id.nav_sign_out) {
-            showSignOutDialog();
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
         }
 
         // If an intent is created, start the new activity
@@ -139,21 +140,6 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         }
 
         return true;
-    }
-
-
-    private void showSignOutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sign Out");
-        builder.setMessage("Are you sure you want to sign out?");
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, WelcomeScreenActivity.class);
-            startActivity(intent);
-            finish();
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-        builder.create().show();
     }
 
     private void setupCustomToggle() {

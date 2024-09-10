@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -17,6 +18,15 @@
         android:theme="@style/Theme.CS426_Final_Project"
         tools:targetApi="31">
         <activity
+            android:name=".ProfileScreen.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileScreen.ProfileDetailsScreenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileScreen.ProfileScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".BaseScreenActivity"
             android:exported="false" />
 
@@ -26,7 +36,7 @@
 
         <activity
             android:name=".CongratulationScreenActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".MainScreen.AddNewTagActivity"
             android:exported="false" />
