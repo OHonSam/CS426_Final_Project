@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
+        toolbar.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void setupNavigationDrawer() {
@@ -142,6 +144,16 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.create().show();
+    }
+
+    protected void updateDrawerToggle () {
+        // bring toggle to front but not the rest of the base screen
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
+        toolbar.setTitle("Ranking");
+        toolbar.setBackgroundColor(getResources().getColor(R.color.blue_deep_sea));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setPopupTheme(R.style.AppTheme);
+
     }
 }
 

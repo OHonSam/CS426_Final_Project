@@ -9,18 +9,24 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
-public class RankingScreenActivity extends AppCompatActivity {
+public class RankingScreenActivity extends BaseScreenActivity {
     private ListView listView;
     private MaterialButtonToggleGroup periodPicker;
     private User currentUser;
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_ranking_screen;
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ranking_screen);
         initializeComponents();
+//        updateDrawerToggle();
     }
 
     private void initializeComponents() {
