@@ -75,8 +75,8 @@ public class RankingScreenActivity extends BaseScreenActivity {
                 rankingModeText.setText("Streak");
                 return true;
             } else if (item.getItemId() == R.id.menu_item_time_focused) {
-                rankingModeBtn.setText("Time Focused");
-                rankingModeText.setText("Time Focused");
+                rankingModeBtn.setText("Focus");
+                rankingModeText.setText("Focus Time");
                 return true;
             } else {
                 return false;

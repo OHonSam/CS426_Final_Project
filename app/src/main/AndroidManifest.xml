@@ -46,10 +46,10 @@
             android:name=".SignUpScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".RankingScreen.RankingScreenActivity"
             android:exported="false"/>
         <activity
-            android:name=".RankingScreen.RankingScreenActivity"
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

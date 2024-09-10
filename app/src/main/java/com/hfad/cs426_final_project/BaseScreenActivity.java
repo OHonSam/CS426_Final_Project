@@ -87,6 +87,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_main_focus_screen).setChecked(true);
         } else if (curLayoutId == R.layout.activity_store_screen) {
             navigationView.getMenu().findItem(R.id.nav_store_screen).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_ranking_screen) {
+            navigationView.getMenu().findItem(R.id.nav_ranking_screen).setChecked(true);
         }
     }
 

@@ -5,5 +5,5 @@
         android:title="Streak"/>
     <item
         android:id="@+id/menu_item_time_focused"
-        android:title="Time Focused"/>
+        android:title="Focus Time"/>
 </menu>
