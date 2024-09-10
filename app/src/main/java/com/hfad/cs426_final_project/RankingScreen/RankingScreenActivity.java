@@ -26,7 +26,6 @@ public class RankingScreenActivity extends BaseScreenActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
-//        updateDrawerToggle();
     }
 
     private void initializeComponents() {

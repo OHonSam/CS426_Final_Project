@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     protected NavigationView navigationView;
     protected ActionBarDrawerToggle toggle;
     private Toolbar toolbar;
+    private ImageView toggleIcon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout_base_screen);
         navigationView = findViewById(R.id.nav_view_screen_choices);
+        toggleIcon = findViewById(R.id.toggle_icon);
     }
 
     protected abstract int getLayoutId();
@@ -148,18 +152,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         builder.create().show();
     }
 
-    protected void updateDrawerToggle () {
-        // bring toggle to front but not the rest of the base screen
-        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
-        toolbar.setTitle("Ranking");
-        toolbar.setBackgroundColor(getResources().getColor(R.color.blue_deep_sea));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        toolbar.setPopupTheme(R.style.AppTheme);
-
-    }
-
     private void setupCustomToggle() {
-        ImageView toggleIcon = findViewById(R.id.toggle_icon);
         toggleIcon.setOnClickListener(v -> {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -168,7 +161,32 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             }
         });
 
-        toggleIcon.bringToFront();
+        toggleIcon.bringToFront(); // avoid being overlapped
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                animateToggleIcon(slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+    }
+
+    private void animateToggleIcon(float slideOffset) {
+        // Rotate the toggle icon from 0 to 180 degrees based on the slide offset
+        float rotationAngle = slideOffset * 180; // Rotate between 0 (closed) and 180 (open)
+        toggleIcon.setRotation(rotationAngle);
     }
 }
 
