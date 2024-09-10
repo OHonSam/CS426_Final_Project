@@ -29,7 +29,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 public class Clock {
     public static enum ClockMode {
         STOPWATCH,
-        TIMER;
+        TIMER
     }
 
     public void setOnClockListener(onClockListener listener) {
@@ -64,7 +64,6 @@ public class Clock {
     private TextView timeView;
     private MyButton startButton;
     private Context context;
-    private MyButton btnClockModePicker;
 
     private ClockSetting clockSetting;
     private CircularSeekBar progressBar;
@@ -122,7 +121,6 @@ public class Clock {
     }
 
     private void redirectToFailScreenActivity() {
-        // TODO: Redirect to FailScreenActivity
         Intent intent = new Intent(context, FailScreenActivity.class);
         context.startActivity(intent);
     }
@@ -132,8 +130,7 @@ public class Clock {
         int initialTargetMinutes = clockSetting.getTargetTime() / 60;
         int initialProgressIntervalIndex = initialTargetMinutes / PROGRESS_INTERVAL_LEN;
 
-        // Ensure that the initial prog
-        // ress is at least the minimum interval
+        // Ensure that the initial progress is at least the minimum interval
         if (initialProgressIntervalIndex < (PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN)) {
             initialProgressIntervalIndex = PROGRESS_MINUTES_MIN / PROGRESS_INTERVAL_LEN;
         }
@@ -254,7 +251,6 @@ public class Clock {
             public void run() {
                 // print notification
                 if (runningOutside && running) {
-                    Log.d("ClockOutside", "Seconds:" + secondsOutside);
                     secondsOutside--;
                     if (secondsOutside < 0) {
                         runningOutside = false;
