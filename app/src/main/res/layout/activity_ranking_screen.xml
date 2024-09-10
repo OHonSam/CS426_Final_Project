@@ -30,7 +30,6 @@
             android:background="@drawable/button_border"
             android:paddingVertical="0dp"
             android:backgroundTint="@color/primary_20"
-            android:text="Streak"
             style="@style/BodyText"
             android:textAllCaps="false"
             android:drawableEnd="@drawable/dropdown"

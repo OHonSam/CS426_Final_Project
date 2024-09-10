@@ -6,17 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
+import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
 public class RankingScreenActivity extends BaseScreenActivity {
     private ListView listView;
     private MaterialButtonToggleGroup periodPicker;
+    private MyButton rankingModeBtn;
     private User currentUser;
 
     @Override
@@ -28,9 +31,11 @@ public class RankingScreenActivity extends BaseScreenActivity {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setToggleColor(Color.WHITE);
+        setupRankingModeButton();
     }
 
     private void initializeComponents() {
+        rankingModeBtn = findViewById(R.id.ranking_mode_btn);
         initializeRankingList();
     }
 
@@ -51,5 +56,28 @@ public class RankingScreenActivity extends BaseScreenActivity {
                 listView.setAdapter(adapter2);
             }
         });
+    }
+
+    private void setupRankingModeButton() {
+        rankingModeBtn.setOnClickListener(v -> showPopupMenu(v));
+    }
+
+    private void showPopupMenu(View anchor) {
+        PopupMenu popupMenu = new PopupMenu(this, anchor);
+        popupMenu.getMenuInflater().inflate(R.menu.popup_ranking_mode, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_item_streak) {
+                rankingModeBtn.setText("Streak");
+                return true;
+            } else if (item.getItemId() == R.id.menu_item_time_focused) {
+                rankingModeBtn.setText("Time Focused");
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        popupMenu.show();
     }
 }
