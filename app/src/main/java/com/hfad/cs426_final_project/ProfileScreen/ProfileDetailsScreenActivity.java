@@ -160,13 +160,12 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
         activityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
-    private void updateUserProfile() {
+    private void updateUserProfile(String name) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
         }
 
-        String name = edtName.getText().toString().trim();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
                 .setPhotoUri(mUri)
@@ -191,6 +190,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
 
         String oldEmail = user.getEmail();
         String newEmail = edtEmail.getText().toString().trim();
+        String name = edtName.getText().toString().trim();
 
         // Send a verification email before updating the email
         user.verifyBeforeUpdateEmail(newEmail)
@@ -198,8 +198,8 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            updateUserInDB(oldEmail, newEmail);
-                            updateUserProfile();
+                            updateUserInDB(oldEmail, newEmail, name);
+                            updateUserProfile(name);
 
                             if(!oldEmail.equals(newEmail)){
                                 // Notify the user to check their email for verification
@@ -209,7 +209,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(ProfileDetailsScreenActivity.this, MainScreenActivity.class);
+                                        Intent intent = new Intent(ProfileDetailsScreenActivity.this, LoginScreenActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -229,7 +229,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
     }
 
 
-    private void updateUserInDB(String oldEmail, String newEmail) {
+    private void updateUserInDB(String oldEmail, String newEmail, String newName) {
         // Reference to Firebase Realtime Database
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -240,6 +240,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     // Update the email
                     userSnapshot.getRef().child("email").setValue(newEmail);
+                    userSnapshot.getRef().child("name").setValue(newName);
                 }
             }
 
