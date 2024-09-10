@@ -71,7 +71,6 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
-        toolbar.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void setupNavigationDrawer() {
@@ -187,6 +186,10 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         // Rotate the toggle icon from 0 to 180 degrees based on the slide offset
         float rotationAngle = slideOffset * 180; // Rotate between 0 (closed) and 180 (open)
         toggleIcon.setRotation(rotationAngle);
+    }
+
+    protected void setToggleColor(int color) {
+        toggleIcon.setColorFilter(color);
     }
 }
 

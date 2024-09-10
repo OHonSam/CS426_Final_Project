@@ -1,5 +1,6 @@
 package com.hfad.cs426_final_project.RankingScreen;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class RankingScreenActivity extends BaseScreenActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
+        setToggleColor(Color.WHITE);
     }
 
     private void initializeComponents() {
