@@ -1,13 +1,16 @@
 package com.hfad.cs426_final_project;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.LayoutInflater;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
+import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 
 import java.util.Objects;
@@ -29,6 +33,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     protected NavigationView navigationView;
     protected ActionBarDrawerToggle toggle;
     private Toolbar toolbar;
+    private ImageView toggleIcon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
 
         setupToolbar();
         setupNavigationDrawer();
+        setupCustomToggle();
     }
 
     private void loadChildActivityLayout(int layoutId) {
@@ -56,6 +63,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout_base_screen);
         navigationView = findViewById(R.id.nav_view_screen_choices);
+        toggleIcon = findViewById(R.id.toggle_icon);
     }
 
     protected abstract int getLayoutId();
@@ -67,7 +75,7 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     }
 
     private void setupNavigationDrawer() {
-        configureDrawerToggle();
+//        configureDrawerToggle();
         setNavigationViewSize();
         navigationView.setNavigationItemSelectedListener(this);
         highlightCurrentMenuItem();
@@ -79,6 +87,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_main_focus_screen).setChecked(true);
         } else if (curLayoutId == R.layout.activity_store_screen) {
             navigationView.getMenu().findItem(R.id.nav_store_screen).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_ranking_screen) {
+            navigationView.getMenu().findItem(R.id.nav_ranking_screen).setChecked(true);
         }
     }
 
@@ -113,6 +123,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, StoreScreenActivity.class);
         } else if (id == R.id.nav_main_focus_screen) {
             intent = new Intent(this, MainScreenActivity.class);
+        } else if (id == R.id.nav_ranking_screen) {
+            intent = new Intent(this, RankingScreenActivity.class);
         } else if (id == R.id.nav_sign_out) {
             showSignOutDialog();
             drawer.closeDrawer(GravityCompat.START);
@@ -142,6 +154,47 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.create().show();
+    }
+
+    private void setupCustomToggle() {
+        toggleIcon.setOnClickListener(v -> {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+        toggleIcon.bringToFront(); // avoid being overlapped
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                animateToggleIcon(slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+    }
+
+    private void animateToggleIcon(float slideOffset) {
+        // Rotate the toggle icon from 0 to 180 degrees based on the slide offset
+        float rotationAngle = slideOffset * 180; // Rotate between 0 (closed) and 180 (open)
+        toggleIcon.setRotation(rotationAngle);
+    }
+
+    protected void setToggleColor(int color) {
+        toggleIcon.setColorFilter(color);
     }
 }
 

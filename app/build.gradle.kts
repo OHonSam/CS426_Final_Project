@@ -45,6 +45,7 @@ dependencies {
     implementation("com.github.skydoves:colorpickerview:2.3.0")
     implementation (libs.circle.progress.view)
     implementation (libs.circularseekbar)
+    implementation(libs.cardview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -28,9 +28,14 @@
     <color name="blue_deep_sea">#FF006769</color>
     <color name="Blue_Deep_Sea">#006769</color>
 
+    <color name="dark_gray">#FFD9D9D9</color>
     <color name="ripple_effect">#44000000</color>
 
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="Accent2">#FFD5F0F8</color>
+    <color name="Gold">#FFFFF176</color>
+    <color name="Silver">#FFB0BEC5</color>
+    <color name="Bronze">#FFBC6F00</color>
 </resources>

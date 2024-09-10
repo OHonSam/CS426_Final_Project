@@ -45,7 +45,6 @@ public class User {
         this.streak = 1;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
-
         Tree tree = new Tree(); // default tree
         ownTrees.add(tree);
 
@@ -55,6 +54,7 @@ public class User {
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
