@@ -23,6 +23,7 @@ import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;
 import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
+import com.hfad.cs426_final_project.ToDoCalendarScreen.ToDoScreenActivity;
 
 import java.util.Objects;
 
