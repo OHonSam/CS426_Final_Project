@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -41,7 +39,7 @@ import com.hfad.cs426_final_project.FailScreenActivity;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.BottomSheet.BottomSheetMainScreen;
-import com.hfad.cs426_final_project.MainScreen.Clock.onClockListener;
+import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
@@ -52,7 +50,7 @@ import java.util.List;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
-public class MainScreenActivity extends BaseScreenActivity {
+public class MainScreenActivity extends BaseScreenActivity implements OnClockListener {
     private AppContext appContext;
     private ImageView imgTree;
     private TextView timeView;
@@ -169,7 +167,7 @@ public class MainScreenActivity extends BaseScreenActivity {
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggleIcon);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, toggleIcon, this);
         appContext.setCurrentClock(clock);
     }
 

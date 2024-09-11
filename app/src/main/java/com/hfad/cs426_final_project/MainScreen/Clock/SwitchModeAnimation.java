@@ -7,7 +7,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 public class SwitchModeAnimation {
-    onModeClickListener onModeClickListener;
+    OnModeClickListener onModeClickListener;
     private ImageView timer, stopwatch;
     public ImageView thumb;
     private ImageView track;
@@ -102,7 +102,7 @@ public class SwitchModeAnimation {
 
     }
 
-    public void addSwitchListener(onModeClickListener onModeClickListener){
+    public void addSwitchListener(OnModeClickListener onModeClickListener){
         this.onModeClickListener = onModeClickListener;
     }
 }

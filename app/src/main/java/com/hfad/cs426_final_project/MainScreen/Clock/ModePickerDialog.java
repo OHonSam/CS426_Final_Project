@@ -87,7 +87,7 @@ public class ModePickerDialog extends DialogFragment {
             }
         });
 
-        switchModeAnimation.addSwitchListener(new onModeClickListener() {
+        switchModeAnimation.addSwitchListener(new OnModeClickListener() {
             @Override
             public void onModeClick(Clock.ClockMode selectedMode) {
                 if (selectedMode == Clock.ClockMode.TIMER) {

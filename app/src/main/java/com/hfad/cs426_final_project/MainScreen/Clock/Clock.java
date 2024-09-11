@@ -29,7 +29,7 @@ public class Clock {
         TIMER;
     }
 
-    private onClockListener onClockListener;
+    private OnClockListener onClockListener;
 
     private static final String CHANNEL_ID = "clock_channel_id";
     private static final int NOTIFICATION_ID = 1;
@@ -62,7 +62,7 @@ public class Clock {
     private CircularSeekBar progressBar;
     private ImageView toggleIcon;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ImageView toggleIcon, onClockListener onClockListener) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, ImageView toggleIcon, OnClockListener onClockListener) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
@@ -74,7 +74,6 @@ public class Clock {
         this.runnableClock = createClockRunnable();
         this.runnableDeepMode = createDeepModeRunnable();
         this.progressBar = progressBar;
-        this.btnClockModePicker = btnClockModePicker;
         this.toggleIcon = toggleIcon;
         this.onClockListener = onClockListener;
         initProgressBar();
