@@ -49,7 +49,7 @@
             android:src="@drawable/ic_arrow_backward"
             />
         <TextView
-            android:id="@+id/tvMonthYear_ToDoScreen"
+            android:id="@+id/tvMonthYear_WeekView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -151,17 +151,17 @@
 
     <com.hfad.cs426_final_project.CustomUIComponent.MyButton
         android:id="@+id/btnAddNewEvent"
+        style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/ButtonText"
-        android:text="New Event"
         android:backgroundTint="@color/background"
-        app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView"
+        android:text="New Event"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView" />
+
     <ListView
-        android:id="@+id/listViewEvents"
+        android:id="@+id/listViewTasks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"

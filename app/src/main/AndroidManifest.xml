@@ -22,7 +22,7 @@
         android:theme="@style/Theme.CS426_Final_Project"
         tools:targetApi="31">
         <activity
-            android:name=".ToDoCalendarScreen.EventEditActivity"
+            android:name=".ToDoCalendarScreen.TaskEditActivity"
             android:exported="false" />
         <activity
             android:name=".ToDoCalendarScreen.WeekViewActivity"

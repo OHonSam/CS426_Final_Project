@@ -49,7 +49,6 @@ public class ToDoScreenActivity extends BaseScreenActivity implements CalendarAd
     private void switchWeeklyMode() {
         Intent intent = new Intent(this, WeekViewActivity.class);
         startActivity(intent);
-        finish();
     }
 
     private void setupCalendarArrowListener() {

@@ -1,23 +1,20 @@
 package com.hfad.cs426_final_project.ToDoCalendarScreen;
 
-import static com.hfad.cs426_final_project.ToDoCalendarScreen.CalendarUtils.generateDaysInMonthArray;
 import static com.hfad.cs426_final_project.ToDoCalendarScreen.CalendarUtils.generateDaysInWeekArray;
 import static com.hfad.cs426_final_project.ToDoCalendarScreen.CalendarUtils.getMonthYearFromDate;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
 
 import java.time.LocalDate;
@@ -27,6 +24,8 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     private ImageButton arrowBackwards, arrowForwards;
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
+    private MyButton btnAddNewEvents;
+    private ListView listViewTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +35,33 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         
         setupCalendarArrowListener();
         setWeekView();
+        setupAddNewEventsButton();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setTaskAdapter();
+    }
+
+    private void setTaskAdapter() {
+        ArrayList<Task> tasksForDate = Task.getTasksForDate(CalendarUtils.selectedDate);
+        TaskAdapter taskAdapter = new TaskAdapter(this, tasksForDate);
+        listViewTasks.setAdapter(taskAdapter);
+    }
+
+    private void setupAddNewEventsButton() {
+        btnAddNewEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToEventEditActivity();
+            }
+        });
+    }
+
+    private void redirectToEventEditActivity() {
+        Intent intent = new Intent(this, TaskEditActivity.class);
+        startActivity(intent);
     }
 
     private void setWeekView() {
@@ -47,6 +73,8 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
+
+        setTaskAdapter();
     }
 
     private void setupCalendarArrowListener() {
@@ -75,11 +103,12 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     }
 
     private void initWidgets() {
-        monthYearText = findViewById(R.id.tvMonthYear_ToDoScreen);
+        monthYearText = findViewById(R.id.tvMonthYear_WeekView);
         calendarRecyclerView = findViewById(R.id.calendarRecyclerView);
         arrowBackwards = findViewById(R.id.arrowBackwards_WeekView);
         arrowForwards = findViewById(R.id.arrowForwards_WeekView);
-
+        btnAddNewEvents = findViewById(R.id.btnAddNewEvent);
+        listViewTasks = findViewById(R.id.listViewTasks);
     }
 
     @Override

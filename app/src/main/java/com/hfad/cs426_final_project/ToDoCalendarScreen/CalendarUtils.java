@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project.ToDoCalendarScreen;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -8,6 +9,21 @@ import java.util.Locale;
 
 public class CalendarUtils {
     public static LocalDate selectedDate;
+
+    public static String getFormattedDate(LocalDate selectedDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
+        return selectedDate.format(formatter);
+    }
+    
+    public static String getFormattedTime(LocalTime selectedTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
+        return selectedTime.format(formatter);
+    }
+
+    public static String getMonthYearFromDate(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
+        return date.format(formatter);
+    }
 
     public static ArrayList<LocalDate> generateDaysInMonthArray(LocalDate date) {
         ArrayList<LocalDate> daysInMonthArray = new ArrayList<>();
@@ -56,10 +72,5 @@ public class CalendarUtils {
             date = date.minusDays(1);
         }
         return null;
-    }
-
-    public static String getMonthYearFromDate(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
-        return date.format(formatter);
     }
 }
