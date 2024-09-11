@@ -32,7 +32,7 @@ public class TagAdapterSpinner extends ArrayAdapter<Tag> {
         Tag tag = this.getItem(position);
         if(tag != null) {
             tvTag.setText(tag.getName());
-            tagColorView.setColorFilter(Color.parseColor(tag.getColorHex()));
+            tagColorView.setColorFilter(tag.getColor());
         }
         else {
             tvTag.setText("None");
@@ -50,7 +50,7 @@ public class TagAdapterSpinner extends ArrayAdapter<Tag> {
         Tag tag = this.getItem(position);
         if(tag != null) {
             tvTag.setText(tag.getName());
-            tagColorView.setColorFilter(Color.parseColor(tag.getColorHex()));
+            tagColorView.setColorFilter(tag.getColor());
         }
         else {
             tvTag.setText("None");

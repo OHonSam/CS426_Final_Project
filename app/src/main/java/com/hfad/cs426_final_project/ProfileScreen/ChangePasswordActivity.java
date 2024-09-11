@@ -1,12 +1,10 @@
 package com.hfad.cs426_final_project.ProfileScreen;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +18,6 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
-import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;

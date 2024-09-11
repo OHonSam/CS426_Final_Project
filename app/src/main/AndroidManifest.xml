@@ -50,13 +50,16 @@
             android:name=".MainScreen.MainScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginScreenActivity"
+            android:name=".StatisticScreen.StatisticScreenActivity"
             android:exported="false" />
         <activity
             android:name=".SignUpScreenActivity"
             android:exported="false" />
         <activity
             android:name=".RankingScreen.RankingScreenActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".LoginScreenActivity"
             android:exported="false"/>
         <activity
             android:name=".SplashScreenActivity"

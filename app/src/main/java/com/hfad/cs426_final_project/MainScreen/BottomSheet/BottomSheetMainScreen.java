@@ -1,6 +1,5 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,7 +81,7 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
                 .into(ivTreeSelected);
         tvFocusTime.setText(String.valueOf((curFocusTime / 5) * 5));
         tvTag.setText(curTag.getName());
-        tagColorDisplay.setColorFilter(Color.parseColor(curTag.getColorHex()));
+        tagColorDisplay.setColorFilter(curTag.getColor());
 
         if(appContext.getCurrentUser().isFavourite(curTree, curTag, curFocusTime)) {
             setFavouriteOn();

@@ -1,6 +1,7 @@
 package com.hfad.cs426_final_project;
 
 import com.hfad.cs426_final_project.DataStorage.Favourite;
+import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.DataStorage.Tree;
@@ -28,6 +29,7 @@ public class User {
     private List<UserTask> ownUserTasks = new ArrayList<>();
 
     private ClockSetting clockSetting;
+    private List<Session> sessions = new ArrayList<>();
 
     public User() {}
 
@@ -210,5 +212,13 @@ public class User {
             }
         }
         return false;
+    }
+
+    public void setSessions(List<Session> sessionsList) {
+        this.sessions = sessionsList;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
     }
 }

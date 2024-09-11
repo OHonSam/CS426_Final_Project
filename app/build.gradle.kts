@@ -40,6 +40,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.lottie)
+    implementation(libs.mpandroidchart)
+    implementation ("com.github.jakob-grabner:Circle-Progress-View:1.4")
     implementation(libs.recyclerview)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.skydoves:colorpickerview:2.3.0")
@@ -49,7 +51,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+//
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-auth")

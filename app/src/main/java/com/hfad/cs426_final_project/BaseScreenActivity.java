@@ -1,30 +1,27 @@
 package com.hfad.cs426_final_project;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.LayoutInflater;
-import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;
+import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 
 import java.util.Objects;
@@ -92,6 +89,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_ranking_screen).setChecked(true);
         } else if (curLayoutId == R.layout.activity_profile_screen) {
             navigationView.getMenu().findItem(R.id.nav_profile_setting).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_statistic_screen) {
+            navigationView.getMenu().findItem(R.id.nav_statistic_screen).setChecked(true);
         }
     }
 
@@ -130,6 +129,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, ProfileScreenActivity.class);
         } else if (id == R.id.nav_ranking_screen) {
             intent = new Intent(this, RankingScreenActivity.class);
+        } else if (id == R.id.nav_statistic_screen) {
+            intent = new Intent(this, StatisticScreenActivity.class);
         }
 
         // If an intent is created, start the new activity

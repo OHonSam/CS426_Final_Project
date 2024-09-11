@@ -39,7 +39,7 @@ public class MyButton extends AppCompatButton {
         super(context, attrs, defStyleAttr);
         init();
     }
-   private void init() {
+    private void init() {
 
         // Store the original drawable
         //originalDrawable = DrawableCompat.wrap(getBackground()).mutate();

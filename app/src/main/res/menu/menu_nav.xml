@@ -7,6 +7,10 @@
             android:title="Focus"
             android:checked="true" />
         <item
+            android:id="@+id/nav_statistic_screen"
+            android:icon="@drawable/statistic_screen_ic"
+            android:title="Statistic" />
+        <item
             android:id="@+id/nav_ranking_screen"
             android:icon="@drawable/ranking_screen_ic"
             android:title="Leaderboard" />
