@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -287,7 +288,7 @@ public class Clock {
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        startForegroundService();
+        //startForegroundService();
     }
 
     public void stop() {
