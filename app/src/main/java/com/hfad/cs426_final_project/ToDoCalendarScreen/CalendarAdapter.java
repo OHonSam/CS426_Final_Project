@@ -9,21 +9,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hfad.cs426_final_project.R;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 {
-    private final ArrayList<String> daysOfMonth;
+    private final ArrayList<LocalDate> daysList;
     private final OnDayClickListener onDayClickListener;
 
     public interface OnDayClickListener
     {
-        void onDayClick(int position, String dayText);
+        void onDayClick(int position, LocalDate date);
     }
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnDayClickListener onDayClickListener)
+    public CalendarAdapter(ArrayList<LocalDate> daysList, OnDayClickListener onDayClickListener)
     {
-        this.daysOfMonth = daysOfMonth;
+        this.daysList = daysList;
         this.onDayClickListener = onDayClickListener;
     }
 
@@ -34,19 +36,25 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.calendar_cell, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = (int) (parent.getHeight() * 0.166666666);
-        return new CalendarViewHolder(view, onDayClickListener);
+
+        if (daysList.size() > 15) // month view
+            layoutParams.height = (int) (parent.getHeight() * 0.166666666);
+        else // week view
+            layoutParams.height = (int) parent.getHeight();
+
+        return new CalendarViewHolder(view, onDayClickListener, daysList);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
-        holder.bind(daysOfMonth.get(position));
+        final LocalDate date = daysList.get(position);
+        holder.bind(date);
     }
 
     @Override
     public int getItemCount()
     {
-        return daysOfMonth.size();
+        return daysList.size();
     }
 }

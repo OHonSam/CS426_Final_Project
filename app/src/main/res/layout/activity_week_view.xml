@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ToDoCalendarScreen.ToDoScreenActivity">
+    tools:context=".ToDoCalendarScreen.WeekViewActivity">
     <TextView
         android:id="@+id/tvTitle_ToDoScreen"
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ButtonText"
-        android:text="Weekly"
+        android:text="?"
         android:backgroundTint="@color/background"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle_ToDoScreen"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         >
         <ImageButton
-            android:id="@+id/arrowBackwards_ToDoScreen"
+            android:id="@+id/arrowBackwards_WeekView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -60,7 +60,7 @@
             />
 
         <ImageButton
-            android:id="@+id/arrowForwards_ToDoScreen"
+            android:id="@+id/arrowForwards_WeekView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -142,10 +142,33 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendarRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="40dp"
         android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddNewEvent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dayOfWeek" />
+
+    <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+        android:id="@+id/btnAddNewEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ButtonText"
+        android:text="New Event"
+        android:backgroundTint="@color/background"
+        app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <ListView
+        android:id="@+id/listViewEvents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddNewEvent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
