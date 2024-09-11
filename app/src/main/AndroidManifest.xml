@@ -75,6 +75,11 @@
     <activity
         android:name=".MainScreen.MainScreenActivity"
         android:exported="false" />
+
+
+    <activity
+        android:name=".FailScreenActivity"
+        android:exported="false" />
     <activity
         android:name=".StatisticScreen.StatisticScreenActivity"
         android:exported="false" />
