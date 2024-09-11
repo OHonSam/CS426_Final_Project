@@ -126,6 +126,7 @@ public class MainScreenActivity extends BaseScreenActivity {
 
     private void getUIReferences() {
         imgTree = findViewById(R.id.tree);
+        imgTree.setScaleType(ImageView.ScaleType.FIT_CENTER);
         timeView = findViewById(R.id.time_view);
         startButton = findViewById(R.id.plant_button);
 

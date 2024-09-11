@@ -19,6 +19,7 @@ public class User {
     private String name;
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
+    private List<Session> sessions;
     private Tag focusTag;
     private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
@@ -27,9 +28,7 @@ public class User {
     private List<Tree> ownTrees = new ArrayList<>();
     private List<Tag> ownTags = new ArrayList<>();
     private List<UserTask> ownUserTasks = new ArrayList<>();
-
     private ClockSetting clockSetting;
-    private List<Session> sessions = new ArrayList<>();
 
     public User() {}
 
@@ -41,6 +40,7 @@ public class User {
         this.name = name;
 
         // default
+        this.sessions = new ArrayList<>();
         this.lastAccessDate = System.currentTimeMillis();
         this.focusTag = new Tag();
         this.favouriteList = new ArrayList<>();
@@ -103,6 +103,14 @@ public class User {
             clock.setTargetTime(focusTimeMinutes * 60);
         else
             AppContext.getInstance().getCurrentUser().getClockSetting().setTargetTime(focusTimeMinutes * 60);
+    }
+
+    public void setSessions(List<Session> sessionsList) {
+        this.sessions = sessionsList;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
     }
 
     public Tag getFocusTag() {
@@ -212,13 +220,5 @@ public class User {
             }
         }
         return false;
-    }
-
-    public void setSessions(List<Session> sessionsList) {
-        this.sessions = sessionsList;
-    }
-
-    public List<Session> getSessions() {
-        return sessions;
     }
 }

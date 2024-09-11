@@ -144,12 +144,6 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
                 // Create a new User object with the new user ID
                 User newUser = new User(cnt, email, password, name);
-                List<Session> sessionsList = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    sessionsList.add(new Session(i));
-                }
-                newUser.setSessions(sessionsList);
-
                 newUser.getUserSetting().getSelectedTree().fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
