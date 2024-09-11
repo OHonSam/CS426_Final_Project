@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +54,7 @@ public class MainScreenActivity extends BaseScreenActivity {
     private MyButton startButton, todoButton, musicButton, newTagButton, btnClockModePicker;
     private ClickableImageView todoImage, musicImage, newTagImage;
     private LinearLayout todoContainer, musicContainer, newTagContainer;
-    private ConstraintLayout popupMusicContainer;
+    private DrawerLayout popupMusicContainer;
 
     private Clock clock;
     private ModePickerDialog modePickerDialog;
@@ -136,7 +137,7 @@ public class MainScreenActivity extends BaseScreenActivity {
         newTagButton = findViewById(R.id.new_tag_button);
         newTagContainer = findViewById(R.id.new_tag_container);
 
-        popupMusicContainer = findViewById(R.id.main);
+        popupMusicContainer = findViewById(R.id.drawer_layout_base_screen);
         progressBar = findViewById(R.id.progress_bar);
         btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
