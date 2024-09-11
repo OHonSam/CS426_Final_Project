@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class TimeManager {
+    private static TimeManager instance;
     private Calendar currentDate;
     private String currentPeriod;
 
@@ -13,6 +14,15 @@ public class TimeManager {
         currentDate = Calendar.getInstance();
         currentPeriod = "Day";
     }
+
+    public static synchronized TimeManager getInstance() {
+        if (instance == null) {
+            instance = new TimeManager();
+        }
+        return instance;
+    }
+
+
 
     public String getCurrentPeriod() {
         return currentPeriod;

@@ -77,12 +77,14 @@
         private TimeManager timeManager;
         private LineChart focusTimeLineChart;
         private BarChart focusTimeBarChart;
+        private PieChart tagDistributionPieChart;
+        private LinearLayout tagListLayout;
         private MyButton viewByButton;
         private boolean isLineChartVisible = true;
-        private PieChart tagDistributionChart;
+        private TagDistributionChart tagDistributionChart;
+        private FocusTimeChart focusTimeChart;
         private List<Session> sessions = new ArrayList<>();
-        int numHourIntervals = 4;
-        int numDayIntervals = 7;
+
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_statistic_screen);
@@ -105,19 +107,20 @@
             backBtn = findViewById(R.id.back_btn);
             forwardBtn = findViewById(R.id.forward_btn);
 
-            timeManager = new TimeManager();
+            timeManager = TimeManager.getInstance();
             initializePeriodSelection();
             initializeTimeSelection();
 
             focusTimeLineChart = findViewById(R.id.focus_time_chart);
             focusTimeLineChart.setNoDataText("");
 
-            tagDistributionChart = findViewById(R.id.tag_distribution_chart);
-            tagDistributionChart.setNoDataText("");
-
             focusTimeBarChart = findViewById(R.id.focus_time_bar_chart);
-            viewByButton = findViewById(R.id.view_by_button);
+            focusTimeBarChart = findViewById(R.id.focus_time_bar_chart);
 
+            tagDistributionPieChart = findViewById(R.id.tag_distribution_chart);
+            tagDistributionPieChart.setNoDataText("");
+            tagListLayout = findViewById(R.id.tag_list);
+            viewByButton = findViewById(R.id.view_by_button);
 
             fetchDataForChart(new OnDataFetchedCallback() {
                 @Override
@@ -130,10 +133,8 @@
         }
 
         private void initializeChart() {
-            initializeFocusTimeLineChart();
-            initializeFocusTimeBarChart();
-            initializeTagDistributionChart();
-
+            focusTimeChart = new FocusTimeChart(this, focusTimeLineChart, focusTimeBarChart);
+            tagDistributionChart = new TagDistributionChart(this, tagDistributionPieChart, tagListLayout);
         }
 
         private void fetchDataForChart(OnDataFetchedCallback callback) {
@@ -165,83 +166,6 @@
             });
         }
 
-        private void initializeFocusTimeLineChart() {
-            focusTimeLineChart.getDescription().setEnabled(false);
-            focusTimeLineChart.setTouchEnabled(true);
-            focusTimeLineChart.setDragEnabled(true);
-            focusTimeLineChart.setScaleEnabled(true);
-            focusTimeLineChart.setPinchZoom(false);
-            focusTimeLineChart.setDrawGridBackground(false);
-            focusTimeLineChart.getLegend().setEnabled(false);
-
-
-            // Customize X-axis
-            XAxis xAxis = focusTimeLineChart.getXAxis();
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xAxis.setDrawGridLines(false);
-            xAxis.setGranularity(1f);
-            xAxis.setTextColor(ContextCompat.getColor(this, R.color.primary_50));
-            xAxis.setTextSize(8f);
-            focusTimeLineChart.setExtraOffsets(20, 0, 20, 0);
-
-            // Disable Y-axis
-            focusTimeLineChart.getAxisLeft().setEnabled(false);
-            focusTimeLineChart.getAxisRight().setEnabled(false);
-            // Set custom marker view
-            FocusTimeMarkerView mv = new FocusTimeMarkerView(this, R.layout.custom_marker_view);
-            mv.setChartView(focusTimeLineChart);
-            focusTimeLineChart.setMarker(mv);
-
-            focusTimeLineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                @Override
-                public void onValueSelected(Entry e, Highlight h) {
-                    focusTimeLineChart.highlightValue(h);
-                }
-
-                @Override
-                public void onNothingSelected() {
-                    focusTimeLineChart.highlightValue(null);
-                }
-            });
-        }
-
-        private void initializeFocusTimeBarChart() {
-            focusTimeBarChart.getDescription().setEnabled(false);
-            focusTimeBarChart.setTouchEnabled(true);
-            focusTimeBarChart.setDragEnabled(true);
-            focusTimeBarChart.setScaleEnabled(true);
-            focusTimeBarChart.setPinchZoom(false);
-            focusTimeBarChart.setDrawGridBackground(false);
-            focusTimeBarChart.getLegend().setEnabled(false);
-
-            XAxis xAxis = focusTimeBarChart.getXAxis();
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xAxis.setDrawGridLines(false);
-            xAxis.setGranularity(1f);
-            xAxis.setTextColor(ContextCompat.getColor(this, R.color.primary_50));
-            xAxis.setTextSize(8f);
-
-            focusTimeBarChart.setExtraOffsets(5, 5, 0, 0);
-
-            focusTimeBarChart.getAxisLeft().setEnabled(false);
-            focusTimeBarChart.getAxisRight().setEnabled(false);
-
-            FocusTimeMarkerView mv = new FocusTimeMarkerView(this, R.layout.custom_marker_view);
-            mv.setChartView(focusTimeBarChart);
-            focusTimeBarChart.setMarker(mv);
-
-            focusTimeBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                @Override
-                public void onValueSelected(Entry e, Highlight h) {
-                    focusTimeBarChart.highlightValue(h);
-                }
-
-                @Override
-                public void onNothingSelected() {
-                    focusTimeBarChart.highlightValue(null);
-                }
-            });
-        }
 
         private void setupViewByButton() {
             viewByButton.setOnClickListener(v -> {
@@ -280,191 +204,32 @@
             isLineChartVisible = false;
         }
 
-        private void initializeTagDistributionChart() {
-            tagDistributionChart.getDescription().setEnabled(false);
-            tagDistributionChart.setDrawHoleEnabled(false);
-            tagDistributionChart.setUsePercentValues(true);
-            tagDistributionChart.setEntryLabelColor(Color.WHITE);
-            tagDistributionChart.setEntryLabelTextSize(12f);
-            tagDistributionChart.getLegend().setEnabled(false);
-        }
-
         private void updateCharts(List<Session> sessions) {
-            String currentSelection = timeManager.getCurrentPeriod();
-            List<Entry> lineEntries = new ArrayList<>();
-            List<BarEntry> barEntries = new ArrayList<>();
-            List<String> xAxisLabels = new ArrayList<>();
-
-            // Sort sessions by timestamp
+            Log.d("Hello", "Hello");
+            String currentPeriod = timeManager.getCurrentPeriod();
             sessions.sort(Comparator.comparing(Session::getTimestamp));
-
-            // Use the common method to update charts for the selected period
-            updateChartsForPeriod(currentSelection, sessions, lineEntries, barEntries, xAxisLabels);
+            updateChartsForPeriod(currentPeriod, sessions);
         }
 
-        private void updateChartsForPeriod(String period, List<Session> sessions, List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
+        private void updateChartsForPeriod(String period, List<Session> sessions) {
             // Update focus time data
-            calculateFocusTimeData(period, sessions, lineEntries, barEntries, xAxisLabels);
-            updateFocusTimeCharts(lineEntries, barEntries, xAxisLabels);
-
-            // Update tag distribution chart
-            List<Session> filteredSessions = calculateTagDistributionData(period, sessions);
-            updateTagDistributionChart(filteredSessions);
-        }
-
-        private void updateFocusTimeCharts(List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
-            boolean allZero = lineEntries.stream().allMatch(entry -> entry.getY() == 0f);
-
-            if (allZero) {
-                focusTimeLineChart.clear();
-                focusTimeBarChart.clear();
-                focusTimeLineChart.setNoDataText("No data available");
-                focusTimeBarChart.setNoDataText("No data available");
-                focusTimeLineChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.primary_50));
-                focusTimeBarChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.primary_50));
-                focusTimeLineChart.invalidate();
-                focusTimeBarChart.invalidate();
-            } else {
-                updateLineChart(lineEntries, xAxisLabels);
-                updateBarChart(barEntries, xAxisLabels);
-            }
-        }
-
-
-        private void updateLineChart(List<Entry> entries, List<String> xAxisLabels) {
-            LineDataSet dataSet = new LineDataSet(entries, "Focus Time");
-            dataSet.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
-            dataSet.setCircleColor(ContextCompat.getColor(this, R.color.secondary_90));
-            dataSet.setCircleRadius(6f);
-            dataSet.setDrawValues(false);
-            dataSet.setHighlightEnabled(true);
-            dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-
-            LineData lineData = new LineData(dataSet);
-            focusTimeLineChart.setData(lineData);
-            focusTimeLineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
-
-            // Animate chart drawing
-            focusTimeLineChart.animateX(2000, Easing.EaseInCubic);
-        }
-
-        private void updateBarChart(List<BarEntry> entries, List<String> xAxisLabels) {
-            BarDataSet dataSet = new BarDataSet(entries, "Focus Time");
-            dataSet.setColor(ContextCompat.getColor(this, R.color.primary_30));
-            dataSet.setValueTextColor(Color.WHITE);
-            dataSet.setValueTextSize(10f);
-            dataSet.setDrawValues(false);
-
-            BarData barData = new BarData(dataSet);
-            focusTimeBarChart.setData(barData);
-            focusTimeBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
-
-            focusTimeBarChart.animateY(1500, Easing.EaseInCubic);
-            focusTimeBarChart.invalidate();
-        }
-
-        private void calculateFocusTimeData(String period, List<Session> sessions, List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
-            HashMap<Integer, Float> intervalFocusTime = new HashMap<>();
-            LocalDateTime startTime = getStartOfPeriod(period);
-            LocalDateTime endTime = getEndOfPeriod(period);
-
-            long totalDuration = 0;
-            int intervalDuration = getIntervalDuration(period);
-            int deadTree = 0;
-            int liveTree = 0;
-
-            for (Session session : sessions) {
-                LocalDateTime sessionDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(session.getTimestamp()), ZoneId.systemDefault());
-                if (isWithinPeriod(sessionDateTime, startTime, endTime)) {
-                    int intervalIndex = getIntervalIndex(sessionDateTime, period, intervalDuration);
-                    float focusTimeMinutes = session.getDuration() / 60f;
-                    intervalFocusTime.put(intervalIndex, intervalFocusTime.getOrDefault(intervalIndex, 0f) + focusTimeMinutes);
-                    totalDuration += session.getDuration();
-
-                    if (session.isStatus()) {
-                        ++liveTree;
-                    } else {
-                        ++deadTree;
-                    }
-                }
-            }
+            long[] results = focusTimeChart.updateFocusTimeCharts(sessions, period);
+            int liveTree = (int)results[0];
+            int deadTree = (int)results[1];
+            long totalDuration = results[2];
 
             numLiveTree.setText(String.valueOf(liveTree));
             numDeadTree.setText(String.valueOf(deadTree));
             totalFocusTimeText.setText(String.format("%d hours %d min", totalDuration / 3600, (totalDuration % 3600) / 60));
 
-            for (int i = 0; i < getNumInterval(period); i++) {
-                float focusTime = intervalFocusTime.getOrDefault(i, 0f);
-                lineEntries.add(new Entry(i, focusTime));
-                barEntries.add(new BarEntry(i, focusTime));
-                xAxisLabels.add(formatIntervalLabel(i, period, intervalDuration));
-            }
+            updateTagDistributionChart(sessions, period);
         }
 
 
-
-        private List<Session> calculateTagDistributionData(String period, List<Session> sessions) {
-            List<Session> filteredSessions = new ArrayList<>();
-            LocalDateTime startTime = getStartOfPeriod(period);
-            LocalDateTime endTime = getEndOfPeriod(period);
-
-            for (Session session : sessions) {
-                if (!session.isStatus()) {
-                    continue;
-                }
-
-                LocalDateTime sessionDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(session.getTimestamp()), ZoneId.systemDefault());
-                if (isWithinPeriod(sessionDateTime, startTime, endTime)) {
-                    filteredSessions.add(session);  // Add the session to the filtered list
-                }
-            }
-            return filteredSessions;  // Return the filtered sessions
-        }
-
-        private void updateTagDistributionChart(List<Session> sessions) {
+        private void updateTagDistributionChart(List<Session> sessions, String period) {
             Map<String, Long> tagDurations = new HashMap<>();
             Map<String, Integer> tagColors = new HashMap<>();
-            long totalDuration = 0;
-
-            // Calculate durations for each tag and assign colors
-            for (Session session : sessions) {
-                    String tagName = session.getTag().getName();
-                    long duration = session.getDuration();
-                    tagDurations.put(tagName, tagDurations.getOrDefault(tagName, 0L) + duration);
-                    totalDuration += duration;
-
-                    // Assign color to each tag if not already assigned
-                    if (!tagColors.containsKey(tagName)) {
-                        tagColors.put(tagName, session.getTag().getColor());
-                }
-            }
-
-            // Prepare data for the pie chart
-            List<PieEntry> entries = new ArrayList<>();
-            List<Integer> colors = new ArrayList<>();
-            LinearLayout tagListLayout = findViewById(R.id.tag_list);
-            tagListLayout.removeAllViews();
-
-            for (Map.Entry<String, Long> entry : tagDurations.entrySet()) {
-                float percentage = (float) entry.getValue() / totalDuration * 100;
-                entries.add(new PieEntry(percentage, entry.getKey()));
-                int color = tagColors.get(entry.getKey());  // Retrieve color from the map
-                colors.add(color);
-
-                addTagItem(tagListLayout, entry.getKey(), color, entry.getValue(), totalDuration);
-            }
-
-            PieDataSet dataSet = new PieDataSet(entries, "Tag Distribution");
-            dataSet.setColors(colors);
-            dataSet.setValueTextSize(12f);
-            dataSet.setValueTextColor(Color.WHITE);
-            dataSet.setValueFormatter(new PercentFormatter());
-
-            tagDistributionChart.setData(new PieData(dataSet));
-            tagDistributionChart.setRotationAngle(270f);
-            tagDistributionChart.setRotationEnabled(false);
-            tagDistributionChart.animateY(1500, Easing.EaseInOutCubic);
-            tagDistributionChart.invalidate();
+            tagDistributionChart.updateTagDistributionChart(sessions, period, tagDurations, tagColors);
 
             String mostFocusedTag;
             if (!tagDurations.isEmpty()) {
@@ -482,23 +247,6 @@
             TextView tagDistributionText = findViewById(R.id.tag_distribution);
             tagDistributionText.setText(mostFocusedTag);
             tagDistributionText.setTextColor(mostFocusedTagColor);
-
-            tagDistributionChart.invalidate(); // refresh the chart
-        }
-
-        private void addTagItem(LinearLayout tagListLayout, String tagName, int color, long duration, long totalDuration) {
-            View tagItem = getLayoutInflater().inflate(R.layout.statistic_tag_item, tagListLayout, false);
-            View colorView = tagItem.findViewById(R.id.tag_color);
-            TextView nameView = tagItem.findViewById(R.id.tag_name);
-            TextView valueView = tagItem.findViewById(R.id.tag_value);
-
-            colorView.setBackgroundColor(color);
-            nameView.setText(tagName);
-            valueView.setText(String.format("%d%% (%d mins)",
-                    Math.round((float) duration / totalDuration * 100),
-                    duration / 60));
-
-            tagListLayout.addView(tagItem);
         }
 
 
@@ -563,139 +311,8 @@
             updateCharts(sessions);
         }
 
-        private LocalDateTime getStartOfPeriod(String period) {
-            Calendar calendar = timeManager.getCurrentDate();
-            LocalDateTime currentDate = LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
-
-            switch (period) {
-                case "Day":
-                    return currentDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
-                case "Week":
-                    LocalDateTime startOfWeek = currentDate.with(DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
-                    return startOfWeek;
-                case "Month":
-                    return currentDate.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
-                case "Year":
-                    return currentDate.withDayOfYear(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
-                default:
-                    return currentDate;
-            }
-        }
-
-
-        private LocalDateTime getEndOfPeriod(String period) {
-            LocalDateTime start = getStartOfPeriod(period);
-            switch (period) {
-                case "Day":
-                    return start.plusDays(1);
-                case "Week":
-                    return start.plusWeeks(1);
-                case "Month":
-                    return start.plusMonths(1);
-                case "Year":
-                    return start.plusYears(1);
-                default:
-                    return start;
-            }
-        }
-
-        private boolean isWithinPeriod(LocalDateTime dateTime, LocalDateTime start, LocalDateTime end) {
-            return (dateTime.isEqual(start) || dateTime.isAfter(start)) && dateTime.isBefore(end);
-        }
-
-        private int getIntervalIndex(LocalDateTime dateTime, String period, int intervalDuration) {
-            switch (period) {
-                case "Day":
-                    return dateTime.getHour() / intervalDuration;
-                case "Week":
-                    return dateTime.getDayOfWeek().getValue() - 1;
-                case "Month":
-                    return (dateTime.getDayOfMonth() - 1) / intervalDuration >= numDayIntervals ? numDayIntervals - 1 : (dateTime.getDayOfMonth() - 1) / intervalDuration;
-                case "Year":
-                    return dateTime.getMonthValue() - 1;
-                default:
-                    return 0;
-            }
-        }
-
-        private int getIntervalDuration(String period) {
-            switch (period) {
-                case "Day":
-                    return 24 / numHourIntervals;
-                case "Month":
-                    return timeManager.getCurrentDateTime().toLocalDate().lengthOfMonth() / numDayIntervals;
-                default:
-                    return 1;
-            }
-        }
-
-        private int getNumInterval(String period) {
-            switch (period) {
-                case "Day":
-                    return numHourIntervals;
-                case "Week":
-                    return 7;
-                case "Month":
-                    return numDayIntervals;
-                case "Year":
-                    return 12;
-                default:
-                    return 0;
-            }
-        }
-
-        private String formatIntervalLabel(int interval, String period, int intervalDuration) {
-            switch (period) {
-                case "Day":
-                    int startHour = interval * intervalDuration;
-                    int endHour = (interval + 1) * intervalDuration;
-                    return String.format("%dh-%dh", startHour, endHour < 24 ? endHour : endHour - 24);
-                case "Week":
-                    int dayOfWeekIndex = (interval % 7) + 1;
-                    return DayOfWeek.of(dayOfWeekIndex).toString().substring(0, 3);
-                case "Month":
-                    int startDay = interval * intervalDuration;
-                    int endDay = (interval + 1) * intervalDuration;
-                    if (interval == numDayIntervals - 1) {
-                        endDay = timeManager.getCurrentDateTime().toLocalDate().lengthOfMonth();
-                    }
-                    return String.format("Day %d-%d", startDay + 1, Math.min(endDay,timeManager.getCurrentDateTime().toLocalDate().lengthOfMonth()));
-                case "Year":
-                    int monthIndex = Math.max(0, Math.min(interval, 11));
-
-                    LocalDate currentDate = timeManager.getCurrentDateTime().toLocalDate();
-                    DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
-
-                    return monthFormatter.format(LocalDate.of(currentDate.getYear(), monthIndex + 1, 1));
-                default:
-                    return "";
-            }
-        }
-
-
         public interface OnDataFetchedCallback {
             void onDataFetched();
         }
 
-        private class FocusTimeMarkerView extends MarkerView {
-            private TextView tvContent;
-
-            public FocusTimeMarkerView(Context context, int layoutResource) {
-                super(context, layoutResource);
-                tvContent = findViewById(R.id.tvContent);
-            }
-
-            @Override
-            public void refreshContent(Entry e, Highlight highlight) {
-                int hours = (int) e.getY() / 60;
-                int minutes = (int) e.getY() % 60;
-                tvContent.setText(String.format("%d hours %d min", hours, minutes));
-                super.refreshContent(e, highlight);
-            }
-
-            @Override
-            public MPPointF getOffset() {
-                return new MPPointF(-((float) getWidth() / 2), -getHeight());
-            }
-        }
     }
