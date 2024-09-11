@@ -1,27 +1,23 @@
 package com.hfad.cs426_final_project;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.LayoutInflater;
-import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;

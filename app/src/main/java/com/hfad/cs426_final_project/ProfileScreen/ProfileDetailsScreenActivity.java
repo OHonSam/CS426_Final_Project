@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -37,12 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.LoginScreenActivity;
-import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
-import com.hfad.cs426_final_project.User;
-import com.hfad.cs426_final_project.WelcomeScreenActivity;
 
 public class ProfileDetailsScreenActivity extends AppCompatActivity {
     public static final int MY_REQUEST_CODE = 10;

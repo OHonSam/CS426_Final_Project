@@ -63,4 +63,8 @@ public class Tag {
     public void setColor(int color) {
         this.color = color;
     }
+
+    public boolean sameID(Tag tag) {
+        return this.id == tag.id;
+    }
 }

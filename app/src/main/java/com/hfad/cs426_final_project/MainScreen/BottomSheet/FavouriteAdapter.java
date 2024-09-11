@@ -1,6 +1,5 @@
 package com.hfad.cs426_final_project.MainScreen.BottomSheet;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +82,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
         // Set tag name and color
         holder.tvTagNameDisplay.setText(favourite.getTag().getName());
-        holder.tagColorView.setColorFilter(Color.parseColor(favourite.getTag().getColorHex()));
+        holder.tagColorView.setColorFilter(favourite.getTag().getColor());
 
         if (selectedPosition == position) {
             holder.favouriteBackgroundView.setBackground(ResourcesCompat.getDrawable(holder.itemView.getContext().getResources(), R.drawable.background_favourite_green, null));

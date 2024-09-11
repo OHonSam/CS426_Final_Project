@@ -2,7 +2,6 @@ package com.hfad.cs426_final_project;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,9 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
-import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 
 public class SignUpScreenActivity extends AppCompatActivity {
     private AppContext appContext;

@@ -47,7 +47,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tagNameTextView.setText(tag.getName());
-        holder.ivTagColor.setColorFilter(Color.parseColor(tag.getColorHex()));
+        holder.ivTagColor.setColorFilter(tag.getColor());
         if (selectedPosition == position) {
             holder.cvTag.setCardBackgroundColor(ResourcesCompat.getColor(holder.itemView.getContext().getResources(), R.color.primary_20, null));
         } else {
