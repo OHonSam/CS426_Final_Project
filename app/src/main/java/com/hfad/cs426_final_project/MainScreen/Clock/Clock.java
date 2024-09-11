@@ -37,8 +37,6 @@ public class Clock {
     private final int PROGRESS_MINUTES_MIN = 10;
     private final int PROGRESS_MINUTES_MAX = 120;
 
-
-
     //Number of seconds displayed on the stopwatch.
     private int seconds;
     //Is the stopwatch running?
@@ -87,6 +85,9 @@ public class Clock {
                     setIsEndSession(false);
                     stop();
                     reset();
+
+                    //ToDo: save a session (is count exceed: duration (target time + extra time(from seconds) ) > target time)
+
                     redirectToCongratulationScreen();
                     return;
                 }
@@ -187,6 +188,9 @@ public class Clock {
                 reset();
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
+
+                // TODO: save a session
+
                 redirectToCongratulationScreen();
             }
             else {
@@ -203,6 +207,9 @@ public class Clock {
             reset();
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
+
+            //TODO: save a session
+
             redirectToCongratulationScreen();
         }
     }
@@ -240,6 +247,9 @@ public class Clock {
                         runningOutside = false;
                         stop();
                         reset();
+
+                        // TODO: save a session
+
                         redirectToFailScreenActivity();
                     }
                 }
@@ -316,6 +326,9 @@ public class Clock {
     public void giveUp() {
         stop();
         reset();
+
+        // TODO: save a session
+
         redirectToFailScreenActivity();
     }
 
