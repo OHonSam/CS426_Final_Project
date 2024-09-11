@@ -190,3 +190,27 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     }
 }
 
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+    }
+
+    private void animateToggleIcon(float slideOffset) {
+        // Rotate the toggle icon from 0 to 180 degrees based on the slide offset
+        float rotationAngle = slideOffset * 180; // Rotate between 0 (closed) and 180 (open)
+        toggleIcon.setRotation(rotationAngle);
+    }
+
+    protected void setToggleColor(int color) {
+        toggleIcon.setColorFilter(color);
+    }
+}

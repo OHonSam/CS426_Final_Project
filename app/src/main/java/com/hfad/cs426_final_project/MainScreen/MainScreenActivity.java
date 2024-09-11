@@ -69,9 +69,7 @@ public class MainScreenActivity extends BaseScreenActivity {
     BottomSheetMainScreen bottomSheet;
 
     private CircularSeekBar progressBar;
-
     private ActivityResultLauncher<Intent> failScreenLauncher;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
@@ -105,7 +103,6 @@ public class MainScreenActivity extends BaseScreenActivity {
                     }
                 }
         );
-
     }
 
     @Override
@@ -376,7 +373,6 @@ public class MainScreenActivity extends BaseScreenActivity {
     public void navigateBottomSheetSelectionFragment() {
         bottomSheet.navigateSelectionFragment();
     }
-
 
     @Override
     public void redirectToFailScreenActivity() {

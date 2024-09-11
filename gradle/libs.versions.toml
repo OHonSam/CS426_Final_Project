@@ -31,4 +31,3 @@ cardview = { group = "androidx.cardview", name = "cardview", version.ref = "card
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-
