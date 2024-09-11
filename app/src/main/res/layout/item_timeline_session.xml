@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:paddingHorizontal="16dp">
     <ImageView
         android:id="@+id/ic_head"
         android:layout_width="wrap_content"
@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:text="13:24"
         style="@style/Title"
+        android:textColor="@color/black"
         android:layout_toEndOf="@+id/ic_head"
         android:layout_alignTop="@id/ic_head"
         android:layout_marginHorizontal="16dp"
@@ -33,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="You gave up and failed to grow a Bush."
+        android:textColor="@color/black"
         style="@style/BodyText"
         android:layout_alignTop="@+id/bar"
         android:layout_alignStart="@+id/tvTimeStart"/>
@@ -61,9 +63,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="13:23 - 13:24"
+                        android:textColor="@color/black"
                         style="@style/SubTitle"
                         android:layout_centerHorizontal="true"/>
                     <ImageView
+                        android:id="@+id/ivTreeDisplay"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:src="@drawable/tree"
@@ -71,15 +75,24 @@
                         android:layout_below="@id/tvDuration"
                         android:layout_centerInParent="true"/>
                 </RelativeLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Study"
-                    style="@style/SubTitle"
-                    android:drawableStart="@drawable/tag"
-                    android:drawablePadding="16dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="4dp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/ic_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/tag"
+                        android:padding="12dp"/>
+                    <TextView
+                        android:id="@+id/tvTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Study"
+                        style="@style/SubTitle"
+                        android:layout_toEndOf="@id/ic_tag"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
