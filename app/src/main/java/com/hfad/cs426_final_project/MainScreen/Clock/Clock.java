@@ -12,14 +12,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
-import com.hfad.cs426_final_project.FailScreenActivity;
 import com.hfad.cs426_final_project.R;
 
 import java.util.Locale;
@@ -29,7 +26,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 public class Clock {
     public static enum ClockMode {
         STOPWATCH,
-        TIMER
+        TIMER;
     }
 
     private OnClockListener onClockListener;
