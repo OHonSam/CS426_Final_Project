@@ -145,7 +145,7 @@ public class SignUpScreenActivity extends AppCompatActivity {
                 // Create a new User object with the new user ID
                 User newUser = new User(cnt, email, password, name);
                 List<Session> sessionsList = new ArrayList<>();
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 5; i++) {
                     sessionsList.add(new Session(i));
                 }
                 newUser.setSessions(sessionsList);

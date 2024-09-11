@@ -42,6 +42,7 @@
     import com.github.mikephil.charting.utils.Utils;
     import com.google.android.material.button.MaterialButtonToggleGroup;
     import com.hfad.cs426_final_project.AppContext;
+    import com.hfad.cs426_final_project.BaseScreenActivity;
     import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
     import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
     import com.hfad.cs426_final_project.DataStorage.Tag;
@@ -71,10 +72,10 @@
     import com.hfad.cs426_final_project.DataStorage.Session;
     import com.hfad.cs426_final_project.User;
 
-    public class StatisticScreenActivity extends AppCompatActivity {
+    public class StatisticScreenActivity extends BaseScreenActivity {
 
         private MaterialButtonToggleGroup toggleGroup;
-        private ClickableImageView escapeBtn, shareBtn, backBtn, forwardBtn, cancelBtn;
+        private ClickableImageView shareBtn, backBtn, forwardBtn, cancelBtn;
         private TextView timeSelectionText, totalFocusTimeText, numLiveTree, numDeadTree;
         private TimeManager timeManager;
         private LineChart focusTimeLineChart;
@@ -89,16 +90,16 @@
 
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_statistic_screen);
-             initializeComponents();
+            initializeComponents();
+            setToggleColor(Color.WHITE);
+        }
+
+        @Override
+        protected int getLayoutId() {
+            return R.layout.activity_statistic_screen;
         }
 
         private void initializeComponents() {
-            escapeBtn = findViewById(R.id.escape_btn);
-            escapeBtn.setOnClickListener(v -> {
-                finish();
-            });
-
             shareBtn = findViewById(R.id.share_btn);
             shareBtn.setOnClickListener(v -> {
             });

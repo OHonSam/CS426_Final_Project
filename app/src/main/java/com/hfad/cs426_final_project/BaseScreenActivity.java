@@ -129,9 +129,6 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, RankingScreenActivity.class);
         } else if (id == R.id.nav_statistic_screen) {
             intent = new Intent(this, StatisticScreenActivity.class);
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(intent);
-            return true;
         }
 
         // If an intent is created, start the new activity

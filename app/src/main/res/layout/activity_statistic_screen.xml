@@ -13,14 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
-            android:id="@+id/escape_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/escape_btn"
-            android:paddingHorizontal="18dp"
-            android:paddingVertical="16dp"
-            android:layout_alignParentStart="true"/>
+
         <TextView
             android:id="@+id/Overview"
             android:layout_width="wrap_content"
