@@ -19,6 +19,10 @@
             android:icon="@drawable/store_screen_ic"
             android:title="Store" />
         <item
+            android:id="@+id/nav_timeline_screen"
+            android:icon="@drawable/ic_timeline"
+            android:title="Timeline" />
+        <item
             android:id="@+id/nav_profile_setting"
             android:icon="@drawable/ic_account"
             android:title="Profile Setting" />
