@@ -15,9 +15,12 @@ import android.widget.TextView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.User;
 
 import java.util.Locale;
 
@@ -90,7 +93,7 @@ public class Clock {
                     reset();
 
                     //ToDo: save a session (is count exceed: duration (target time + extra time(from seconds) ) > target time)
-
+                    saveSession(true);
                     redirectToCongratulationScreen();
                     return;
                 }
@@ -105,7 +108,6 @@ public class Clock {
             }
         });
     }
-
 
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
@@ -194,7 +196,7 @@ public class Clock {
                 notifyOrVibrate(context);
 
                 // TODO: save a session
-
+                saveSession(true);
                 redirectToCongratulationScreen();
             }
             else {
@@ -213,7 +215,7 @@ public class Clock {
             notifyOrVibrate(context);
 
             //TODO: save a session
-
+            saveSession(true);
             redirectToCongratulationScreen();
         }
     }
@@ -253,6 +255,8 @@ public class Clock {
                         reset();
 
                         // TODO: save a session
+                        saveSession(false);
+                        redirectToFailScreenActivity();
 
                         // Retrieve the string from strings.xml using the context
                         String message = context.getString(R.string.reason_why_tree_withered_non_focus);
@@ -334,6 +338,8 @@ public class Clock {
         reset();
 
         // TODO: save a session
+        saveSession(false);
+        redirectToFailScreenActivity();
 
         // Retrieve the string from strings.xml using the context
         String message = context.getString(R.string.reason_why_tree_withered_give_up);
@@ -409,5 +415,27 @@ public class Clock {
     private void updateStartButton(String text, int colorResId) {
         startButton.setText(text);
         startButton.setBackgroundTintList(ContextCompat.getColorStateList(startButton.getContext(), colorResId));
+    }
+
+    private void saveSession(boolean isComplete) {
+        User user = AppContext.getInstance().getCurrentUser();
+
+        Session session = new Session();
+        session.setId(user.getSessions().size());
+        session.setStatus(isComplete);
+        int duration = 0;
+        if(clockSetting.getType() == ClockMode.STOPWATCH)
+            duration = seconds;
+        else if(clockSetting.getIsCountExceedTime()) {
+            duration = clockSetting.getTargetTime() + seconds;
+        }
+        else {
+            duration = clockSetting.getTargetTime();
+        }
+        session.setDuration(duration);
+        session.setTimestamp(System.currentTimeMillis());
+        session.setTree(user.getUserSetting().getSelectedTree());
+        session.setTag(user.getFocusTag());
+        user.getSessions().add(session);
     }
 }
