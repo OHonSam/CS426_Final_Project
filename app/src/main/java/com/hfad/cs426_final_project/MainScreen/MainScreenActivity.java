@@ -20,6 +20,8 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,9 +36,11 @@ import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.FailScreenActivity;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.BottomSheet.BottomSheetMainScreen;
+import com.hfad.cs426_final_project.MainScreen.Clock.onClockListener;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
@@ -65,6 +69,8 @@ public class MainScreenActivity extends BaseScreenActivity {
 
     private CircularSeekBar progressBar;
 
+    private ActivityResultLauncher<Intent> failScreenLauncher;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
@@ -88,6 +94,17 @@ public class MainScreenActivity extends BaseScreenActivity {
 
         setupTree();
         setupBottomSheet();
+
+        failScreenLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Start the clock for a new session
+                        clock.start();
+                    }
+                }
+        );
+
     }
 
     @Override
@@ -178,7 +195,7 @@ public class MainScreenActivity extends BaseScreenActivity {
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle, this);
         appContext.setCurrentClock(clock);
     }
 
@@ -389,5 +406,12 @@ public class MainScreenActivity extends BaseScreenActivity {
 
     public void navigateBottomSheetSelectionFragment() {
         bottomSheet.navigateSelectionFragment();
+    }
+
+
+    @Override
+    public void redirectToFailScreenActivity() {
+        Intent intent = new Intent(this, FailScreenActivity.class);
+        failScreenLauncher.launch(intent);
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -30,6 +31,12 @@ public class Clock {
         STOPWATCH,
         TIMER;
     }
+
+    public void setOnClockListener(onClockListener listener) {
+        this.onClockListener = listener;
+    }
+
+    private onClockListener onClockListener;
 
     private static final String CHANNEL_ID = "clock_channel_id";
     private static final int NOTIFICATION_ID = 1;
@@ -63,7 +70,7 @@ public class Clock {
     private CircularSeekBar progressBar;
     private ImageView toggleIcon;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ImageView toggleIcon) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ImageView toggleIcon, onClockListener onClockListener) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
@@ -77,6 +84,7 @@ public class Clock {
         this.progressBar = progressBar;
         this.btnClockModePicker = btnClockModePicker;
         this.toggleIcon = toggleIcon;
+        this.onClockListener = onClockListener;
         initProgressBar();
         setupStartButton();
     }
@@ -113,11 +121,12 @@ public class Clock {
         context.startActivity(intent);
     }
 
-    private void redirectToFailScreenActivity() {
-        // TODO: Redirect to FailScreenActivity
-        Intent intent = new Intent(context, FailScreenActivity.class);
-        context.startActivity(intent);
-    }
+//    private void redirectToFailScreenActivity() {
+//        ActivityResultLauncher<Intent> failScreenLauncher
+//        // TODO: Redirect to FailScreenActivity
+//        Intent intent = new Intent(context, FailScreenActivity.class);
+//
+//    }
 
     private void initProgressBar() {
         progressBar.setMax(TOTAL_PROGRESS_INTERVAL);
@@ -255,7 +264,7 @@ public class Clock {
 
                         // TODO: save a session
 
-                        redirectToFailScreenActivity();
+                        onClockListener.redirectToFailScreenActivity();
                     }
                 }
                 deepModeHandler.postDelayed(this, 1000);
@@ -285,7 +294,7 @@ public class Clock {
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        startForegroundService();
+        //startForegroundService();
     }
 
     public void stop() {
@@ -334,7 +343,7 @@ public class Clock {
 
         // TODO: save a session
 
-        redirectToFailScreenActivity();
+        onClockListener.redirectToFailScreenActivity();
     }
 
     public void setClockMode(ClockMode mClockMode) {
