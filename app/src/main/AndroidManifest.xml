@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -32,47 +35,65 @@
         <activity
             android:name=".BaseScreenActivity"
             android:exported="false" />
-
-        <service
-            android:name=".MainScreen.Clock.ClockService"
+        <activity
+            android:name=".FailScreenActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".CongratulationScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainScreen.AddNewTagActivity"
-            android:exported="false" />
-        <activity
-            android:name=".WelcomeScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".StoreScreen.StoreScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainScreen.MainScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".StatisticScreen.StatisticScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SignUpScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RankingScreen.RankingScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginScreenActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".SplashScreenActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    <service
+        android:name=".MainScreen.Clock.ClockService"
+        android:exported="false" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+    <activity
+        android:name=".CongratulationScreenActivity"
+        android:exported="false" />
+    <activity
+        android:name=".MainScreen.AddNewTagActivity"
+        android:exported="false" />
+    <activity
+        android:name=".WelcomeScreenActivity"
+        android:exported="false" />
+    <activity
+        android:name=".StoreScreen.StoreScreenActivity"
+        android:exported="false" />
+    <activity
+        android:name=".MainScreen.MainScreenActivity"
+        android:exported="false" />
+
+
+    <activity
+        android:name=".FailScreenActivity"
+        android:exported="false" />
+    <activity
+        android:name=".StatisticScreen.StatisticScreenActivity"
+        android:exported="false" />
+    <activity
+        android:name=".SignUpScreenActivity"
+        android:exported="false" />
+    <activity
+        android:name=".RankingScreen.RankingScreenActivity"
+        android:exported="false"/>
+    <activity
+        android:name=".LoginScreenActivity"
+        android:exported="false"/>
+    <activity
+        android:name=".SplashScreenActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+    <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.yourpackage.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+    </provider>
+</application>
 
 </manifest>

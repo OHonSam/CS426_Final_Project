@@ -29,6 +29,8 @@ public class Clock {
         TIMER;
     }
 
+    private OnClockListener onClockListener;
+
     private static final String CHANNEL_ID = "clock_channel_id";
     private static final int NOTIFICATION_ID = 1;
     private final int TIME_LIMIT_OUTSIDE = 10;
@@ -36,6 +38,8 @@ public class Clock {
     private final int PROGRESS_INTERVAL_LEN = 5;
     private final int PROGRESS_MINUTES_MIN = 10;
     private final int PROGRESS_MINUTES_MAX = 120;
+
+
 
     //Number of seconds displayed on the stopwatch.
     private int seconds;
@@ -53,13 +57,12 @@ public class Clock {
     private TextView timeView;
     private MyButton startButton;
     private Context context;
-    private MyButton btnClockModePicker;
 
     private ClockSetting clockSetting;
     private CircularSeekBar progressBar;
     private ImageView toggleIcon;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, MyButton btnClockModePicker, ImageView toggleIcon) {
+    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, ImageView toggleIcon, OnClockListener onClockListener) {
         this.context = context;
         this.timeView = timeView;
         this.startButton = startButton;
@@ -71,8 +74,8 @@ public class Clock {
         this.runnableClock = createClockRunnable();
         this.runnableDeepMode = createDeepModeRunnable();
         this.progressBar = progressBar;
-        this.btnClockModePicker = btnClockModePicker;
         this.toggleIcon = toggleIcon;
+        this.onClockListener = onClockListener;
         initProgressBar();
         setupStartButton();
     }
@@ -241,7 +244,6 @@ public class Clock {
             public void run() {
                 // print notification
                 if (runningOutside && running) {
-                    Log.d("ClockOutside", "Seconds:" + secondsOutside);
                     secondsOutside--;
                     if (secondsOutside < 0) {
                         runningOutside = false;
@@ -250,7 +252,7 @@ public class Clock {
 
                         // TODO: save a session
 
-                        redirectToFailScreenActivity();
+                        onClockListener.redirectToFailScreenActivity();
                     }
                 }
                 deepModeHandler.postDelayed(this, 1000);
@@ -280,7 +282,7 @@ public class Clock {
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        startForegroundService();
+        //startForegroundService();
     }
 
     public void stop() {
@@ -329,7 +331,7 @@ public class Clock {
 
         // TODO: save a session
 
-        redirectToFailScreenActivity();
+        onClockListener.redirectToFailScreenActivity();
     }
 
     public void setClockMode(ClockMode mClockMode) {

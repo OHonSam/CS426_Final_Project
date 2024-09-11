@@ -189,4 +189,3 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         toggleIcon.setColorFilter(color);
     }
 }
-

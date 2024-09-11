@@ -20,8 +20,9 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -34,9 +35,11 @@ import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.FailScreenActivity;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.BottomSheet.BottomSheetMainScreen;
+import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
@@ -47,7 +50,7 @@ import java.util.List;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
-public class MainScreenActivity extends BaseScreenActivity {
+public class MainScreenActivity extends BaseScreenActivity implements OnClockListener {
     private AppContext appContext;
     private ImageView imgTree;
     private TextView timeView;
@@ -64,7 +67,7 @@ public class MainScreenActivity extends BaseScreenActivity {
     BottomSheetMainScreen bottomSheet;
 
     private CircularSeekBar progressBar;
-
+    private ActivityResultLauncher<Intent> failScreenLauncher;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
@@ -83,12 +86,21 @@ public class MainScreenActivity extends BaseScreenActivity {
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
-
         setupClockModePickerDialog();
         setupClock();
 
         setupTree();
         setupBottomSheet();
+
+        failScreenLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Start the clock for a new session
+                        clock.start();
+                    }
+                }
+        );
     }
 
     @Override
@@ -155,19 +167,11 @@ public class MainScreenActivity extends BaseScreenActivity {
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggleIcon);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, toggleIcon, this);
         appContext.setCurrentClock(clock);
     }
 
     private void setupClockModePickerDialog() {
-        enableClockModePickerDialog(); // Initially enable the click listener
-    }
-
-    private void disableClockModePickerDialog() {
-        btnClockModePicker.setOnClickListener(null);
-    }
-
-    private void enableClockModePickerDialog() {
         btnClockModePicker.setOnClickListener(v -> {
             showModePickerDialog();
         });
@@ -366,5 +370,11 @@ public class MainScreenActivity extends BaseScreenActivity {
 
     public void navigateBottomSheetSelectionFragment() {
         bottomSheet.navigateSelectionFragment();
+    }
+
+    @Override
+    public void redirectToFailScreenActivity() {
+        Intent intent = new Intent(this, FailScreenActivity.class);
+        failScreenLauncher.launch(intent);
     }
 }
