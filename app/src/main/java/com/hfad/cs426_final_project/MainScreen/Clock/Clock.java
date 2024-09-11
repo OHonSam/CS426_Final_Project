@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -31,7 +29,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 public class Clock {
     public static enum ClockMode {
         STOPWATCH,
-        TIMER
+        TIMER;
     }
 
     private OnClockListener onClockListener;
