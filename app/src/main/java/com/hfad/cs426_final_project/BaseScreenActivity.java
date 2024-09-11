@@ -21,6 +21,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;
+import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 
 import java.util.Objects;
@@ -126,6 +127,11 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, ProfileScreenActivity.class);
         } else if (id == R.id.nav_ranking_screen) {
             intent = new Intent(this, RankingScreenActivity.class);
+        } else if (id == R.id.nav_statistic_screen) {
+            intent = new Intent(this, StatisticScreenActivity.class);
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(intent);
+            return true;
         }
 
         // If an intent is created, start the new activity

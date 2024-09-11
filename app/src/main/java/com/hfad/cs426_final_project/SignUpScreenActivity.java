@@ -24,9 +24,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignUpScreenActivity extends AppCompatActivity {
     private AppContext appContext;
@@ -140,6 +144,12 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
                 // Create a new User object with the new user ID
                 User newUser = new User(cnt, email, password, name);
+                List<Session> sessionsList = new ArrayList<>();
+                for (int i = 0; i < 30; i++) {
+                    sessionsList.add(new Session(i));
+                }
+                newUser.setSessions(sessionsList);
+
                 newUser.getUserSetting().getSelectedTree().fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

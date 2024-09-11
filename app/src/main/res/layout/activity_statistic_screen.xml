@@ -283,7 +283,7 @@
                     android:layout_gravity="center|top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tag focused most and completed"
+                    android:text="Tag focused most"
                     android:elegantTextHeight="true"
                     android:textColor="@color/black"
                     style="@style/LabelSmall"

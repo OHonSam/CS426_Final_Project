@@ -41,6 +41,7 @@
     import com.github.mikephil.charting.utils.MPPointF;
     import com.github.mikephil.charting.utils.Utils;
     import com.google.android.material.button.MaterialButtonToggleGroup;
+    import com.hfad.cs426_final_project.AppContext;
     import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
     import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
     import com.hfad.cs426_final_project.DataStorage.Tag;
@@ -68,11 +69,12 @@
     import java.util.Map;
 
     import com.hfad.cs426_final_project.DataStorage.Session;
+    import com.hfad.cs426_final_project.User;
 
     public class StatisticScreenActivity extends AppCompatActivity {
 
         private MaterialButtonToggleGroup toggleGroup;
-        private ClickableImageView escapeBtn, shareBtn, backBtn, forwardBtn;
+        private ClickableImageView escapeBtn, shareBtn, backBtn, forwardBtn, cancelBtn;
         private TextView timeSelectionText, totalFocusTimeText, numLiveTree, numDeadTree;
         private TimeManager timeManager;
         private LineChart focusTimeLineChart;
@@ -94,18 +96,19 @@
         private void initializeComponents() {
             escapeBtn = findViewById(R.id.escape_btn);
             escapeBtn.setOnClickListener(v -> {
+                finish();
             });
 
             shareBtn = findViewById(R.id.share_btn);
             shareBtn.setOnClickListener(v -> {
             });
 
+            backBtn = findViewById(R.id.back_btn);
+            forwardBtn = findViewById(R.id.forward_btn);
             timeSelectionText = findViewById(R.id.time_selection_text);
             totalFocusTimeText = findViewById(R.id.total_focused_time);
             numLiveTree = findViewById(R.id.num_live_tree);
             numDeadTree = findViewById(R.id.num_dead_tree);
-            backBtn = findViewById(R.id.back_btn);
-            forwardBtn = findViewById(R.id.forward_btn);
 
             timeManager = TimeManager.getInstance();
             initializePeriodSelection();
@@ -139,8 +142,15 @@
 
         private void fetchDataForChart(OnDataFetchedCallback callback) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference usersRef = database.getReference("Users_bao");
-            DatabaseReference userRef = usersRef.child("User0");
+            User currentUser = AppContext.getInstance().getCurrentUser();
+            Log.d("Current user", currentUser.getId() + "");
+            if (currentUser == null) {
+                // Handle the case where there's no current user logged in (e.g., show an error message)
+                return;
+            }
+
+            DatabaseReference usersRef = database.getReference("Users");
+            DatabaseReference userRef = usersRef.child("User" + currentUser.getId());
             DatabaseReference databaseRef = userRef.child("sessions");
 
             databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -149,6 +159,7 @@
                     for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
                         Session session = sessionSnapshot.getValue(Session.class);
                         assert session != null;
+                        Log.d("Sessionn", session.getTimestamp() + "");
                         Log.d("Timestamp", session.getDateTimeFromTimestamp() + "");
                         sessions.add(session);
                     }
@@ -314,5 +325,4 @@
         public interface OnDataFetchedCallback {
             void onDataFetched();
         }
-
     }

@@ -57,9 +57,9 @@ public class TagDistributionChart {
         LocalDateTime endTime = chartUtils.getEndOfPeriod(period, startTime);
 
         for (Session session : sessions) {
-            if (!session.isStatus()) {
-                continue;
-            }
+//            if (!session.isStatus()) {
+//                continue;
+//            } later use
 
             LocalDateTime sessionDateTime = LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(session.getTimestamp()), java.time.ZoneId.systemDefault());
             if (chartUtils.isWithinPeriod(sessionDateTime, startTime, endTime)) {

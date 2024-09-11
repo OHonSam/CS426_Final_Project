@@ -213,4 +213,12 @@ public class User {
         }
         return false;
     }
+
+    public void setSessions(List<Session> sessionsList) {
+        this.sessions = sessionsList;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
+    }
 }

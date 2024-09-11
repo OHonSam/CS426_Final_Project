@@ -50,7 +50,7 @@
             android:name=".MainScreen.MainScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginScreenActivity"
+            android:name=".StatisticScreen.StatisticScreenActivity"
             android:exported="false" />
         <activity
             android:name=".SignUpScreenActivity"
@@ -59,7 +59,7 @@
             android:name=".RankingScreen.RankingScreenActivity"
             android:exported="false"/>
         <activity
-            android:name=".StatisticScreen.StatisticScreenActivity"
+            android:name=".LoginScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
