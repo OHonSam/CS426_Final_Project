@@ -25,6 +25,16 @@ public class CalendarUtils {
         return date.format(formatter);
     }
 
+    public static String getMonthDayFromDate(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH);
+        return date.format(formatter);
+    }
+
+    public static String getFormattedShortTime(LocalTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(formatter);
+    }
+
     public static ArrayList<LocalDate> generateDaysInMonthArray(LocalDate date) {
         ArrayList<LocalDate> daysInMonthArray = new ArrayList<>();
         YearMonth yearMonth = YearMonth.from(date);

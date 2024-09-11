@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp" >
+
+    <TextView
+        android:id="@+id/tvTime"
+        style="@style/Title"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:text="17:00"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/darkgray"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+        <TextView
+            android:id="@+id/task1"
+            style="@style/BodyText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/rounded_white_bar"
+            android:lines="2"
+            android:text="Task Details"
+            />
+        <TextView
+            android:id="@+id/task2"
+            style="@style/BodyText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/rounded_white_bar"
+            android:lines="2"
+            android:text="Task Details"
+            />
+        <TextView
+            android:id="@+id/task3"
+            style="@style/BodyText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/rounded_white_bar"
+            android:lines="2"
+            android:text="Task Details"
+            />
+    </LinearLayout>
+
+</LinearLayout>

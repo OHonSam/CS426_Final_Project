@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ToDoCalendarScreen.ToDoScreenActivity">
+
     <TextView
         android:id="@+id/tvTitle_ToDoScreen"
         android:layout_width="match_parent"
@@ -20,11 +21,12 @@
         />
     <com.hfad.cs426_final_project.CustomUIComponent.MyButton
         android:id="@+id/btnSwitchWeeklyMode"
+        style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/ButtonText"
+        android:backgroundTint="@color/primary_20"
+        android:background="@drawable/button_border"
         android:text="Weekly"
-        android:backgroundTint="@color/background"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle_ToDoScreen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

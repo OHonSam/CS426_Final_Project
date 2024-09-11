@@ -29,7 +29,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.task_cell, parent, false);
         }
-        TextView tvTaskCell = convertView.findViewById(R.id.tvTaskCell);
+        TextView tvTaskCell = convertView.findViewById(R.id.tvTime);
         assert task != null;
         tvTaskCell.setText(task.getTitle() + " " + CalendarUtils.getFormattedTime(task.getTime()));
         return convertView;

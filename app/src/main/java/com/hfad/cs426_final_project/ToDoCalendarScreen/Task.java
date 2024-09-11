@@ -23,6 +23,16 @@ public class Task {
         return tasks;
     }
 
+    public static ArrayList<Task> getTasksForDateAndTime(LocalDate date, LocalTime time) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        for (Task task : tasksList) {
+            if (task.getDate().equals(date) && task.getTime().getHour() == time.getHour()) {
+                tasks.add(task);
+            }
+        }
+        return tasks;
+    }
+
     public Task(LocalDate date, LocalTime time, String title) {
         this.date = date;
         this.time = time;
