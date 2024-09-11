@@ -189,7 +189,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle);
+        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle, this);
         appContext.setCurrentClock(clock);
     }
 

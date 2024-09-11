@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -114,11 +115,12 @@ public class Clock {
         context.startActivity(intent);
     }
 
-    private void redirectToFailScreenActivity() {
-        // TODO: Redirect to FailScreenActivity
-        Intent intent = new Intent(context, FailScreenActivity.class);
-        context.startActivity(intent);
-    }
+//    private void redirectToFailScreenActivity() {
+//        ActivityResultLauncher<Intent> failScreenLauncher
+//        // TODO: Redirect to FailScreenActivity
+//        Intent intent = new Intent(context, FailScreenActivity.class);
+//
+//    }
 
     private void initProgressBar() {
         progressBar.setMax(TOTAL_PROGRESS_INTERVAL);
