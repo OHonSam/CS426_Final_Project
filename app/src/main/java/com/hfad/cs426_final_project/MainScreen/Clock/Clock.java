@@ -90,10 +90,9 @@ public class Clock {
                 if (getClockSetting().getIsCountExceedTime() && getIsEndSession()) {
                     setIsEndSession(false);
                     stop();
+                    saveSession(true);
                     reset();
 
-                    //ToDo: save a session (is count exceed: duration (target time + extra time(from seconds) ) > target time)
-                    saveSession(true);
                     redirectToCongratulationScreen();
                     return;
                 }
@@ -191,12 +190,11 @@ public class Clock {
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
+                saveSession(true);
                 reset();
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
 
-                // TODO: save a session
-                saveSession(true);
                 redirectToCongratulationScreen();
             }
             else {
@@ -210,12 +208,11 @@ public class Clock {
         seconds += 60;
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
+            saveSession(true);
             reset();
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
 
-            //TODO: save a session
-            saveSession(true);
             redirectToCongratulationScreen();
         }
     }
@@ -252,11 +249,8 @@ public class Clock {
                     if (secondsOutside < 0) {
                         runningOutside = false;
                         stop();
-                        reset();
-
-                        // TODO: save a session
                         saveSession(false);
-                        redirectToFailScreenActivity();
+                        reset();
 
                         // Retrieve the string from strings.xml using the context
                         String message = context.getString(R.string.reason_why_tree_withered_non_focus);
@@ -335,11 +329,8 @@ public class Clock {
 
     public void giveUp() {
         stop();
-        reset();
-
-        // TODO: save a session
         saveSession(false);
-        redirectToFailScreenActivity();
+        reset();
 
         // Retrieve the string from strings.xml using the context
         String message = context.getString(R.string.reason_why_tree_withered_give_up);
@@ -423,15 +414,15 @@ public class Clock {
         Session session = new Session();
         session.setId(user.getSessions().size());
         session.setStatus(isComplete);
-        int duration = 0;
-        if(clockSetting.getType() == ClockMode.STOPWATCH)
+        int duration = clockSetting.getTargetTime();
+
+        if (!isComplete) {
             duration = seconds;
-        else if(clockSetting.getIsCountExceedTime()) {
-            duration = clockSetting.getTargetTime() + seconds;
+        } else if(clockSetting.getType() == ClockMode.TIMER && clockSetting.getIsCountExceedTime() && isEndSession) {
+            duration = clockSetting.getTargetTime() - seconds;
         }
-        else {
-            duration = clockSetting.getTargetTime();
-        }
+
+
         session.setDuration(duration);
         session.setTimestamp(System.currentTimeMillis());
         session.setTree(user.getUserSetting().getSelectedTree());
