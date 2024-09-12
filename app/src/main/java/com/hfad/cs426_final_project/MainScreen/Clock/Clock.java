@@ -246,6 +246,7 @@ public class Clock {
                 // print notification
                 if (runningOutside && running) {
                     secondsOutside--;
+                    Log.d("Outside",""+secondsOutside);
                     if (secondsOutside < 0) {
                         runningOutside = false;
                         stop();
@@ -253,7 +254,9 @@ public class Clock {
 
                         // TODO: save a session
 
-                        onClockListener.redirectToFailScreenActivity();
+                        // Retrieve the string from strings.xml using the context
+                        String message = context.getString(R.string.reason_why_tree_withered_non_focus);
+                        onClockListener.redirectToFailScreenActivity(message);
                     }
                 }
                 deepModeHandler.postDelayed(this, 1000);
@@ -283,7 +286,7 @@ public class Clock {
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        //startForegroundService();
+        startForegroundService();
     }
 
     public void stop() {
@@ -332,7 +335,9 @@ public class Clock {
 
         // TODO: save a session
 
-        onClockListener.redirectToFailScreenActivity();
+        // Retrieve the string from strings.xml using the context
+        String message = context.getString(R.string.reason_why_tree_withered_give_up);
+        onClockListener.redirectToFailScreenActivity(message);
     }
 
     public void setClockMode(ClockMode mClockMode) {
@@ -341,6 +346,7 @@ public class Clock {
     }
 
     public void enableDeepModeCount() {
+        Log.d("Outside","enableDeepModeCount triggered");
         runningOutside = true;
         secondsOutside = TIME_LIMIT_OUTSIDE;
         if (clockSetting.getIsDeepModeTimer() || clockSetting.getIsDeepModeStopwatch()) {

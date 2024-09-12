@@ -31,11 +31,8 @@
     <string name="failText">Oops! You can do better next time</string>
 
     <string name="title_why_tree_withered">Why did the tree wither?</string>
-    <string name="reason_why_tree_withered">Because you give up</string>
+    <string name="reason_why_tree_withered_give_up">Because you give up</string>
+    <string name="reason_why_tree_withered_non_focus">Because you are not focus on the app</string>
     <string name="ok">OK</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    
-    <string name="why_whithered_tree"><u>Check why tree withered</u></string>
-    <string name="failText">Oops! You can do better next time</string>
+
 </resources>
