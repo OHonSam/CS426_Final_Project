@@ -35,6 +35,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +67,12 @@ public class HexagonalLandView extends View {
     private float touchStartX, touchStartY;
     private static final float CLICK_TOLERANCE = 10f;
 
+    private static final long ANIMATION_DURATION = 1000; // 1 second for full cycle
+    private static final float MAX_BORDER_WIDTH = 8f; // Maximum border width in pixels
+    private long animationStartTime;
+    private Paint borderPaint;
+    private Path hexagonPath;
+
     public HexagonalLandView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
@@ -85,6 +93,15 @@ public class HexagonalLandView extends View {
         offsetX = offsetY = 0f;
         scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         loadTiles();
+
+        borderPaint = new Paint();
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setColor(ContextCompat.getColor(context, R.color.primary_20));
+        animationStartTime = System.currentTimeMillis();
+        hexagonPath = new Path();
+
+        // Start the animation
+        postInvalidateOnAnimation();
     }
 
     private void loadTiles() {
@@ -137,6 +154,10 @@ public class HexagonalLandView extends View {
         float centerX = getWidth() / 2f / scaleFactor;
         float centerY = getHeight() / 2f / scaleFactor;
 
+        float animationProgress = (System.currentTimeMillis() - animationStartTime) % ANIMATION_DURATION / (float) ANIMATION_DURATION;
+        float currentBorderWidth = MAX_BORDER_WIDTH * Math.abs(animationProgress - 0.5f) * 2;
+        borderPaint.setStrokeWidth(currentBorderWidth / scaleFactor);
+
         // Sort coordinates from top-left to bottom-right
         List<Map.Entry<Coordinate, TileType>> sortedTiles = new ArrayList<>(tiles.entrySet());
         Collections.sort(sortedTiles, (a, b) -> {
@@ -160,9 +181,31 @@ public class HexagonalLandView extends View {
             Bitmap tileToDraw = (type == TileType.NORMAL) ? normalTile : plusTile;
             matrix.setTranslate(x - TILE_SIZE / 2, y - TILE_SIZE / 2);
             canvas.drawBitmap(tileToDraw, matrix, null);
+
+            if (type == TileType.PLUS && isPlantingMode) {
+                drawHexagonBorder(canvas, x, y-6f, 50f, borderPaint);
+            }
         }
 
         canvas.restore();
+        postInvalidateOnAnimation();
+    }
+
+    private void drawHexagonBorder(Canvas canvas, float centerX, float centerY, float size, Paint paint) {
+        hexagonPath.reset();
+        for (int i = 0; i < 6; i++) {
+            float angle_deg = 60 * i;
+            float angle_rad = (float) (Math.PI / 180 * angle_deg);
+            float x = (float) (centerX + size * Math.cos(angle_rad));
+            float y = (float) (centerY + size * Math.sin(angle_rad));
+            if (i == 0) {
+                hexagonPath.moveTo(x, y);
+            } else {
+                hexagonPath.lineTo(x, y);
+            }
+        }
+        hexagonPath.close();
+        canvas.drawPath(hexagonPath, paint);
     }
 
     private void markUnsavedChanges() {

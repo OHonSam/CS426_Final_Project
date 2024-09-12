@@ -82,6 +82,9 @@
             android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".PlantingScreen.PlantingScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
