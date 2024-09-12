@@ -81,6 +81,7 @@ public class MusicAdapter extends  RecyclerView.Adapter<MusicAdapter.MusicViewHo
                 titleView.setTextAppearance(R.style.SubHead);
             } else {
                 itemView.setBackgroundColor(Color.TRANSPARENT);
+                titleView.setTextAppearance(R.style.SubTitle);
             }
 
 //            // Set a listener to handle press state

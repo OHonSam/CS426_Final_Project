@@ -20,18 +20,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CS426_Final_Project"
         tools:targetApi="31">
-        <activity
-            android:name=".FailScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".FailScreenActivity"
-            android:exported="false" />
-
         <service
             android:name=".MainScreen.Clock.ClockService"
             android:exported="false"
             android:foregroundServiceType=""/>
-
+        <activity
+            android:name=".TimelineScreen.TimelineScreenActivity"
+            android:exported="false" />
         <activity
             android:name=".CongratulationScreenActivity"
             android:exported="false" />
@@ -39,7 +34,16 @@
             android:name=".WelcomeScreenActivity"
             android:exported="false" />
         <activity
+            android:name=".ProfileScreen.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileScreen.ProfileDetailsScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileScreen.ProfileScreenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BaseScreenActivity"
             android:exported="false" />
         <activity
             android:name=".MainScreen.MainScreenActivity"
@@ -51,66 +55,38 @@
             android:name=".SignUpScreenActivity"
             android:exported="false" />
         <activity
+            android:name=".MainScreen.AddNewTagActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FailScreenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StoreScreen.StoreScreenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StatisticScreen.StatisticScreenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RankingScreen.RankingScreenActivity"
+            android:exported="false"/>
+        <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-    <service
-        android:name=".MainScreen.Clock.ClockService"
-        android:exported="false" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <activity
-        android:name=".CongratulationScreenActivity"
-        android:exported="false" />
-    <activity
-        android:name=".MainScreen.AddNewTagActivity"
-        android:exported="false" />
-    <activity
-        android:name=".WelcomeScreenActivity"
-        android:exported="false" />
-    <activity
-        android:name=".StoreScreen.StoreScreenActivity"
-        android:exported="false" />
-    <activity
-        android:name=".MainScreen.MainScreenActivity"
-        android:exported="false" />
-
-
-    <activity
-        android:name=".FailScreenActivity"
-        android:exported="false" />
-    <activity
-        android:name=".StatisticScreen.StatisticScreenActivity"
-        android:exported="false" />
-    <activity
-        android:name=".SignUpScreenActivity"
-        android:exported="false" />
-    <activity
-        android:name=".RankingScreen.RankingScreenActivity"
-        android:exported="false"/>
-    <activity
-        android:name=".LoginScreenActivity"
-        android:exported="false"/>
-    <activity
-        android:name=".SplashScreenActivity"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-
-    <provider
-        android:name="androidx.core.content.FileProvider"
-        android:authorities="com.yourpackage.fileprovider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths" />
-    </provider>
-</application>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.yourpackage.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
 </manifest>
