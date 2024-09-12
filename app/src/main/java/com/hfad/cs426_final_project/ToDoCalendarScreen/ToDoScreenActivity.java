@@ -68,7 +68,10 @@ public class ToDoScreenActivity extends BaseScreenActivity implements CalendarAd
 
     private void setMonthView() {
         monthYearText.setText(getMonthYearFromDate(CalendarUtils.selectedDate));
+        setupCalendarAdapter();
+    }
 
+    private void setupCalendarAdapter() {
         ArrayList<LocalDate> daysInMonth = generateDaysInMonthArray();
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
@@ -91,20 +94,22 @@ public class ToDoScreenActivity extends BaseScreenActivity implements CalendarAd
     }
 
     public void previousMonthAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
-        setMonthView();
+        updateDate(CalendarUtils.selectedDate.minusMonths(1));
     }
 
     public void nextMonthAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
-        setMonthView();
+        updateDate(CalendarUtils.selectedDate.plusMonths(1));
     }
 
     @Override
     public void onDayClick(int position, LocalDate date) {
         if (date != null) {
-            CalendarUtils.selectedDate = date;
-            setMonthView();
+            updateDate(date);
         }
+    }
+
+    private void updateDate(LocalDate newDate) {
+        CalendarUtils.selectedDate = newDate;
+        setMonthView();
     }
 }

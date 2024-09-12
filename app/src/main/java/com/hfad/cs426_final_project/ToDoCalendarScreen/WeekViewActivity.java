@@ -94,15 +94,17 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
 
     private void setWeekView() {
         monthYearText.setText(getMonthYearFromDate(CalendarUtils.selectedDate));
+        setupCalendarAdapter();
+        setTaskAdapter();
+    }
 
+    private void setupCalendarAdapter() {
         ArrayList<LocalDate> daysInMonth = generateDaysInWeekArray(CalendarUtils.selectedDate);
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
-
-        setTaskAdapter();
     }
 
     private void setupCalendarArrowListener() {
@@ -121,13 +123,11 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     }
 
     private void nextWeekAction(View v) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
-        setWeekView();
+        updateDate(CalendarUtils.selectedDate.plusWeeks(1));
     }
 
     private void previousWeekAction(View v) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
-        setWeekView();
+        updateDate(CalendarUtils.selectedDate.minusWeeks(1));
     }
 
     private void initWidgets() {
@@ -144,8 +144,12 @@ public class WeekViewActivity extends AppCompatActivity implements CalendarAdapt
     @Override
     public void onDayClick(int position, LocalDate date) {
         if (date != null) {
-            CalendarUtils.selectedDate = date;
-            setWeekView();
+            updateDate(date);
         }
+    }
+
+    private void updateDate(LocalDate newDate) {
+        CalendarUtils.selectedDate = newDate;
+        setWeekView();
     }
 }

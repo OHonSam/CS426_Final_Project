@@ -40,10 +40,10 @@ public class DailyCalendarActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setDayView();
+        updateDayView();
     }
 
-    private void setDayView() {
+    private void updateDayView() {
         monthDayText.setText(CalendarUtils.getMonthDayFromDate(selectedDate));
         String dayOfWeek = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
         dayOfWeekText.setText(dayOfWeek);
@@ -107,12 +107,12 @@ public class DailyCalendarActivity extends AppCompatActivity {
 
     private void nextDayAction(View v) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
-        setDayView();
+        updateDayView();
     }
 
     private void previousDayAction(View v) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
-        setDayView();
+        updateDayView();
     }
 
     private void initWidgets() {

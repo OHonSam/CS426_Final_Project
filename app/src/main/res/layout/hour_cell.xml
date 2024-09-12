@@ -23,6 +23,7 @@
         <TextView
             android:id="@+id/task1"
             style="@style/BodyText"
+            android:layout_marginHorizontal="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -34,6 +35,7 @@
         <TextView
             android:id="@+id/task2"
             style="@style/BodyText"
+            android:layout_marginHorizontal="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -45,6 +47,7 @@
         <TextView
             android:id="@+id/task3"
             style="@style/BodyText"
+            android:layout_marginHorizontal="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

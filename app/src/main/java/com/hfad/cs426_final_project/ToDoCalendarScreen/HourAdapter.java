@@ -30,11 +30,11 @@ public class HourAdapter extends ArrayAdapter<HourTask> {
         }
 
         setHour(convertView, hourTask.getTime());
-        setEvent(convertView, hourTask.getHourTasksList());
+        setTasks(convertView, hourTask.getHourTasksList());
         return convertView;
     }
 
-    private void setEvent(View convertView, ArrayList<Task> tasksList) {
+    private void setTasks(View convertView, ArrayList<Task> tasksList) {
         TextView tvTask1 = convertView.findViewById(R.id.task1);
         TextView tvTask2 = convertView.findViewById(R.id.task2);
         TextView tvTask3 = convertView.findViewById(R.id.task3);
