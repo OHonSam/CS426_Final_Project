@@ -42,6 +42,7 @@ public class HexagonalLandView extends View {
     private static final float VERTICAL_SPACING = TILE_HEIGHT * (32/81f);
     private static final String TILES_KEY = "tiles";
     private boolean hasUnsavedChanges = false;
+    private boolean isPlantingMode = true;
 
     private Map<Coordinate, TileType> tiles = new HashMap<>();
     private Bitmap normalTile, plusTile;
@@ -105,6 +106,10 @@ public class HexagonalLandView extends View {
     }
 
 
+    public void setPlantingMode(boolean plantingMode) {
+        isPlantingMode = plantingMode;
+        invalidate();
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -123,6 +128,10 @@ public class HexagonalLandView extends View {
 
             float x = centerX + coord.q * HORIZONTAL_SPACING;
             float y = centerY + (coord.r * 2f + coord.q) * VERTICAL_SPACING;
+
+            if (type == TileType.PLUS && !isPlantingMode) {
+                continue;
+            }
 
             Bitmap tileToDraw = (type == TileType.NORMAL) ? normalTile : plusTile;
             matrix.setTranslate(x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2);
@@ -176,6 +185,10 @@ public class HexagonalLandView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (!isPlantingMode) {
+            return handlePanAndZoom(ev);
+        }
+
         scaleDetector.onTouchEvent(ev);
 
         final int action = ev.getActionMasked();
@@ -203,6 +216,64 @@ public class HexagonalLandView extends View {
                     markUnsavedChanges();
                     invalidate();
                 }
+                break;
+            }
+
+            case MotionEvent.ACTION_MOVE: {
+                final int pointerIndex = ev.findPointerIndex(activePointerId);
+                final float x = ev.getX(pointerIndex);
+                final float y = ev.getY(pointerIndex);
+
+                if (!scaleDetector.isInProgress()) {
+                    final float dx = x - lastTouchX;
+                    final float dy = y - lastTouchY;
+
+                    offsetX += dx;
+                    offsetY += dy;
+                    invalidate();
+                }
+
+                lastTouchX = x;
+                lastTouchY = y;
+                break;
+            }
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL: {
+                activePointerId = INVALID_POINTER_ID;
+                break;
+            }
+
+            case MotionEvent.ACTION_POINTER_UP: {
+                final int pointerIndex = ev.getActionIndex();
+                final int pointerId = ev.getPointerId(pointerIndex);
+                if (pointerId == activePointerId) {
+                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    lastTouchX = ev.getX(newPointerIndex);
+                    lastTouchY = ev.getY(newPointerIndex);
+                    activePointerId = ev.getPointerId(newPointerIndex);
+                }
+                break;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean handlePanAndZoom(MotionEvent ev) {
+        scaleDetector.onTouchEvent(ev);
+
+        final int action = ev.getActionMasked();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN: {
+                final int pointerIndex = ev.getActionIndex();
+                final float x = ev.getX(pointerIndex);
+                final float y = ev.getY(pointerIndex);
+
+                lastTouchX = x;
+                lastTouchY = y;
+                activePointerId = ev.getPointerId(0);
                 break;
             }
 

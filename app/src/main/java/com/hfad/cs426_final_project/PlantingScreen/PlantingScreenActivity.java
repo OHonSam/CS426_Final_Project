@@ -20,40 +20,24 @@ public class PlantingScreenActivity extends BaseScreenActivity {
 
     private void initializeComponents() {
         gardenModeBtn = findViewById(R.id.garden_mode);
-
-        gardenModeBtn.setOnClickListener(v -> {
-            isPlantingMode = !isPlantingMode;
-            if (isPlantingMode) {
-                gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.watch_garden_mode, null));
-            } else {
-                gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.plant_mode, null));
-            }
-        });
-
         hexagonalLandView = findViewById(R.id.hexagonalLandView);
+
+        gardenModeBtn.setOnClickListener(v -> toggleGardenMode());
+    }
+
+    private void toggleGardenMode() {
+        isPlantingMode = !isPlantingMode;
+        if (isPlantingMode) {
+            gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.plant_mode, null));
+            hexagonalLandView.setPlantingMode(true);
+        } else {
+            gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.watch_garden_mode, null));
+            hexagonalLandView.setPlantingMode(false);
+        }
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_planting_screen;
-    }
-
-    protected void onPause() {
-        Log.d("PlantingScreenActivity", "onPause: Saving tiles");
-        super.onPause();
-        if (hexagonalLandView != null) {
-
-            hexagonalLandView.saveAllTiles();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d("PlantingScreenActivity", "onDestroy: Saving tiles");
-        super.onDestroy();
-        if (hexagonalLandView != null) {
-
-            hexagonalLandView.saveAllTiles();
-        }
     }
 }
