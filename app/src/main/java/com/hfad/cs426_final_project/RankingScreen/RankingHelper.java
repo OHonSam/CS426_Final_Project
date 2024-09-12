@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
@@ -114,10 +115,12 @@ public class RankingHelper extends BaseAdapter {
                 cardView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Bronze));
                 break;
             default:
+                cardView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Accent2));
+                break;
         }
 
         // need to change into CurrentUser.getId() when finish merging
-        if (user.getId() == 0) {
+        if (user.getId() == AppContext.getInstance().getCurrentUser().getId()) {
             usernameTextView.setText(user.getName() + " (you)");
             usernameTextView.setTypeface(usernameTextView.getTypeface(), Typeface.BOLD_ITALIC);
         } else {
