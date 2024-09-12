@@ -86,6 +86,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
+
         setupClockModePickerDialog();
         setupClock();
 
@@ -373,8 +374,10 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     @Override
-    public void redirectToFailScreenActivity() {
+    public void redirectToFailScreenActivity(String message) {
         Intent intent = new Intent(this, FailScreenActivity.class);
+        intent.putExtra(FailScreenActivity.TAG_WHY_TREE_WITHERED, message);  // Add the extra message
         failScreenLauncher.launch(intent);
     }
+
 }

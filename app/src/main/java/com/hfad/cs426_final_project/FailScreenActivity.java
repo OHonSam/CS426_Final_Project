@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -30,6 +31,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class FailScreenActivity extends AppCompatActivity {
+
+    public static final String TAG_WHY_TREE_WITHERED = "WHY_TREE_WITHERED_MESSAGE";
 
     ClickableImageView backButton;
     TextView whyTreeWitheredTextView;
@@ -99,6 +102,11 @@ public class FailScreenActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_why_tree_whithered, null);
 
+        TextView whyTreeWithered = dialogView.findViewById(R.id.textViewDescription);
+        String message = getIntent().getStringExtra(TAG_WHY_TREE_WITHERED);
+        if (message != null && !message.isEmpty()) {
+            whyTreeWithered.setText(message);
+        }
         // Create a dialog using the AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);

@@ -19,7 +19,7 @@
         android:id="@+id/textViewDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/reason_why_tree_withered"
+        android:text="@string/reason_why_tree_withered_give_up"
         android:textSize="16sp"
         android:gravity="center"
         android:layout_marginTop="8dp"/>
