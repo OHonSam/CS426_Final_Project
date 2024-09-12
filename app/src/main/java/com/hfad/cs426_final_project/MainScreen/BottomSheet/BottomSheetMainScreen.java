@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,12 +14,14 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Tag;
@@ -32,7 +35,9 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
 
     private AppContext appContext;
 
-    private MyButton btnSelection, btnFavourite;
+    private MyButton btnPlant;
+    private MaterialButtonToggleGroup modePicker;
+    private Button btnSelection, btnFavourite;
 
     private ImageView ivTreeSelected, tagColorDisplay;
     private TextView tvFocusTime, tvTag;
@@ -59,8 +64,14 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
     }
 
     private void initUI() {
+        modePicker = mView.findViewById(R.id.modePicker);
         btnSelection = mView.findViewById(R.id.btnSelection);
         btnFavourite = mView.findViewById(R.id.btnFavourite);
+        btnPlant = mView.findViewById(R.id.btnPlant);
+
+        modePicker.check(R.id.btnSelection);
+        activateBtn(btnSelection);
+        deactivateBtn(btnFavourite);
 
         ivTreeSelected = mView.findViewById(R.id.selectedTree);
         tagColorDisplay = mView.findViewById(R.id.tagColorDisplay);
@@ -104,23 +115,39 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
     }
 
     private void initListener() {
-        btnSelection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnSelection.setActivate();
-                btnFavourite.setInActivate();
-                navigateSelectionFragment();
+        modePicker.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                if (checkedId == R.id.btnSelection) {
+                    activateBtn(btnSelection);
+                    deactivateBtn(btnFavourite);
+                    navigateSelectionFragment();
+                }
+                else if (checkedId == R.id.btnFavourite) {
+                    activateBtn(btnFavourite);
+                    deactivateBtn(btnSelection);
+                    navigateFavouriteFragment();
+                }
             }
         });
-        btnFavourite.setOnClickListener(new View.OnClickListener() {
+
+        btnPlant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnSelection.setInActivate();
-                btnFavourite.setActivate();
-                navigateFavouriteFragment();
+                mainScreenActivity.startPlanting();
             }
         });
     }
+
+    private void activateBtn(Button button) {
+        button.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+        button.setTextColor(ResourcesCompat.getColor(getResources(), R.color.black, null));
+    }
+
+    private void deactivateBtn(Button button) {
+        button.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary_70, null));
+        button.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+    }
+
 
     private void setupFavouriteHeart() {
         Drawable unfilledHeart = ResourcesCompat.getDrawable(getResources(), R.drawable.heart_unfilled, null);

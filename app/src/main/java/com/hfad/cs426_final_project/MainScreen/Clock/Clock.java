@@ -15,9 +15,12 @@ import android.widget.TextView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.User;
 
 import java.util.Locale;
 
@@ -87,9 +90,8 @@ public class Clock {
                 if (getClockSetting().getIsCountExceedTime() && getIsEndSession()) {
                     setIsEndSession(false);
                     stop();
+                    saveSession(true);
                     reset();
-
-                    //ToDo: save a session (is count exceed: duration (target time + extra time(from seconds) ) > target time)
 
                     redirectToCongratulationScreen();
                     return;
@@ -105,7 +107,6 @@ public class Clock {
             }
         });
     }
-
 
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
@@ -189,11 +190,10 @@ public class Clock {
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
+                saveSession(true);
                 reset();
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
-
-                // TODO: save a session
 
                 redirectToCongratulationScreen();
             }
@@ -208,11 +208,10 @@ public class Clock {
         seconds += 60;
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
+            saveSession(true);
             reset();
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
-
-            //TODO: save a session
 
             redirectToCongratulationScreen();
         }
@@ -250,9 +249,8 @@ public class Clock {
                     if (secondsOutside < 0) {
                         runningOutside = false;
                         stop();
+                        saveSession(false);
                         reset();
-
-                        // TODO: save a session
 
                         // Retrieve the string from strings.xml using the context
                         String message = context.getString(R.string.reason_why_tree_withered_non_focus);
@@ -331,9 +329,8 @@ public class Clock {
 
     public void giveUp() {
         stop();
+        saveSession(false);
         reset();
-
-        // TODO: save a session
 
         // Retrieve the string from strings.xml using the context
         String message = context.getString(R.string.reason_why_tree_withered_give_up);
@@ -409,5 +406,27 @@ public class Clock {
     private void updateStartButton(String text, int colorResId) {
         startButton.setText(text);
         startButton.setBackgroundTintList(ContextCompat.getColorStateList(startButton.getContext(), colorResId));
+    }
+
+    private void saveSession(boolean isComplete) {
+        User user = AppContext.getInstance().getCurrentUser();
+
+        Session session = new Session();
+        session.setId(user.getSessions().size());
+        session.setStatus(isComplete);
+        int duration = clockSetting.getTargetTime();
+
+        if (!isComplete) {
+            duration = seconds;
+        } else if(clockSetting.getType() == ClockMode.TIMER && clockSetting.getIsCountExceedTime() && isEndSession) {
+            duration = clockSetting.getTargetTime() - seconds;
+        }
+
+
+        session.setDuration(duration);
+        session.setTimestamp(System.currentTimeMillis());
+        session.setTree(user.getUserSetting().getSelectedTree());
+        session.setTag(user.getFocusTag());
+        user.getSessions().add(session);
     }
 }

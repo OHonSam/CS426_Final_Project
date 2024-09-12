@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainScreen.BottomSheet.BottomSheetMainScreen">
 
     <LinearLayout
@@ -17,33 +18,35 @@
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:background="@color/primary_70" />
-        <LinearLayout
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/modePicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:paddingVertical="8dp"
-            android:paddingHorizontal="16dp">
-            <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+            android:paddingHorizontal="16dp"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            android:gravity="center">
+            <Button
                 android:id="@+id/btnSelection"
+                style="@style/Title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:text="Plating Settings"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                style="@style/Title"/>
-            <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:id="@+id/btnFavourite"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/primary_70"
-                android:text="My Favourite"
-                android:textAllCaps="false"
+                android:text="Planting Settings"
+                android:backgroundTint="@color/primary_70"
                 android:textColor="@color/white"
-                style="@style/Title"/>
-        </LinearLayout>
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btnFavourite"
+                style="@style/Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="My Favourite"
+                android:backgroundTint="@color/primary_70"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
     </LinearLayout>
 
     <FrameLayout
@@ -134,6 +137,7 @@
                 android:layout_height="match_parent"
                 android:gravity="end">
                 <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+                    android:id="@+id/btnPlant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Plant"
