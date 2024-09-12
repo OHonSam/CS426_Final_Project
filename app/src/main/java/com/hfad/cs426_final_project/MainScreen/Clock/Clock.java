@@ -285,7 +285,7 @@ public class Clock {
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        //startForegroundService();
+        startForegroundService();
     }
 
     public void stop() {
