@@ -63,11 +63,12 @@ public class TimelineScreenActivity extends BaseScreenActivity {
         // Get the list of sessions from the current user
         List<Session> sessionList = appContext.getCurrentUser().getSessions();
 
-        // Group sessions by date
+        // Group sessions by date (ignore time)
         Map<LocalDateTime, List<Session>> sessionsByDate = new HashMap<>();
 
         for (Session session : sessionList) {
-            LocalDateTime sessionDate = session.getDateTimeFromTimestamp();
+            // Extract the date part (year, month, day) from the session's date
+            LocalDateTime sessionDate = session.getDateTimeFromTimestamp().toLocalDate().atStartOfDay();
 
             // If this date is not already in the map, add it
             if (!sessionsByDate.containsKey(sessionDate)) {

@@ -131,36 +131,40 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     }
 
     private void fetchDataForChart(OnDataFetchedCallback callback) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        User currentUser = AppContext.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            // Handle the case where there's no current user logged in (e.g., show an error message)
-            return;
+        sessions = AppContext.getInstance().getCurrentUser().getSessions();
+        if(callback != null) {
+            callback.onDataFetched();
         }
-
-        DatabaseReference usersRef = database.getReference("Users");
-        DatabaseReference userRef = usersRef.child("User" + currentUser.getId());
-        DatabaseReference databaseRef = userRef.child("sessions");
-
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                    Session session = sessionSnapshot.getValue(Session.class);
-                    assert session != null;
-                    sessions.add(session);
-                }
-
-                if (callback != null) {
-                    callback.onDataFetched();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle possible errors.
-            }
-        });
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        User currentUser = AppContext.getInstance().getCurrentUser();
+//        if (currentUser == null) {
+//            // Handle the case where there's no current user logged in (e.g., show an error message)
+//            return;
+//        }
+//
+//        DatabaseReference usersRef = database.getReference("Users");
+//        DatabaseReference userRef = usersRef.child("User" + currentUser.getId());
+//        DatabaseReference databaseRef = userRef.child("sessions");
+//
+//        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+//                    Session session = sessionSnapshot.getValue(Session.class);
+//                    assert session != null;
+//                    sessions.add(session);
+//                }
+//
+//                if (callback != null) {
+//                    callback.onDataFetched();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Handle possible errors.
+//            }
+//        });
     }
 
     private void setupViewByButton() {

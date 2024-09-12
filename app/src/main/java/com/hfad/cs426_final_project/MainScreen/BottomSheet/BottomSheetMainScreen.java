@@ -32,7 +32,7 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
 
     private AppContext appContext;
 
-    private MyButton btnSelection, btnFavourite;
+    private MyButton btnSelection, btnFavourite, btnPlant;
 
     private ImageView ivTreeSelected, tagColorDisplay;
     private TextView tvFocusTime, tvTag;
@@ -61,6 +61,7 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
     private void initUI() {
         btnSelection = mView.findViewById(R.id.btnSelection);
         btnFavourite = mView.findViewById(R.id.btnFavourite);
+        btnPlant = mView.findViewById(R.id.btnPlant);
 
         ivTreeSelected = mView.findViewById(R.id.selectedTree);
         tagColorDisplay = mView.findViewById(R.id.tagColorDisplay);
@@ -118,6 +119,12 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
                 btnSelection.setInActivate();
                 btnFavourite.setActivate();
                 navigateFavouriteFragment();
+            }
+        });
+        btnPlant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainScreenActivity.startPlanting();
             }
         });
     }

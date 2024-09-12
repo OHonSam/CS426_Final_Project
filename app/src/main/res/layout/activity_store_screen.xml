@@ -50,29 +50,27 @@
             android:orientation="horizontal">
 
             <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:id="@+id/shopButton"
+                android:id="@+id/treeShopButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="0dp"
-                android:background="@drawable/button_border_rec"
-                android:text="Shop"
+                android:background="@color/primary_70"
+                android:text="Tree Shop"
                 android:textColor="@color/white"
-                android:backgroundTint="@color/primary_70"
                 android:textAllCaps="false"
                 style="@style/BodyText"
                 android:paddingHorizontal="64dp"/>
 
             <com.hfad.cs426_final_project.CustomUIComponent.MyButton
-                android:id="@+id/specialShopButton"
+                android:id="@+id/blockShopButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Special shop"
+                android:text="Block Shop"
                 android:padding="0dp"
-                android:background="@drawable/button_border_rec"
+                android:background="@color/white"
                 android:textColor="@color/black"
-                android:backgroundTint="@color/darkgray"
                 android:textAllCaps="false"
                 style="@style/BodyText"
                 android:paddingHorizontal="64dp"/>

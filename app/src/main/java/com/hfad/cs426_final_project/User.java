@@ -1,5 +1,9 @@
 package com.hfad.cs426_final_project;
 
+import android.util.Pair;
+
+import com.hfad.cs426_final_project.DataStorage.Block;
+import com.hfad.cs426_final_project.DataStorage.BlockData;
 import com.hfad.cs426_final_project.DataStorage.Favourite;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.DataStorage.Tag;
@@ -19,13 +23,15 @@ public class User {
     private String name;
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
-    private List<Session> sessions;
+    private List<Session> sessions = new ArrayList<>();
     private Tag focusTag;
+    private Block selectedBlock;
     private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
     private int sun; // money
     private UserSetting userSetting;
     private List<Tree> ownTrees = new ArrayList<>();
+    private List<BlockData> ownBlock = new ArrayList<>();
     private List<Tag> ownTags = new ArrayList<>();
     private List<UserTask> ownUserTasks = new ArrayList<>();
     private ClockSetting clockSetting;
@@ -43,12 +49,17 @@ public class User {
         this.sessions = new ArrayList<>();
         this.lastAccessDate = System.currentTimeMillis();
         this.focusTag = new Tag();
+        this.selectedBlock = new Block();
         this.favouriteList = new ArrayList<>();
         this.streak = 1;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
+
         Tree tree = new Tree(); // default tree
         ownTrees.add(tree);
+
+        Block block = new Block(); // default block
+        ownBlock.add(new BlockData(block, 1));
 
         this.clockSetting = new ClockSetting();
     }
@@ -121,6 +132,14 @@ public class User {
         this.focusTag = focusTag;
     }
 
+    public Block getSelectedBlock() {
+        return selectedBlock;
+    }
+
+    public void setSelectedBlock(Block selectedBlock) {
+        this.selectedBlock = selectedBlock;
+    }
+
     public List<Favourite> getFavouriteList() {
         return favouriteList;
     }
@@ -164,6 +183,14 @@ public class User {
         this.ownTrees = ownTrees;
     }
 
+    public List<BlockData> getOwnBlock() {
+        return ownBlock;
+    }
+
+    public void setOwnBlock(List<BlockData> ownBlock) {
+        this.ownBlock = ownBlock;
+    }
+
     public List<Tag> getOwnTags() {
         return ownTags;
     }
@@ -187,6 +214,16 @@ public class User {
             listOwnTreeID.add(t.getId());
         }
         return listOwnTreeID.contains(tree.getId());
+    }
+
+    public boolean hasBlock(Block block) {
+        if (ownBlock == null)
+            return false;
+        List<Integer> listOwnBlockID = new ArrayList<>();
+        for (BlockData b : ownBlock) {
+            listOwnBlockID.add(b.getBlock().getId());
+        }
+        return listOwnBlockID.contains(block.getId());
     }
 
     public boolean hasTag(String tagName) {

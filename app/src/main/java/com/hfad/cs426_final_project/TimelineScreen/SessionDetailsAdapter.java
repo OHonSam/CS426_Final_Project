@@ -41,7 +41,7 @@ public class SessionDetailsAdapter extends RecyclerView.Adapter<SessionDetailsAd
         if (position == 0) {
             holder.icHead.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.ic_leaf, null));
         } else {
-            holder.icHead.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.ic_leaf, null));
+            holder.icHead.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.ic_water, null));
         }
         // Format and set the session start time
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");

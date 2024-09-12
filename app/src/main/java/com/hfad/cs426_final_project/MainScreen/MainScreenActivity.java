@@ -373,6 +373,11 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         bottomSheet.navigateSelectionFragment();
     }
 
+    public void startPlanting() {
+        startButton.performClick();
+        bottomSheet.dismiss();
+    }
+
     @Override
     public void redirectToFailScreenActivity(String message) {
         Intent intent = new Intent(this, FailScreenActivity.class);

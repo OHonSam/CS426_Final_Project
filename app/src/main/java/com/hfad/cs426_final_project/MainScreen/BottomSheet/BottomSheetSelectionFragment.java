@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.DataStorage.BlockData;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
@@ -23,7 +24,7 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
     private MainScreenActivity mainScreenActivity;
     private AppContext appContext;
 
-    private RecyclerView rcvTree, rcvFocusTime, rcvTag;
+    private RecyclerView rcvTree, rcvFocusTime, rcvTag, rcvBlock;
 
     public BottomSheetSelectionFragment() {
         // Required empty public constructor
@@ -41,6 +42,7 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
         initRCVTreeSelection();
         initRCVFocusTime();
         initRCVTag();
+        initRCVBlock();
         return mView;
     }
 
@@ -48,6 +50,7 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
         rcvTree = mView.findViewById(R.id.rcv_treeSelection);
         rcvFocusTime = mView.findViewById(R.id.rcvFocusedTime);
         rcvTag = mView.findViewById(R.id.rcvTag);
+        rcvBlock = mView.findViewById(R.id.rcvBlock);
     }
 
     private void initRCVTreeSelection() {
@@ -106,6 +109,16 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
         rcvTag.setAdapter(tagAdapter);
     }
 
+    private void initRCVBlock() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mainScreenActivity, LinearLayoutManager.HORIZONTAL, false);
+        rcvBlock.setLayoutManager(layoutManager);
 
-
+        OwnBlockAdapter blockAdapter = new OwnBlockAdapter(appContext.getCurrentUser().getOwnBlock(), new OwnBlockAdapter.IClickOwnBlockListener() {
+            @Override
+            public void onClickOwnBlock(BlockData blockData) {
+                appContext.getCurrentUser().setSelectedBlock(blockData.getBlock());
+            }
+        });
+        rcvBlock.setAdapter(blockAdapter);
+    }
 }

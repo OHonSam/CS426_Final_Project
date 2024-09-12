@@ -134,6 +134,7 @@
                 android:layout_height="match_parent"
                 android:gravity="end">
                 <com.hfad.cs426_final_project.CustomUIComponent.MyButton
+                    android:id="@+id/btnPlant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Plant"

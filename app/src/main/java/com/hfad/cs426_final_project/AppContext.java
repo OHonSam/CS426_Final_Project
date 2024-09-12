@@ -1,6 +1,10 @@
 package com.hfad.cs426_final_project;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+
+import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +25,7 @@ public class AppContext {
     private static AppContext instance;
     private User currentUser;
     private List<Tree> treeList;
+    private List<Block> grassList;
 
     private Clock currentClock;
 
@@ -39,6 +44,8 @@ public class AppContext {
                 }
             }
         });
+        grassList = new ArrayList<>();
+        loadGrassListFromDB();
     }
 
     private void fetchTrees() {
@@ -145,6 +152,31 @@ public class AppContext {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child("User" + currentUser.getId());
             userRef.setValue(currentUser);
         }
+    }
+
+    public List<Block> getGrassList() {
+        return grassList;
+    }
+
+    private void loadGrassListFromDB() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Blocks/Grass");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                grassList.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Block block = dataSnapshot.getValue(Block.class);
+                    grassList.add(block);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public Clock getCurrentClock() {
