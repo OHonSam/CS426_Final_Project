@@ -32,12 +32,11 @@ public class TaskEditActivity extends AppCompatActivity {
     }
 
     private void setupSaveButton() {
-        btnSaveTask.setOnClickListener(v -> {
-            if (!edtTaskTitle.getText().toString().isEmpty()) {
-                Task event = new Task(CalendarUtils.selectedDate, time, edtTaskTitle.getText().toString());
-                Task.tasksList.add(event);
+        btnSaveTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTaskAndFinish();
             }
-            finish();
         });
     }
 
@@ -45,9 +44,7 @@ public class TaskEditActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Task newTask = new Task(CalendarUtils.selectedDate, time, edtTaskTitle.getText().toString());
-                Task.tasksList.add(newTask);
-                finish();
+                saveTaskAndFinish();
             }
         });
     }
@@ -58,5 +55,14 @@ public class TaskEditActivity extends AppCompatActivity {
         edtTaskDate = findViewById(R.id.edtTaskDate);
         edtTaskTitle = findViewById(R.id.edtTaskTitle);
         edtTaskTime = findViewById(R.id.edtTaskTime);
+    }
+
+    private void saveTaskAndFinish() {
+        String taskTitle = edtTaskTitle.getText().toString().trim();
+        if (!taskTitle.isEmpty()) {
+            Task newTask = new Task(CalendarUtils.selectedDate, time, taskTitle);
+            Task.tasksList.add(newTask);
+        }
+        finish();
     }
 }

@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_border"
-        android:backgroundTint="@color/primary_20"
+        android:backgroundTint="@color/secondary_40"
         android:layout_marginTop="10dp"
         android:text="New Event"
         app:layout_constraintEnd_toEndOf="parent"

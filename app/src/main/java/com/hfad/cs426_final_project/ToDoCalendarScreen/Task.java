@@ -13,13 +13,11 @@ public class Task {
 
     public static ArrayList<Task> getTasksForDate(LocalDate date) {
         ArrayList<Task> tasks = new ArrayList<>();
-
         for (Task task : tasksList) {
             if (task.getDate().equals(date)) {
                 tasks.add(task);
             }
         }
-
         return tasks;
     }
 
