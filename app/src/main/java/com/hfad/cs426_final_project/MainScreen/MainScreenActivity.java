@@ -114,6 +114,8 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     protected void onResume() {
         super.onResume();
 
+        // Reset the clock
+        clock.reset();
         // Re-enable clock interaction when the user returns to this activity
         clock.getClockSetting().setModePickerDialogEnabled(true);
 
