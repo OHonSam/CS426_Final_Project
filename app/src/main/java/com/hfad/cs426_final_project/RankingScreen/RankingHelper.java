@@ -1,4 +1,5 @@
 package com.hfad.cs426_final_project.RankingScreen;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -22,20 +23,28 @@ import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class RankingHelper extends BaseAdapter {
     private Context context;
     private List<User> users;
     private User currentUser;
     private boolean isToday;
+    private boolean isStreak;
+    private Map<Long, Long> focusTimeMap;
 
-    public RankingHelper(Context context, User currentUser, boolean isToday) {
+    public RankingHelper(Context context, User currentUser, boolean isToday, boolean isStreak) {
         this.context = context;
-        users = new ArrayList<>();
+        this.users = new ArrayList<>();
         this.currentUser = currentUser;
         this.isToday = isToday;
+        this.isStreak = isStreak;
+        this.focusTimeMap = new HashMap<>();
         fetchUsers();
     }
 
@@ -47,26 +56,56 @@ public class RankingHelper extends BaseAdapter {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
+                focusTimeMap.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     if (user != null) {
                         users.add(user);
+                        calculateFocusTime(user.getId(), snapshot);
                     }
                 }
-                if (isToday) {
-                    users.sort((user1, user2) -> user2.getStreak() - user1.getStreak());
-                } else {
-                    // need to change to getHighestStreak when developed
-                    // users.sort((user1, user2) -> user2.getHighestStreak() - user1.getHighestStreak());
-                }
-
+                sortUsers();
                 notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.out.println("Error fetching users: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void calculateFocusTime(long userId, DataSnapshot userSnapshot) {
+        long totalFocusTime = 0;
+        DataSnapshot sessionsSnapshot = userSnapshot.child("sessions");
+        String today = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+
+        for (DataSnapshot sessionSnapshot : sessionsSnapshot.getChildren()) {
+            Boolean status = sessionSnapshot.child("status").getValue(Boolean.class);
+            if (status != null && status) {
+                Long duration = sessionSnapshot.child("duration").getValue(Long.class);
+                Long timestamp = sessionSnapshot.child("timestamp").getValue(Long.class);
+
+                if (duration != null && timestamp != null) {
+                    String sessionDate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date(timestamp));
+                    if (!isToday || sessionDate.equals(today)) {
+                        totalFocusTime += duration;
+                    }
+                }
+            }
+        }
+        focusTimeMap.put(userId, totalFocusTime);
+    }
+
+    private void sortUsers() {
+        if (isStreak) {
+            users.sort((user1, user2) -> user2.getStreak() - user1.getStreak());
+        } else {
+            users.sort((user1, user2) -> Long.compare(
+                    focusTimeMap.getOrDefault(user2.getId(), 0L),
+                    focusTimeMap.getOrDefault(user1.getId(), 0L)
+            ));
+        }
     }
 
     @Override
@@ -85,11 +124,9 @@ public class RankingHelper extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.ranking_card,
-            null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.ranking_card, null);
         }
 
         TextView rankingTextView = convertView.findViewById(R.id.ranking);
@@ -101,7 +138,16 @@ public class RankingHelper extends BaseAdapter {
         rankingTextView.setText(String.valueOf(position + 1));
         medalImageView.setVisibility(position < 3 ? View.VISIBLE : View.GONE);
         usernameTextView.setText(user.getName());
-        streakTextView.setText(String.valueOf(user.getStreak()));
+
+        if (isStreak) {
+            streakTextView.setText(String.valueOf(user.getStreak()));
+        } else {
+            long focusTime = focusTimeMap.getOrDefault(user.getId(), 0L);
+            long hours = focusTime / 3600;
+            long minutes = (focusTime % 3600) / 60;
+            streakTextView.setText(String.format(Locale.getDefault(), "%dh %dm", hours, minutes));
+        }
+
         CardView cardView = convertView.findViewById(R.id.ranking_card);
 
         switch (position) {
@@ -119,8 +165,7 @@ public class RankingHelper extends BaseAdapter {
                 break;
         }
 
-        // need to change into CurrentUser.getId() when finish merging
-        if (user.getId() == AppContext.getInstance().getCurrentUser().getId()) {
+        if (user.getId() == currentUser.getId()) {
             usernameTextView.setText(user.getName() + " (you)");
             usernameTextView.setTypeface(usernameTextView.getTypeface(), Typeface.BOLD_ITALIC);
         } else {

@@ -2,14 +2,11 @@ package com.hfad.cs426_final_project.RankingScreen;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
@@ -23,12 +20,15 @@ public class RankingScreenActivity extends BaseScreenActivity {
     private MyButton rankingModeBtn;
     private TextView rankingModeText;
     private User currentUser;
+    private boolean isStreak = true;
+    private boolean isToday = true;
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_ranking_screen;
     }
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
@@ -46,23 +46,26 @@ public class RankingScreenActivity extends BaseScreenActivity {
         currentUser = AppContext.getInstance().getCurrentUser();
 
         listView = findViewById(R.id.ranking_list);
-        RankingHelper adapter = new RankingHelper(this, AppContext.getInstance().getCurrentUser(), true);
-        listView.setAdapter(adapter);
+        updateAdapter();
 
         periodPicker = findViewById(R.id.period_picker);
         periodPicker.check(R.id.today_btn);
 
         periodPicker.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
-                boolean isToday = checkedId == R.id.today_btn;
-                RankingHelper adapter2 = new RankingHelper(this, currentUser, isToday);
-                listView.setAdapter(adapter2);
+                isToday = checkedId == R.id.today_btn;
+                updateAdapter();
             }
         });
     }
 
+    private void updateAdapter() {
+        RankingHelper adapter = new RankingHelper(this, currentUser, isToday, isStreak);
+        listView.setAdapter(adapter);
+    }
+
     private void setupRankingModeButton() {
-        rankingModeBtn.setOnClickListener(v -> showPopupMenu(v));
+        rankingModeBtn.setOnClickListener(this::showPopupMenu);
     }
 
     private void showPopupMenu(View anchor) {
@@ -71,12 +74,14 @@ public class RankingScreenActivity extends BaseScreenActivity {
 
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_item_streak) {
-                rankingModeBtn.setText("Streak");
-                rankingModeText.setText("Streak");
+                setRankingMode("Streak");
+                isStreak = true;
+                updateAdapter();
                 return true;
             } else if (item.getItemId() == R.id.menu_item_time_focused) {
-                rankingModeBtn.setText("Focus");
-                rankingModeText.setText("Focus Time");
+                setRankingMode("Focus");
+                isStreak = false;
+                updateAdapter();
                 return true;
             } else {
                 return false;
@@ -84,5 +89,10 @@ public class RankingScreenActivity extends BaseScreenActivity {
         });
 
         popupMenu.show();
+    }
+
+    private void setRankingMode(String mode) {
+        rankingModeBtn.setText(mode);
+        rankingModeText.setText(mode.equals("Focus") ? "Focus Time" : mode);
     }
 }
