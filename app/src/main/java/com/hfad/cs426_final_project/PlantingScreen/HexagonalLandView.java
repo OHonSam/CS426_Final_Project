@@ -44,9 +44,10 @@ public class HexagonalLandView extends View {
     private static final float ZOOM_FACTOR = 1.2f;
 
     private static final float TILE_SIZE = 100f;
-    private static final float HORIZONTAL_SPACING = TILE_SIZE * 0.79f;
-    private static final float VERTICAL_SPACING = TILE_SIZE * 0.4f;
-    private static final String TILES_KEY = "tiles";
+    private static final float HORIZONTAL_SPACING = TILE_SIZE * 0.76f;
+    private static final float VERTICAL_SPACING = TILE_SIZE * 0.41f;
+    private static final float LAND_SPACING = 0.84f;
+    private static final String TILES_KEY = "tiles-tiles";
     private boolean hasUnsavedChanges = false;
     private boolean isPlantingMode = true;
 
@@ -61,6 +62,8 @@ public class HexagonalLandView extends View {
     private static final int INVALID_POINTER_ID = -1;
     private int activePointerId = INVALID_POINTER_ID;
     private DatabaseReference tilesRef;
+    private float touchStartX, touchStartY;
+    private static final float CLICK_TOLERANCE = 10f;
 
     public HexagonalLandView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -202,33 +205,16 @@ public class HexagonalLandView extends View {
 
         scaleDetector.onTouchEvent(ev);
 
-        final int action = ev.getActionMasked();
+        int action = ev.getActionMasked();
 
         switch (action) {
-            case MotionEvent.ACTION_DOWN: {
-                final int pointerIndex = ev.getActionIndex();
-                final float x = ev.getX(pointerIndex);
-                final float y = ev.getY(pointerIndex);
-
-                lastTouchX = x;
-                lastTouchY = y;
+            case MotionEvent.ACTION_DOWN:
+                touchStartX = ev.getX();
+                touchStartY = ev.getY();
+                lastTouchX = touchStartX;
+                lastTouchY = touchStartY;
                 activePointerId = ev.getPointerId(0);
-
-                // Check for tile conversion
-                float scaledX = (x - offsetX) / scaleFactor;
-                float scaledY = (y - offsetY) / scaleFactor;
-                Coordinate tappedCoord = pixelToHex(scaledX, scaledY);
-                if (tiles.containsKey(tappedCoord)) {
-                    if (tiles.get(tappedCoord) == TileType.PLUS) {
-                        expandTile(tappedCoord);
-                    } else if (tiles.get(tappedCoord) == TileType.NORMAL) {
-                        convertToPlus(tappedCoord);
-                    }
-                    markUnsavedChanges();
-                    invalidate();
-                }
                 break;
-            }
 
             case MotionEvent.ACTION_MOVE: {
                 final int pointerIndex = ev.findPointerIndex(activePointerId);
@@ -250,10 +236,12 @@ public class HexagonalLandView extends View {
             }
 
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: {
+                if (isClick(ev.getX(), ev.getY())) {
+                    handleTileConversion(ev.getX(), ev.getY());
+                }
+            case MotionEvent.ACTION_CANCEL:
                 activePointerId = INVALID_POINTER_ID;
                 break;
-            }
 
             case MotionEvent.ACTION_POINTER_UP: {
                 final int pointerIndex = ev.getActionIndex();
@@ -269,6 +257,36 @@ public class HexagonalLandView extends View {
         }
 
         return true;
+    }
+
+    private void handleTileConversion(float x, float y) {
+        float scaledX = (x - offsetX) / scaleFactor;
+        float scaledY = (y - offsetY) / scaleFactor;
+        Coordinate tappedCoord = pixelToHex(scaledX, scaledY);
+        Log.d("taggedCoord", "Tapped coord: " + tappedCoord.q + "," + tappedCoord.r);
+        Log.d("taggedCoord", "state: " + offsetX + ", " + offsetY + ", " + scaleFactor);
+        Log.d("taggedCoord", "position: " + scaledX + ", " + scaledY);
+        if (tiles.containsKey(tappedCoord)) {
+            if (tiles.get(tappedCoord) == TileType.PLUS) {
+                expandTile(tappedCoord);
+            } else if (tiles.get(tappedCoord) == TileType.NORMAL) {
+                convertToPlus(tappedCoord);
+            }
+            markUnsavedChanges();
+            invalidate();
+        }
+    }
+
+    private Coordinate pixelToHex(float x, float y) {
+        float centerX = getWidth() / (2f * scaleFactor);
+        float centerY = getHeight() / (2f * scaleFactor);
+
+        // Convert to HEX coordinates
+        float q = (x - centerX) / HORIZONTAL_SPACING;
+        float r = (y - centerY) / (TILE_SIZE*LAND_SPACING) - q/2f;
+        Log.d("taggedCoord", "q: " + q + ", r: " + r);
+
+        return hexRound(q, r);
     }
 
     private boolean handlePanAndZoom(MotionEvent ev) {
@@ -329,6 +347,11 @@ public class HexagonalLandView extends View {
         return true;
     }
 
+    private boolean isClick(float x, float y) {
+        float dx = Math.abs(x - touchStartX);
+        float dy = Math.abs(y - touchStartY);
+        return dx <= CLICK_TOLERANCE && dy <= CLICK_TOLERANCE;
+    }
     private void expandTile(Coordinate coord) {
         tiles.put(coord, TileType.NORMAL);
         addSurroundingPlusTiles(coord);
@@ -336,23 +359,28 @@ public class HexagonalLandView extends View {
 
     private void convertToPlus(Coordinate coord) {
         tiles.put(coord, TileType.PLUS);
-        removeSurroundingPlusTiles(coord);
+        updateSurroundingTiles(coord);
     }
 
-    private void removeSurroundingPlusTiles(Coordinate center) {
+    private void updateSurroundingTiles(Coordinate center) {
         int[][] directions = {{1, 0}, {1, -1}, {0, -1}, {-1, 0}, {-1, 1}, {0, 1}};
         for (int[] dir : directions) {
             Coordinate newCoord = new Coordinate(center.q + dir[0], center.r + dir[1]);
             if (tiles.containsKey(newCoord) && tiles.get(newCoord) == TileType.PLUS) {
-                tiles.remove(newCoord);
+                boolean hasNormalNeighbor = false;
+                for (int[] checkDir : directions) {
+                    Coordinate checkCoord = new Coordinate(newCoord.q + checkDir[0], newCoord.r + checkDir[1]);
+                    if (tiles.containsKey(checkCoord) && tiles.get(checkCoord) == TileType.NORMAL && !checkCoord.equals(center)) {
+                        hasNormalNeighbor = true;
+                        break;
+                    }
+                }
+                if (!hasNormalNeighbor) {
+                    tiles.remove(newCoord);
+                    markUnsavedChanges();
+                }
             }
         }
-    }
-
-    private Coordinate pixelToHex(float x, float y) {
-        float q = (x - getWidth() / 2f / scaleFactor) / HORIZONTAL_SPACING;
-        float r = (y - getHeight() / 2f / scaleFactor) / VERTICAL_SPACING - q / 2f;
-        return hexRound(q, r);
     }
 
     private Coordinate hexRound(float q, float r) {

@@ -50,4 +50,23 @@ public class PlantingScreenActivity extends BaseScreenActivity {
     protected int getLayoutId() {
         return R.layout.activity_planting_screen;
     }
+
+    protected void onPause() {
+        Log.d("PlantingScreenActivity", "onPause: Saving tiles");
+        super.onPause();
+        if (hexagonalLandView != null) {
+
+            hexagonalLandView.saveAllTiles();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("PlantingScreenActivity", "onDestroy: Saving tiles");
+        super.onDestroy();
+        if (hexagonalLandView != null) {
+
+            hexagonalLandView.saveAllTiles();
+        }
+    }
 }
