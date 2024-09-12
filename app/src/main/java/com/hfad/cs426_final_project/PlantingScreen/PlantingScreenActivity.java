@@ -30,6 +30,7 @@ public class PlantingScreenActivity extends BaseScreenActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blockDataList = AppContext.getInstance().getCurrentUser().getOwnBlock();
+        // curBlockData.getBlock().getImgUri() URI to bitmap ?
         initializeComponents();
         initRCVLandSelection();
     }

@@ -206,4 +206,10 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     protected void setToggleColor(int color) {
         toggleIcon.setColorFilter(color);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)  {
+        super.onSaveInstanceState(outState);
+        AppContext.getInstance().saveUserInfo();
+    }
 }
