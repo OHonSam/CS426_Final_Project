@@ -6,10 +6,12 @@ public class UserTask {
     private String location;
     private long startDate; // Store Date as long (timestamp)
     private long endDate;   // Store Date as long (timestamp)
+
     private long startTimeInMinutes;
+
     private long endTimeInMinutes;
     private String description;
-    private Tag tag;
+//    private Tag tag;
 
     public UserTask() {}
 
@@ -79,5 +81,21 @@ public class UserTask {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getStartTimeInMinutes() {
+        return startTimeInMinutes;
+    }
+
+    public void setStartTimeInMinutes(long startTimeInMinutes) {
+        this.startTimeInMinutes = startTimeInMinutes;
+    }
+
+    public long getEndTimeInMinutes() {
+        return endTimeInMinutes;
+    }
+
+    public void setEndTimeInMinutes(long endTimeInMinutes) {
+        this.endTimeInMinutes = endTimeInMinutes;
     }
 }

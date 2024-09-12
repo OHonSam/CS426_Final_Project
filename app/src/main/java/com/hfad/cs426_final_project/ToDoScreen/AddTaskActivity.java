@@ -17,7 +17,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
-import com.hfad.cs426_final_project.MainScreen.TagAdapterSpinner;
+import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.R;
 
 import java.util.Calendar;
@@ -47,6 +47,12 @@ public class AddTaskActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+        appContext.saveUserInfo();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         appContext.saveUserInfo();
     }
 
@@ -166,32 +172,22 @@ public class AddTaskActivity extends AppCompatActivity {
     }
 
     private boolean isValidDateTime(long startDateMillis, long endDateMillis, long startTimeInMinutes, long endTimeInMinutes) {
-        if (startDateMillis > endDateMillis) {
-            setDateError("Start date must be before end date");
+        if (startDateMillis > endDateMillis ||
+                (startDateMillis == endDateMillis && startTimeInMinutes > endTimeInMinutes)) {
+            edtTaskEndDate.setError("End date/time must be after start date/time");
             return false;
         }
-
-        if (startTimeInMinutes > endTimeInMinutes) {
-            setTimeError("Start time must be before end time");
-            return false;
-        }
-
         return true;
-    }
-
-    private void setDateError(String errorMsg) {
-        edtTaskStartDate.setError(errorMsg);
-        edtTaskEndDate.setError(errorMsg);
-    }
-
-    private void setTimeError(String errorMsg) {
-        edtTaskStartTime.setError(errorMsg);
-        edtTaskEndTime.setError(errorMsg);
     }
 
     private int getNextTaskId() {
         List<UserTask> taskList = appContext.getCurrentUser().getOwnUserTasksList();
-        int highestId = taskList.stream().mapToInt(UserTask::getId).max().orElse(0);
+        int highestId = -1;
+        for (UserTask task : taskList) {
+            if (highestId < task.getId()){
+                highestId = task.getId();
+            }
+        }
         return highestId + 1;
     }
 

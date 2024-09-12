@@ -63,7 +63,7 @@
             android:name=".SignUpScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".MainScreen.AddNewTagActivity"
+            android:name=".MainScreen.Tag.AddNewTagActivity"
             android:exported="false" />
         <activity
             android:name=".FailScreenActivity"

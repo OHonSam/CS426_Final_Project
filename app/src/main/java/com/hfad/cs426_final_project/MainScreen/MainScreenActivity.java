@@ -44,6 +44,8 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicAdapter;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
+import com.hfad.cs426_final_project.MainScreen.Tag.AddNewTagActivity;
+import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.ToDoScreen.ToDoScreenActivity;
 

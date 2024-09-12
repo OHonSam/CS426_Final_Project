@@ -1,6 +1,8 @@
 package com.hfad.cs426_final_project.ToDoScreen;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class CalendarUtils {
@@ -27,5 +29,19 @@ public class CalendarUtils {
             e.printStackTrace();
             return -1; // Invalid time format
         }
+    }
+
+    public static String convertMillisToDate(long dateInMillis) {
+        // Format the long value to a human-readable date string
+        // e.g., "12/09/2024"
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return sdf.format(new Date(dateInMillis));
+    }
+
+    public static String convertMinutesToTimeFormat(long timeInMinutes) {
+        // Convert time from minutes to "HH:mm" format
+        long hours = timeInMinutes / 60;
+        long minutes = timeInMinutes % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
     }
 }

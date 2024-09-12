@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project.MainScreen;
+package com.hfad.cs426_final_project.MainScreen.Tag;
 
 import android.os.Bundle;
 import android.view.View;

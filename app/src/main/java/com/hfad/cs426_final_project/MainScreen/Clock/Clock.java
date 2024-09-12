@@ -29,7 +29,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 public class Clock {
     public static enum ClockMode {
         STOPWATCH,
-        TIMER;
+        TIMER
     }
 
     private OnClockListener onClockListener;

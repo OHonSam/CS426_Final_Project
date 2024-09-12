@@ -1,7 +1,6 @@
-package com.hfad.cs426_final_project.MainScreen;
+package com.hfad.cs426_final_project.MainScreen.Tag;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
