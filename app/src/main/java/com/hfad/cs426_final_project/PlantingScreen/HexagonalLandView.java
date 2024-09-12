@@ -19,7 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -40,10 +43,9 @@ public class HexagonalLandView extends View {
     private static final float MAX_SCALE = 3.0f;
     private static final float ZOOM_FACTOR = 1.2f;
 
-    private static final float TILE_WIDTH = 100f; // Adjust based on your image size
-    private static final float TILE_HEIGHT = 100f; // Adjust based on your image size
-    private static final float HORIZONTAL_SPACING = TILE_WIDTH * 0.79f;
-    private static final float VERTICAL_SPACING = TILE_HEIGHT * 0.4f;
+    private static final float TILE_SIZE = 100f;
+    private static final float HORIZONTAL_SPACING = TILE_SIZE * 0.79f;
+    private static final float VERTICAL_SPACING = TILE_SIZE * 0.4f;
     private static final String TILES_KEY = "tiles";
     private boolean hasUnsavedChanges = false;
     private boolean isPlantingMode = true;
@@ -70,11 +72,11 @@ public class HexagonalLandView extends View {
         tilesRef = database.getReference(TILES_KEY);
 
         Bitmap originalNormalTile = BitmapFactory.decodeResource(getResources(), R.drawable.piece);
-        normalTile = Bitmap.createScaledBitmap(originalNormalTile, (int)TILE_WIDTH, (int)TILE_HEIGHT, true);
+        normalTile = Bitmap.createScaledBitmap(originalNormalTile, (int)TILE_SIZE, (int)TILE_SIZE, true);
         originalNormalTile.recycle();
 
         Bitmap originalPlusTile = BitmapFactory.decodeResource(getResources(), R.drawable.plus_btn);
-        plusTile = Bitmap.createScaledBitmap(originalPlusTile, (int)TILE_WIDTH, (int)TILE_HEIGHT, true);
+        plusTile = Bitmap.createScaledBitmap(originalPlusTile, (int)TILE_SIZE, (int)TILE_SIZE, true);
         originalPlusTile.recycle();
 
         offsetX = offsetY = 0f;
@@ -93,6 +95,7 @@ public class HexagonalLandView extends View {
                         int q = Integer.parseInt(coords[0]);
                         int r = Integer.parseInt(coords[1]);
                         Coordinate coord = new Coordinate(q, r);
+                        Log.d("Bugga", "Loading tile at " + coord.q + "," + coord.r);
                         String tileTypeString = tileSnapshot.getValue(String.class);
                         TileType tileType = TileType.valueOf(tileTypeString);
                         tiles.put(coord, tileType);
@@ -131,7 +134,16 @@ public class HexagonalLandView extends View {
         float centerX = getWidth() / 2f / scaleFactor;
         float centerY = getHeight() / 2f / scaleFactor;
 
-        for (Map.Entry<Coordinate, TileType> entry : tiles.entrySet()) {
+        // Sort coordinates from top-left to bottom-right
+        List<Map.Entry<Coordinate, TileType>> sortedTiles = new ArrayList<>(tiles.entrySet());
+        Collections.sort(sortedTiles, (a, b) -> {
+            if (a.getKey().r != b.getKey().r) {
+                return Integer.compare(a.getKey().r, b.getKey().r);
+            }
+            return Integer.compare(a.getKey().q, b.getKey().q);
+        });
+
+        for (Map.Entry<Coordinate, TileType> entry : sortedTiles) {
             Coordinate coord = entry.getKey();
             TileType type = entry.getValue();
 
@@ -143,7 +155,7 @@ public class HexagonalLandView extends View {
             }
 
             Bitmap tileToDraw = (type == TileType.NORMAL) ? normalTile : plusTile;
-            matrix.setTranslate(x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2);
+            matrix.setTranslate(x - TILE_SIZE / 2, y - TILE_SIZE / 2);
             canvas.drawBitmap(tileToDraw, matrix, null);
         }
 
@@ -156,7 +168,6 @@ public class HexagonalLandView extends View {
 
     // Method to save all tiles
     public void saveAllTiles() {
-        Log.d("Hello", "hell");
         Map<String, Object> updates = new HashMap<>();
         if (hasUnsavedChanges) {
             for (Map.Entry<Coordinate, TileType> entry : tiles.entrySet()) {
@@ -167,15 +178,6 @@ public class HexagonalLandView extends View {
             tilesRef.updateChildren(updates);
             hasUnsavedChanges = false;
         }
-
-        tilesRef.updateChildren(updates)
-                .addOnSuccessListener(aVoid -> {
-                    hasUnsavedChanges = false;
-                    Log.d("HexagonalLandView", "Tiles saved successfully");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("HexagonalLandView", "Failed to save tiles", e);
-                });
     }
 
     private void addSurroundingPlusTiles(Coordinate center) {
@@ -405,7 +407,7 @@ public class HexagonalLandView extends View {
         invalidate();
     }
 
-    private static class Coordinate {
+    private static class Coordinate implements Comparable<Coordinate> {
         int q, r;
 
         Coordinate(int q, int r) {
@@ -419,6 +421,13 @@ public class HexagonalLandView extends View {
             if (o == null || getClass() != o.getClass()) return false;
             Coordinate that = (Coordinate) o;
             return q == that.q && r == that.r;
+        }
+
+        public int compareTo(Coordinate other) {
+            if (this.r != other.r) {
+                return Integer.compare(this.r, other.r);
+            }
+            return Integer.compare(this.q, other.q);
         }
 
         @Override

@@ -66,5 +66,12 @@
         android:src="@drawable/zoom_reset"/>
     </LinearLayout>
 
-
+    <View
+        android:id="@+id/land_selection"
+        android:layout_height="120dp"
+        android:layout_width="match_parent"
+        android:background="@color/blue_deep_sea"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
