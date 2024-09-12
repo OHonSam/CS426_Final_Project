@@ -45,6 +45,7 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicItem;
 import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.ToDoScreen.ToDoScreenActivity;
 
 import java.util.List;
 
@@ -318,6 +319,18 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
+
+        View.OnClickListener todoClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainScreenActivity.this, ToDoScreenActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        };
+        todoContainer.setOnClickListener(todoClickListener);
+        todoButton.setOnClickListener(todoClickListener);
+        todoImage.setOnClickListener(todoClickListener);
     }
 
     private void setupNewTagListener() {

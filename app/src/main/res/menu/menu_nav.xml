@@ -23,6 +23,10 @@
             android:icon="@drawable/ic_timeline"
             android:title="Timeline" />
         <item
+            android:id="@+id/nav_to_do_screen"
+            android:icon="@drawable/todo_calendar_ic"
+            android:title="To-Do" />
+        <item
             android:id="@+id/nav_profile_setting"
             android:icon="@drawable/ic_account"
             android:title="Profile Setting" />
