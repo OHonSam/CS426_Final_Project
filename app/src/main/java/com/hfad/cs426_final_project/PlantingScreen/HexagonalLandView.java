@@ -36,10 +36,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HexagonalLandView extends View {
-    private static final float TILE_WIDTH = 200f; // Adjust based on your image size
-    private static final float TILE_HEIGHT = 173.2f; // Adjust based on your image size
-    private static final float HORIZONTAL_SPACING = TILE_WIDTH * (46/81f);
-    private static final float VERTICAL_SPACING = TILE_HEIGHT * (32/81f);
+    private static final float MIN_SCALE = 0.5f;
+    private static final float MAX_SCALE = 3.0f;
+    private static final float ZOOM_FACTOR = 1.2f;
+
+    private static final float TILE_WIDTH = 100f; // Adjust based on your image size
+    private static final float TILE_HEIGHT = 100f; // Adjust based on your image size
+    private static final float HORIZONTAL_SPACING = TILE_WIDTH * 0.79f;
+    private static final float VERTICAL_SPACING = TILE_HEIGHT * 0.4f;
     private static final String TILES_KEY = "tiles";
     private boolean hasUnsavedChanges = false;
     private boolean isPlantingMode = true;
@@ -65,8 +69,13 @@ public class HexagonalLandView extends View {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         tilesRef = database.getReference(TILES_KEY);
 
-        normalTile = BitmapFactory.decodeResource(getResources(), R.drawable.piece);
-        plusTile = BitmapFactory.decodeResource(getResources(), R.drawable.plus_btn);
+        Bitmap originalNormalTile = BitmapFactory.decodeResource(getResources(), R.drawable.piece);
+        normalTile = Bitmap.createScaledBitmap(originalNormalTile, (int)TILE_WIDTH, (int)TILE_HEIGHT, true);
+        originalNormalTile.recycle();
+
+        Bitmap originalPlusTile = BitmapFactory.decodeResource(getResources(), R.drawable.plus_btn);
+        plusTile = Bitmap.createScaledBitmap(originalPlusTile, (int)TILE_WIDTH, (int)TILE_HEIGHT, true);
+        originalPlusTile.recycle();
 
         offsetX = offsetY = 0f;
         scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
@@ -371,6 +380,29 @@ public class HexagonalLandView extends View {
             invalidate();
             return true;
         }
+    }
+
+    public void zoomIn() {
+        scaleFactor *= ZOOM_FACTOR;
+        if (scaleFactor > MAX_SCALE) {
+            scaleFactor = MAX_SCALE;
+        }
+        invalidate();
+    }
+
+    public void zoomOut() {
+        scaleFactor /= ZOOM_FACTOR;
+        if (scaleFactor < MIN_SCALE) {
+            scaleFactor = MIN_SCALE;
+        }
+        invalidate();
+    }
+
+    public void resetZoom() {
+        scaleFactor = 1.0f;
+        offsetX = 0;
+        offsetY = 0;
+        invalidate();
     }
 
     private static class Coordinate {

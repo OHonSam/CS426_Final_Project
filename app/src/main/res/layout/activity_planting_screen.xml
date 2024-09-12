@@ -38,4 +38,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hexagonalLandView"
+        android:layout_margin="8dp">
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/zoom_in_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:src="@drawable/zoom_in"/>
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/zoom_out_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:src="@drawable/zoom_out" />
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/zoom_reset_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:src="@drawable/zoom_reset"/>
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

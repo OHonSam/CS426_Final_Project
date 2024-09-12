@@ -5,10 +5,12 @@ import android.util.Log;
 import android.widget.ImageView;
 import androidx.core.content.res.ResourcesCompat;
 import com.hfad.cs426_final_project.BaseScreenActivity;
+import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.R;
 
 public class PlantingScreenActivity extends BaseScreenActivity {
     private HexagonalLandView hexagonalLandView;
+    private ClickableImageView zoomInButton, zoomOutButton, zoomResetButton;
     private ImageView gardenModeBtn;
     private boolean isPlantingMode = false;
 
@@ -22,7 +24,15 @@ public class PlantingScreenActivity extends BaseScreenActivity {
         gardenModeBtn = findViewById(R.id.garden_mode);
         hexagonalLandView = findViewById(R.id.hexagonalLandView);
 
+        zoomInButton = findViewById(R.id.zoom_in_btn);
+        zoomOutButton = findViewById(R.id.zoom_out_btn);
+        zoomResetButton = findViewById(R.id.zoom_reset_btn);
+
         gardenModeBtn.setOnClickListener(v -> toggleGardenMode());
+
+        zoomInButton.setOnClickListener(v -> hexagonalLandView.zoomIn());
+        zoomOutButton.setOnClickListener(v -> hexagonalLandView.zoomOut());
+        zoomResetButton.setOnClickListener(v -> hexagonalLandView.resetZoom());
     }
 
     private void toggleGardenMode() {
