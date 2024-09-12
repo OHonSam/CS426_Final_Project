@@ -14,39 +14,40 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CalendarViewHolder extends RecyclerView.ViewHolder {
-    private final ArrayList<LocalDate> daysList;
     public final TextView dayOfMonth;
     private final CalendarAdapter.OnDayClickListener listener;
-    private View parentView;
+    View parentView;
 
-    public CalendarViewHolder(@NonNull View itemView, CalendarAdapter.OnDayClickListener listener, ArrayList<LocalDate> daysList) {
+    public CalendarViewHolder(@NonNull View itemView, CalendarAdapter.OnDayClickListener listener) {
         super(itemView);
         this.parentView = itemView.findViewById(R.id.parentView);
         this.dayOfMonth = itemView.findViewById(R.id.cellDayText);
-        this.daysList = daysList;
         this.listener = listener;
     }
 
     public void bind(LocalDate date) {
-        if (date == null) {
-            dayOfMonth.setText("");
-        } else {
-            dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
-            if (date.equals(CalendarUtils.selectedDate)) {
-                // Use ContextCompat to get the color value from the resource
-                parentView.setBackgroundColor(ContextCompat.getColor(parentView.getContext(), R.color.secondary_50));
-            } else {
-                // Optionally reset the background color for non-selected dates
-                parentView.setBackgroundColor(Color.TRANSPARENT);  // Or another default color
-            }
-        }
+        // The bind() method already passes the date corresponding to the current item in the list.
+        dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
+        setDayAppearance(date);
+        setDayOnClickListener(date);
+    }
 
+    private void setDayOnClickListener(LocalDate date) {
         // Enable click listener only if the day is not empty
         itemView.setOnClickListener(v -> {
             if (date!=null) {
-                listener.onDayClick(getAdapterPosition(), daysList.get(getAdapterPosition()));
+                listener.onDayClick(getAdapterPosition(), date);
             }
         });
+    }
 
+    private void setDayAppearance(LocalDate date) {
+        if(date.equals(CalendarUtils.selectedDate))
+            parentView.setBackgroundColor(Color.LTGRAY);
+
+        if(date.getMonth().equals(CalendarUtils.selectedDate.getMonth()))
+            dayOfMonth.setTextColor(Color.BLACK);
+        else
+            dayOfMonth.setTextColor(Color.LTGRAY);
     }
 }

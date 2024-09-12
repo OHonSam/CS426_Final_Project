@@ -1,5 +1,6 @@
 package com.hfad.cs426_final_project.ToDoCalendarScreen;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
 
-class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
-{
+class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     private final ArrayList<LocalDate> daysList;
     private final OnDayClickListener onDayClickListener;
 
@@ -35,21 +35,23 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
     {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.calendar_cell, parent, false);
+        adjustCellHeight(view, parent);
+        return new CalendarViewHolder(view, onDayClickListener);
+    }
+
+    private void adjustCellHeight(View view, ViewGroup parent) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 
         if (daysList.size() > 15) // month view
             layoutParams.height = (int) (parent.getHeight() * 0.166666666);
         else // week view
             layoutParams.height = (int) parent.getHeight();
-
-        return new CalendarViewHolder(view, onDayClickListener, daysList);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
-        final LocalDate date = daysList.get(position);
-        holder.bind(date);
+        holder.bind(daysList.get(position));
     }
 
     @Override

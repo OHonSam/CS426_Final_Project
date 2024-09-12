@@ -69,7 +69,7 @@ public class ToDoScreenActivity extends BaseScreenActivity implements CalendarAd
     private void setMonthView() {
         monthYearText.setText(getMonthYearFromDate(CalendarUtils.selectedDate));
 
-        ArrayList<LocalDate> daysInMonth = generateDaysInMonthArray(CalendarUtils.selectedDate);
+        ArrayList<LocalDate> daysInMonth = generateDaysInMonthArray();
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 7);

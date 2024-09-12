@@ -10,77 +10,67 @@ import java.util.Locale;
 public class CalendarUtils {
     public static LocalDate selectedDate;
 
-    public static String getFormattedDate(LocalDate selectedDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
-        return selectedDate.format(formatter);
+    public static String getFormattedDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH));
     }
-    
-    public static String getFormattedTime(LocalTime selectedTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
-        return selectedTime.format(formatter);
+
+    public static String getFormattedTime(LocalTime time) {
+        return time.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH));
     }
 
     public static String getMonthYearFromDate(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
-        return date.format(formatter);
+        return date.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
     }
 
     public static String getMonthDayFromDate(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH);
-        return date.format(formatter);
+        return date.format(DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH));
     }
 
     public static String getFormattedShortTime(LocalTime time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return time.format(formatter);
+        return time.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
-    public static ArrayList<LocalDate> generateDaysInMonthArray(LocalDate date) {
+    public static ArrayList<LocalDate> generateDaysInMonthArray() {
         ArrayList<LocalDate> daysInMonthArray = new ArrayList<>();
-        YearMonth yearMonth = YearMonth.from(date);
 
-        // Returns the number of days in the month (i.e., 28, 30, or 31).
-        int daysInMonthCount = yearMonth.lengthOfMonth();
-        // For example, if selectedDate is September 15, 2024, this will return September 1, 2024.
-        LocalDate firstDayOfMonth = CalendarUtils.selectedDate.withDayOfMonth(1);
-        // Returns the day of the week (i.e., 1 for Monday, 7 for Sunday) for the first day of the month.
-        int dayOfWeek = firstDayOfMonth.getDayOfWeek().getValue();
-        // By determining which day of the week the 1st day of the month falls on (via dayOfWeek),
-        // the function knows how many empty cells ("") it needs to insert before the first actual day of the month appears.
+        LocalDate prevMonth = selectedDate.minusMonths(1);
+        LocalDate nextMonth = selectedDate.plusMonths(1);
 
-        // 6x7 (6 weeks x 7 days/week)
-        for (int i = 1; i <= 42; i++) {
-            if (i <= dayOfWeek || i > daysInMonthCount + dayOfWeek) {
-                // "padding" days from the previous month, which ensures that the 1st day of the current month starts in its correct position.
-                // "padding" days from the next month, which ensures that the last day of the current month ends in its correct position.
-                daysInMonthArray.add(null);
-            } else {
-                daysInMonthArray.add(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), i - dayOfWeek));
-            }
+        YearMonth curYearMonth = YearMonth.from(selectedDate);
+        int curNumDaysInMonth = curYearMonth.lengthOfMonth();
+
+        YearMonth prevYearMonth = YearMonth.from(prevMonth);
+        int prevNumDaysInMonth = prevYearMonth.lengthOfMonth();
+
+        LocalDate firstDateOfMonth = selectedDate.withDayOfMonth(1);
+        int firstDayOfWeek = firstDateOfMonth.getDayOfWeek().getValue(); //  The day of the week (1-7, Monday-Sunday) of the firstDateOfMonth.
+
+        for(int i = 1; i <= 42; i++) {
+            if(i <= firstDayOfWeek)
+                daysInMonthArray.add(LocalDate.of(prevMonth.getYear(),prevMonth.getMonth(),prevNumDaysInMonth + i - firstDayOfWeek));
+            else if(i > curNumDaysInMonth + firstDayOfWeek)
+                daysInMonthArray.add(LocalDate.of(nextMonth.getYear(),nextMonth.getMonth(),i - firstDayOfWeek - curNumDaysInMonth));
+            else
+                daysInMonthArray.add(LocalDate.of(selectedDate.getYear(),selectedDate.getMonth(),i - firstDayOfWeek));
         }
-
-        return daysInMonthArray;
+        return  daysInMonthArray;
     }
 
     public static ArrayList<LocalDate> generateDaysInWeekArray(LocalDate date) {
         ArrayList<LocalDate> daysInWeekArray = new ArrayList<>();
-        LocalDate current = sundayForDate(date);
-        LocalDate endDate = current.plusWeeks(1);
-        while (current.isBefore(endDate)) {
-            daysInWeekArray.add(current);
-            current = current.plusDays(1);
+        LocalDate currentDateIterator = sundayForDate(date);
+        LocalDate endDate = currentDateIterator.plusWeeks(1);
+        while (currentDateIterator.isBefore(endDate)) {
+            daysInWeekArray.add(currentDateIterator);
+            currentDateIterator = currentDateIterator.plusDays(1);
         }
         return daysInWeekArray;
     }
 
     private static LocalDate sundayForDate(LocalDate date) {
-        LocalDate oneWeekAgo = date.minusWeeks(1);
-        while (date.isAfter(oneWeekAgo)) {
-            if (date.getDayOfWeek() == java.time.DayOfWeek.SUNDAY) {
-                return date;
-            }
+        while (date.getDayOfWeek() != java.time.DayOfWeek.SUNDAY) {
             date = date.minusDays(1);
         }
-        return null;
+        return date;
     }
 }
