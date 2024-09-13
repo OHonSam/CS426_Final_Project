@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,6 +55,7 @@ public class HexagonalLandView extends View {
     private static final float MIN_SCALE = 0.5f;
     private static final float MAX_SCALE = 2.0f;
     private static final float ZOOM_FACTOR = 1.2f;
+    private OnBlockRestoredListener onBlockRestoredListener;
 
     private static final float TILE_SIZE = 100f;
     private static final float HORIZONTAL_SPACING = TILE_SIZE * 0.76f;
@@ -118,12 +121,8 @@ public class HexagonalLandView extends View {
         animationStartTime = System.currentTimeMillis();
         hexagonPath = new Path();
 
-        postInvalidateOnAnimation();
-    }
-
-    public void setBlockTiles(Map<Coordinate, Block> blockTiles) {
-        this.blockTiles = blockTiles;
         preloadBitmaps();
+        postInvalidateOnAnimation();
     }
 
     private void preloadBitmaps() {
@@ -136,38 +135,40 @@ public class HexagonalLandView extends View {
 
     private void loadBitmapFromBlock(Block block) {
         if (block == null || block.getImgUri() == null || block.getImgUri().isEmpty()) {
+            Log.d("HexagonalLandView", "Invalid block or image URI");
             return;
         }
 
-        if (!bitmapCache.containsKey(block.getImgUri())) {
-            new Thread(() -> {
-                try {
-                    Bitmap bitmap = Glide.with(getContext())
-                            .asBitmap()
-                            .load(block.getImgUri())
-                            .error(R.drawable.piece)
-                            .submit((int) TILE_SIZE, (int) TILE_SIZE)
-                            .get();  // This blocks, so we're doing it in a background thread
+        if (bitmapCache.containsKey(block.getImgUri())) {
+            Log.d("HexagonalLandView", "Bitmap already in cache for " + block.getImgUri());
+            invalidate();
+            return;
+        }
 
-                    // Update the cache and invalidate on the main thread
-                    post(() -> {
-                        bitmapCache.put(block.getImgUri(), bitmap);
+        Glide.with(getContext())
+                .asBitmap()
+                .load(Uri.parse(block.getImgUri()))
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        Log.d("HexagonalLandView", "Loaded bitmap for " + block.getImgUri());
+                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, (int)TILE_SIZE, (int)TILE_SIZE, true);
+                        bitmapCache.put(block.getImgUri(), scaledBitmap);
                         invalidate();
-                    });
-                } catch (Exception e) {
-                    Log.e("HexagonalLandView", "Error loading bitmap", e);
-                    // Load default bitmap on error
-                    post(() -> {
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        Log.d("HexagonalLandView", "Cleared bitmap for " + block.getImgUri());
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        Log.d("HexagonalLandView", "Failed to load bitmap for " + block.getImgUri());
                         bitmapCache.put(block.getImgUri(), defaultTile);
                         invalidate();
-                    });
-                }
-            }).start();
-        }
-    }
-
-    interface BitmapLoadCallback {
-        void onBitmapLoaded(Bitmap bitmap);
+                    }
+                });
     }
 
     public void setSelectedBlockData(BlockData blockData) {
@@ -178,6 +179,10 @@ public class HexagonalLandView extends View {
         this.onBlockUsedListener = listener;
     }
 
+    public void setOnBlockRestoredListener(OnBlockRestoredListener listener) {
+        this.onBlockRestoredListener = listener;
+    }
+
     private BlockData getDefaultBlockData() {
         for (BlockData blockData : blockDataList) {
             if (blockData.getQuantity() > 0) {
@@ -186,8 +191,6 @@ public class HexagonalLandView extends View {
         }
         return null;
     }
-
-
 
     private void loadTiles() {
         tilesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -274,6 +277,7 @@ public class HexagonalLandView extends View {
                         matrix.setTranslate(x - TILE_SIZE / 2, y - TILE_SIZE / 2);
                         canvas.drawBitmap(bitmap, matrix, null);
                     } else {
+                        loadBitmapFromBlock(block);
                         matrix.setTranslate(x - TILE_SIZE / 2, y - TILE_SIZE / 2);
                         canvas.drawBitmap(defaultTile, matrix, null);
                     }
@@ -342,48 +346,44 @@ public class HexagonalLandView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        try {
-            if (!isPlantingMode) {
-                return handlePanAndZoom(ev);
-            }
-
-            final int action = ev.getActionMasked();
-
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    touchStartX = ev.getX();
-                    touchStartY = ev.getY();
-                    lastTouchX = touchStartX;
-                    lastTouchY = touchStartY;
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-                    final float x = ev.getX();
-                    final float y = ev.getY();
-
-                    final float dx = x - lastTouchX;
-                    final float dy = y - lastTouchY;
-
-                    offsetX += dx;
-                    offsetY += dy;
-                    invalidate();
-
-                    lastTouchX = x;
-                    lastTouchY = y;
-                    break;
-
-                case MotionEvent.ACTION_UP:
-                    if (isClick(ev.getX(), ev.getY())) {
-                        handleTileConversion(ev.getX(), ev.getY());
-                    }
-                    break;
-            }
-
-            return true;
-        } catch (Exception e) {
-            Log.e("HexagonalLandView", "Error in onTouchEvent", e);
-            return false;
+        if (!isPlantingMode) {
+            return handlePanAndZoom(ev);
         }
+
+        scaleDetector.onTouchEvent(ev);
+
+        final int action = ev.getActionMasked();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                touchStartX = ev.getX();
+                touchStartY = ev.getY();
+                lastTouchX = touchStartX;
+                lastTouchY = touchStartY;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                final float x = ev.getX();
+                final float y = ev.getY();
+
+                final float dx = x - lastTouchX;
+                final float dy = y - lastTouchY;
+
+                offsetX += dx;
+                offsetY += dy;
+                invalidate();
+
+                lastTouchX = x;
+                lastTouchY = y;
+                break;
+
+            case MotionEvent.ACTION_UP:
+                if (isClick(ev.getX(), ev.getY())) {
+                    handleTileConversion(ev.getX(), ev.getY());
+                }
+                break;
+        }
+          return true;
     }
 
     private void handleTileConversion(float x, float y) {
@@ -424,40 +424,35 @@ public class HexagonalLandView extends View {
     }
 
     private boolean handlePanAndZoom(MotionEvent ev) {
-        try {
-            scaleDetector.onTouchEvent(ev);
+        scaleDetector.onTouchEvent(ev);
 
-            final int action = ev.getActionMasked();
+        final int action = ev.getActionMasked();
 
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    lastTouchX = ev.getX();
-                    lastTouchY = ev.getY();
-                    break;
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                lastTouchX = ev.getX();
+                lastTouchY = ev.getY();
+                break;
 
-                case MotionEvent.ACTION_MOVE:
-                    final float x = ev.getX();
-                    final float y = ev.getY();
+            case MotionEvent.ACTION_MOVE:
+                final float x = ev.getX();
+                final float y = ev.getY();
 
-                    if (!scaleDetector.isInProgress()) {
-                        final float dx = x - lastTouchX;
-                        final float dy = y - lastTouchY;
+                if (!scaleDetector.isInProgress()) {
+                    final float dx = x - lastTouchX;
+                    final float dy = y - lastTouchY;
 
-                        offsetX += dx;
-                        offsetY += dy;
-                        invalidate();
-                    }
+                    offsetX += dx;
+                    offsetY += dy;
+                    invalidate();
+                }
 
-                    lastTouchX = x;
-                    lastTouchY = y;
-                    break;
-            }
-
-            return true;
-        } catch (Exception e) {
-            Log.e("HexagonalLandView", "Error in handlePanAndZoom", e);
-            return false;
+                lastTouchX = x;
+                lastTouchY = y;
+                break;
         }
+
+        return true;
     }
 
     private boolean isClick(float x, float y) {
@@ -465,6 +460,7 @@ public class HexagonalLandView extends View {
         float dy = Math.abs(y - touchStartY);
         return dx <= CLICK_TOLERANCE && dy <= CLICK_TOLERANCE;
     }
+
     private void expandTile(Coordinate coord) {
         tiles.put(coord, TileType.NORMAL);
 
@@ -474,8 +470,8 @@ public class HexagonalLandView extends View {
 
         if (blockToUse != null && blockToUse.getQuantity() > 0) {
             blockTiles.put(coord, blockToUse.getBlock());
+            loadBitmapFromBlock(blockToUse.getBlock());
             blockToUse.setQuantity(blockToUse.getQuantity() - 1);
-
             // Update the RecyclerView's dataset
             int position = blockDataList.indexOf(blockToUse);
             if (position != -1) {
@@ -496,8 +492,17 @@ public class HexagonalLandView extends View {
 
 
     private void convertToPlus(Coordinate coord) {
-        tiles.put(coord, TileType.PLUS);
-        updateSurroundingTiles(coord);
+        if (tiles.get(coord) == TileType.NORMAL) {
+            tiles.put(coord, TileType.PLUS);
+            Block removedBlock = blockTiles.remove(coord);
+            if (removedBlock != null && onBlockRestoredListener != null) {
+                BlockData restoredBlockData = new BlockData(removedBlock, 1);
+                onBlockRestoredListener.onBlockRestored(restoredBlockData);
+            }
+            updateSurroundingTiles(coord);
+            markUnsavedChanges();
+            invalidate();
+        }
     }
 
     private void updateSurroundingTiles(Coordinate center) {
@@ -608,5 +613,9 @@ public class HexagonalLandView extends View {
 
     public interface OnBlockUsedListener {
         void onBlockUsed(BlockData blockData);
+    }
+
+    public interface OnBlockRestoredListener {
+        void onBlockRestored(BlockData blockData);
     }
 }

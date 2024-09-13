@@ -47,8 +47,8 @@ public class PlantingBlockAdapter extends RecyclerView.Adapter<PlantingBlockAdap
 
         Glide.with(holder.itemView.getContext())
                 .load(Uri.parse(blockData.getBlock().getImgUri()))
-                .override(Target.SIZE_ORIGINAL) // or specify your desired dimensions
-                .fitCenter() // Or use centerCrop() if you want to crop the image to fit
+                .override(Target.SIZE_ORIGINAL)
+                .fitCenter()
                 .into(holder.ivBlock);
 
         holder.tvNumOwnBlock.setText(String.valueOf(blockData.getQuantity()));

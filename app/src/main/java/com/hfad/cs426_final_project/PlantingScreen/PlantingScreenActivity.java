@@ -18,7 +18,7 @@ import com.hfad.cs426_final_project.R;
 
 import java.util.List;
 
-public class PlantingScreenActivity extends BaseScreenActivity {
+public class PlantingScreenActivity extends BaseScreenActivity implements HexagonalLandView.OnBlockRestoredListener {
     private HexagonalLandView hexagonalLandView;
     private ClickableImageView zoomInButton, zoomOutButton, zoomResetButton;
     private ImageView gardenModeBtn;
@@ -36,6 +36,21 @@ public class PlantingScreenActivity extends BaseScreenActivity {
         // curBlockData.getBlock().getImgUri() URI to bitmap ?
         initializeComponents();
         initRCVLandSelection();
+        hexagonalLandView.setOnBlockRestoredListener(this);
+    }
+
+    public void onBlockRestored(BlockData restoredBlockData) {
+        // Find the matching block in the blockDataList
+        for (BlockData blockData : blockDataList) {
+            if (blockData.getBlock().getId() == (restoredBlockData.getBlock().getId())) {
+                // Increment the quantity
+                blockData.setQuantity(blockData.getQuantity() + 1);
+                // Notify the adapter of the change
+                int position = blockDataList.indexOf(blockData);
+                plantingBlockAdapter.notifyItemChanged(position);
+                break;
+            }
+        }
     }
 
     private void initializeComponents() {
