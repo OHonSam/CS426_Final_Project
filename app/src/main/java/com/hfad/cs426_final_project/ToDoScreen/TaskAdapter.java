@@ -27,7 +27,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @NonNull
     @Override
     public TaskAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_card,parent, false);
         return new TaskViewHolder(view);
     }
 
@@ -73,6 +73,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskEndTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getEndTimeInMinutes()));
             tvTaskLocation.setText(userTask.getLocation() != null ? userTask.getLocation() : "None");
             tvTaskTag.setText(userTask.getTag().getName()); // Placeholder for Tag if needed
+            btnCheckComplete.setChecked(userTask.getIsComplete());
 
             btnDeleteTask.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,11 +99,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 public void onClick(View v) {
                     // Toggle the isComplete status of the task
                     userTask.setIsComplete(btnCheckComplete.isChecked());
-
-                    // Optionally, you can update the task in persistent storage
-                    // For example, appContext.getCurrentUser().updateTask(userTask);
-
-                    // Notify the adapter to update the UI
                     notifyItemChanged(position);
                 }
             });

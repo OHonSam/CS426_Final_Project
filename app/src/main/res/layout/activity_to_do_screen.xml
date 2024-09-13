@@ -38,7 +38,6 @@
         android:id="@+id/TasksDisplayRCV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintTop_toBottomOf="@+id/header"
         app:layout_constraintStart_toStartOf="parent"

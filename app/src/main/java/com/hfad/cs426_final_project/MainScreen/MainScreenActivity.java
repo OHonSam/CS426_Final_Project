@@ -127,12 +127,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)  {
-        super.onSaveInstanceState(outState);
-        appContext.saveUserInfo();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
     }

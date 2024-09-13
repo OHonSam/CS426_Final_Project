@@ -53,9 +53,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        Log.d("BaseScreenTest", "onSave invoked");
+    protected void onSaveInstanceState(Bundle outState)  {
+        super.onSaveInstanceState(outState);
         AppContext.getInstance().saveUserInfo();
     }
 
