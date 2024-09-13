@@ -58,70 +58,66 @@ public class HexagonalLandView extends View {
     private static final float MIN_SCALE = 0.5f;
     private static final float MAX_SCALE = 2.0f;
     private static final float ZOOM_FACTOR = 1.2f;
-    private OnBlockRestoredListener onBlockRestoredListener;
-
     private static final float TILE_SIZE = 100f;
     private static final float HORIZONTAL_SPACING = TILE_SIZE * 0.76f;
     private static final float VERTICAL_SPACING = TILE_SIZE * 0.41f;
     private static final float LAND_SPACING = 0.84f;
-    private boolean hasUnsavedChanges = false;
-    private boolean isPlantingMode = true;
-    private Bitmap defaultTile;
-    private User currentUser;
-
-    private Map<Coordinate, TileType> tiles = new HashMap<>();
-    private Bitmap plusTile;
-    private float offsetX, offsetY;
-    private float scaleFactor = 1f;
-    private Matrix matrix = new Matrix();
-
-    private Map<Coordinate, Block> blockTiles = new HashMap<>();
-    private BlockData selectedBlockData;
-    private List<BlockData> blockDataList;
-    private OnBlockUsedListener onBlockUsedListener;
-    private Map<String, Bitmap> bitmapCache = new HashMap<>();
-
-    private ScaleGestureDetector scaleDetector;
-    private float lastTouchX, lastTouchY;
-    private static final int INVALID_POINTER_ID = -1;
-    private int activePointerId = INVALID_POINTER_ID;
-    private DatabaseReference tilesRef;
-    private float touchStartX, touchStartY;
     private static final float CLICK_TOLERANCE = 10f;
-
     private static final long ANIMATION_DURATION = 1000;
     private static final float MAX_BORDER_WIDTH = 8f;
-    private long animationStartTime;
+
+    private Map<Coordinate, TileType> tiles = new HashMap<>();
+    private Map<Coordinate, Block> blockTiles = new HashMap<>();
+    private Map<String, Bitmap> bitmapCache = new HashMap<>();
+
+    private Bitmap plusTile;
+    private Bitmap defaultTile;
+    private User currentUser;
+    private BlockData selectedBlockData;
+    private Matrix matrix = new Matrix();
+    private List<BlockData> blockDataList;
+    private OnBlockRestoredListener onBlockRestoredListener;
+    private OnBlockUsedListener onBlockUsedListener;
+    private ScaleGestureDetector scaleDetector;
     private Paint borderPaint;
     private Path hexagonPath;
 
+    private float lastTouchX, lastTouchY;
+    private float touchStartX, touchStartY;
+    private long animationStartTime;
+    private boolean hasUnsavedChanges = false;
+    private boolean isPlantingMode = true;
+    private float offsetX, offsetY;
+    private float scaleFactor = 1f;
+
+
     public HexagonalLandView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+        borderPaint = new Paint();
+        hexagonPath = new Path();
+        blockDataList = new ArrayList<>();
         init(context);
     }
 
     private void init(Context context) {
-        Bitmap originalDefaultTile = BitmapFactory.decodeResource(getResources(), R.drawable.piece);
-        defaultTile = Bitmap.createScaledBitmap(originalDefaultTile, (int)TILE_SIZE, (int)TILE_SIZE, true);
-        originalDefaultTile.recycle();
-
-        Bitmap originalPlusTile = BitmapFactory.decodeResource(getResources(), R.drawable.plus_btn);
-        plusTile = Bitmap.createScaledBitmap(originalPlusTile, (int)TILE_SIZE, (int)TILE_SIZE, true);
-        originalPlusTile.recycle();
-
-        blockDataList = new ArrayList<>();
-
+        defaultTile = loadAndScaleBitmap(R.drawable.piece);
+        plusTile = loadAndScaleBitmap(R.drawable.plus_btn);
         offsetX = offsetY = 0f;
-        scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 
-        borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setColor(ContextCompat.getColor(context, R.color.primary_20));
         animationStartTime = System.currentTimeMillis();
-        hexagonPath = new Path();
 
         preloadBitmaps();
         postInvalidateOnAnimation();
+    }
+
+    private Bitmap loadAndScaleBitmap(int resourceId) {
+        Bitmap original = BitmapFactory.decodeResource(getResources(), resourceId);
+        Bitmap scaled = Bitmap.createScaledBitmap(original, (int)TILE_SIZE, (int)TILE_SIZE, true);
+        original.recycle();
+        return scaled;
     }
 
     public void setCurrentUser(User user) {
@@ -153,13 +149,10 @@ public class HexagonalLandView extends View {
                     tiles.put(coord, TileType.PLUS);
                 }
             }
-
-            invalidate();
         } else {
-            // Initialize with center tile if no saved state
-            Coordinate center = new Coordinate(0, 0);
-            tiles.put(center, TileType.PLUS);
+            tiles.put(new Coordinate(0, 0), TileType.PLUS);
         }
+        invalidate();
     }
 
     private Block findBlockById(int id) {
@@ -205,12 +198,10 @@ public class HexagonalLandView extends View {
 
     private void loadBitmapFromBlock(Block block) {
         if (block == null || block.getImgUri() == null || block.getImgUri().isEmpty()) {
-            Log.d("HexagonalLandView", "Invalid block or image URI");
             return;
         }
 
         if (bitmapCache.containsKey(block.getImgUri())) {
-            Log.d("HexagonalLandView", "Bitmap already in cache for " + block.getImgUri());
             invalidate();
             return;
         }
@@ -221,7 +212,6 @@ public class HexagonalLandView extends View {
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        Log.d("HexagonalLandView", "Loaded bitmap for " + block.getImgUri());
                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, (int)TILE_SIZE, (int)TILE_SIZE, true);
                         bitmapCache.put(block.getImgUri(), scaledBitmap);
                         invalidate();
@@ -229,14 +219,6 @@ public class HexagonalLandView extends View {
 
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
-                        Log.d("HexagonalLandView", "Cleared bitmap for " + block.getImgUri());
-                    }
-
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        Log.d("HexagonalLandView", "Failed to load bitmap for " + block.getImgUri());
-                        bitmapCache.put(block.getImgUri(), defaultTile);
-                        invalidate();
                     }
                 });
     }
@@ -253,6 +235,11 @@ public class HexagonalLandView extends View {
         this.onBlockRestoredListener = listener;
     }
 
+    public void setPlantingMode(boolean plantingMode) {
+        isPlantingMode = plantingMode;
+        invalidate();
+    }
+
     private BlockData getDefaultBlockData() {
         for (BlockData blockData : blockDataList) {
             if (blockData.getQuantity() > 0) {
@@ -260,11 +247,6 @@ public class HexagonalLandView extends View {
             }
         }
         return null;
-    }
-
-    public void setPlantingMode(boolean plantingMode) {
-        isPlantingMode = plantingMode;
-        invalidate();
     }
 
     @Override
@@ -355,19 +337,6 @@ public class HexagonalLandView extends View {
         hasUnsavedChanges = true;
     }
 
-    // Method to save all tiles
-    public void saveAllTiles() {
-        Map<String, Object> updates = new HashMap<>();
-        if (hasUnsavedChanges) {
-            for (Map.Entry<Coordinate, TileType> entry : tiles.entrySet()) {
-                Coordinate coord = entry.getKey();
-                TileType tileType = entry.getValue();
-                updates.put(coord.q + "," + coord.r, tileType.name());
-            }
-            tilesRef.updateChildren(updates);
-            hasUnsavedChanges = false;
-        }
-    }
 
     private void addSurroundingPlusTiles(Coordinate center) {
         int[][] directions = {{1, 0}, {1, -1}, {0, -1}, {-1, 0}, {-1, 1}, {0, 1}};
@@ -376,7 +345,6 @@ public class HexagonalLandView extends View {
             if (!tiles.containsKey(newCoord)) {
                 tiles.put(newCoord, TileType.PLUS);
                 markUnsavedChanges();
-                // saveAllTiles();
             }
         }
     }
