@@ -21,19 +21,19 @@ public class Tag implements Serializable {
 
     public Tag(int id) {
         this.id = id;
-        if (id == 1) {
+        if (id == 0) {
             this.name = "Work";
             this.color = 0xFF4285F4;
-        } else if (id == 2) {
+        } else if (id == 1) {
             this.name = "Study";
             this.color = 0xFFFFA500;
-        } else if (id == 3) {
+        } else if (id == 2) {
             this.name = "Exercise";
             this.color = 0xFF34A853;
-        } else if (id == 4) {
+        } else if (id == 3) {
             this.name = "Relax";
             this.color = 0xFFEA4335;
-        } else if (id == 5) {
+        } else if (id == 4) {
             this.name = "Sleep";
             this.color = 0xFF9C27B0;
         } else {

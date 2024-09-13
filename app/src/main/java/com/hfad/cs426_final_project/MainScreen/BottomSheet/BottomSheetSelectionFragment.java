@@ -56,10 +56,6 @@ public class BottomSheetSelectionFragment extends BottomSheetDialogFragment {
     private void initRCVTreeSelection() {
         rcvTree.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
-        // Initialize the adapter (assuming you pass the list of trees from the main activity)
-        // change in selection area
-        // or specify your desired dimensions
-        // Or use centerCrop() if you want to crop the image to fit
         OwnTreeAdapter treeAdapter = new OwnTreeAdapter(appContext.getCurrentUser().getOwnTrees(), new OwnTreeAdapter.IClickTreeListener() {
             @Override
             public void onClickTree(Tree tree) {

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppContext {
+    private static final TaskCompletionSource<AppContext> taskCompletionSource = new TaskCompletionSource<>();
     private static AppContext instance;
     private User currentUser;
     private List<Tree> treeList;
@@ -32,62 +33,7 @@ public class AppContext {
 
     private Clock currentClock;
 
-    private AppContext() {
-        treeList = new ArrayList<Tree>();
-        loadTreeListFromDB().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()) {
-                    fetchTrees();
-                }
-                else {
-                    // Handle the error
-                    Exception e = task.getException();
-                    // Show error or take appropriate action
-                }
-            }
-        });
-        grassList = new ArrayList<>();
-        loadGrassListFromDB();
-    }
-
-    private void fetchTrees() {
-        fetchTreeUriSequentially(0); // Start fetching URIs from the first tree
-    }
-
-    private void fetchTreeUriSequentially(int index) {
-        if (index >= treeList.size()) {
-            // All trees have been processed
-            return;
-        }
-
-        Tree tree = treeList.get(index);
-        tree.fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                fetchTreeUriSequentially(index + 1);
-            }
-        });
-    }
-
-    private void fetchOwnTrees() {
-        fetchOwnTreeUriSequentially(0); // Start fetching URIs from the first tree
-    }
-
-    private void fetchOwnTreeUriSequentially(int index) {
-        if (index >= currentUser.getOwnTrees().size()) {
-            // All trees have been processed
-            return;
-        }
-
-        Tree tree = currentUser.getOwnTrees().get(index);
-        tree.fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                fetchOwnTreeUriSequentially(index + 1);
-            }
-        });
-    }
+    private AppContext() {}
 
     public static synchronized AppContext getInstance() {
         if (instance == null) {
@@ -96,13 +42,38 @@ public class AppContext {
         return instance;
     }
 
+    public Task<Void> loadData() {
+        treeList = new ArrayList<>();
+        grassList = new ArrayList<>();
+
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+        // Load both lists, wait for both tasks to complete
+        Task<Void> treeListTask = loadTreeListFromDB();
+        Task<Void> grassListTask = loadGrassListFromDB();
+
+        // Wait for both tasks to complete before setting the instance as ready
+        Tasks.whenAll(treeListTask, grassListTask).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    taskCompletionSource.setResult(null); // Mark the task as complete
+                } else {
+                    // Handle error
+                    Exception e = task.getException();
+                    taskCompletionSource.setException(e); // Pass the error if any task fails
+                }
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+
     public User getCurrentUser() {
         return currentUser;
     }
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        fetchOwnTrees();
     }
 
     public List<Tree> getTreeList() {
@@ -118,21 +89,11 @@ public class AppContext {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 treeList.clear();
-                List<Task<Void>> addTreeTasks = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Tree tree = dataSnapshot.getValue(Tree.class);
-                    if (tree != null) {
-                        addTreeTasks.add(addNewtree(tree));
-                    }
+                    treeList.add(tree);
                 }
-                // Once all fetchUri tasks are completed, we complete the main task
-                Tasks.whenAll(addTreeTasks).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        taskCompletionSource.setResult(null);
-                    } else {
-                        taskCompletionSource.setException(task.getException());
-                    }
-                });
+                taskCompletionSource.setResult(null);
             }
 
             @Override
@@ -140,13 +101,6 @@ public class AppContext {
                 taskCompletionSource.setException(error.toException());
             }
         });
-        return taskCompletionSource.getTask();
-    }
-
-    private Task<Void> addNewtree(Tree tree) {
-        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-        treeList.add(tree);
-        taskCompletionSource.setResult(null);
         return taskCompletionSource.getTask();
     }
 
@@ -161,9 +115,10 @@ public class AppContext {
         return grassList;
     }
 
-    private void loadGrassListFromDB() {
+    private Task<Void> loadGrassListFromDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Blocks/Grass");
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -173,13 +128,15 @@ public class AppContext {
                     Block block = dataSnapshot.getValue(Block.class);
                     grassList.add(block);
                 }
+                taskCompletionSource.setResult(null);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                taskCompletionSource.setException(error.toException());
             }
         });
+        return taskCompletionSource.getTask();
     }
 
     public Clock getCurrentClock() {

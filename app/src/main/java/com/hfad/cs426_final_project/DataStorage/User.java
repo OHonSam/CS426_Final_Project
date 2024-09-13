@@ -1,5 +1,9 @@
 package com.hfad.cs426_final_project.DataStorage;
 
+import android.graphics.Color;
+
+import androidx.core.content.res.ResourcesCompat;
+
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ClockSetting;
@@ -54,6 +58,13 @@ public class User {
 
         Block block = new Block(); // default block
         ownBlock.add(new BlockData(block, 1));
+
+        // default Tag
+        ownTags.add(new Tag(0));
+        ownTags.add(new Tag(1));
+        ownTags.add(new Tag(2));
+        ownTags.add(new Tag(3));
+        ownTags.add(new Tag(4));
 
         this.clockSetting = new ClockSetting();
         this.landState = new LandState();
@@ -271,5 +282,14 @@ public class User {
             }
         }
         return false;
+    }
+
+    public void addSelectedBlock() {
+        for(BlockData blockData : ownBlock) {
+            if(blockData.getBlock().getId() == selectedBlock.getId()) {
+                blockData.setQuantity(blockData.getQuantity() + 1);
+                break;
+            }
+        }
     }
 }

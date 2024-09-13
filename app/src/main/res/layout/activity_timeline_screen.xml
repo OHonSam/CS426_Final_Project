@@ -42,6 +42,5 @@
         android:id="@+id/rcvTimeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
         tools:listitem="@layout/item_timeline_date"/>
 </LinearLayout>

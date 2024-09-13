@@ -470,7 +470,10 @@ public class Clock {
 
     private void saveSession(boolean isComplete) {
         User user = AppContext.getInstance().getCurrentUser();
-
+        if(isComplete) {
+            // Reward
+            user.addSelectedBlock();
+        }
         Session session = new Session();
         session.setId(user.getSessions().size());
         session.setStatus(isComplete);
@@ -481,7 +484,6 @@ public class Clock {
         } else if(clockSetting.getType() == ClockMode.TIMER && clockSetting.getIsCountExceedTime() && isEndSession) {
             duration = clockSetting.getTargetTime() - seconds;
         }
-
 
         session.setDuration(duration);
         session.setTimestamp(System.currentTimeMillis());

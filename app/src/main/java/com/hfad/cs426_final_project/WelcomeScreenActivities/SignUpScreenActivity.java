@@ -143,28 +143,21 @@ public class SignUpScreenActivity extends AppCompatActivity {
 
                 // Create a new User object with the new user ID
                 User newUser = new User(cnt, email, password, name);
-                newUser.getUserSetting().getSelectedTree().fetchUri().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // Add the new user to the database
-                        dbRef.child("User" + cnt).setValue(newUser)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            // Update appContext with the new user
-                                            appContext.setCurrentUser(newUser);
+                dbRef.child("User" + cnt).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Update appContext with the new user
+                                appContext.setCurrentUser(newUser);
 
-                                            // Navigate to MainScreenActivity
-                                            Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
-                                            startActivity(intent);
-                                            finishAffinity(); // Close all activities below this one
-                                        } else {
-                                            Toast.makeText(SignUpScreenActivity.this, "Failed to register user.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                    }
+                                // Navigate to MainScreenActivity
+                                Intent intent = new Intent(SignUpScreenActivity.this, MainScreenActivity.class);
+                                startActivity(intent);
+                                finishAffinity(); // Close all activities below this one
+                            } else {
+                                Toast.makeText(SignUpScreenActivity.this, "Failed to register user.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                 });
             }
             @Override
