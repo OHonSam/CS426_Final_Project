@@ -1,5 +1,15 @@
 package com.hfad.cs426_final_project.StatisticScreen;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,8 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -23,6 +35,10 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -93,6 +109,12 @@ public class StatisticScreenActivity extends BaseScreenActivity {
                 setupViewByButton();
                 updateTimeSelection();
                 sessionModeBtn.setOnClickListener(v -> showSessionModePopup());
+                shareBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        shareStatistics();
+                    }
+                });
             }
         });
         setupItemTypeButton();
@@ -102,6 +124,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         itemTypeBtn = findViewById(R.id.item_type_btn);
         itemTypeImage = findViewById(R.id.item_type_image);
         itemTypeBtn.setOnClickListener(v -> toggleItemType());
+        shareBtn = findViewById(R.id.share_btn);
     }
 
     private void toggleItemType() {
@@ -355,5 +378,50 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     // Interface
     public interface OnDataFetchedCallback {
         void onDataFetched();
+    }
+
+    private void shareStatistics() {
+        LinearLayout contentToShare = findViewById(R.id.content_to_share);
+        Bitmap screenshot = takeScreenshot(contentToShare);
+        Uri screenshotUri = saveScreenshotToMediaStore(screenshot);
+        shareScreenshot(screenshotUri);
+    }
+
+    private Bitmap takeScreenshot(View view) {
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+
+    private Uri saveScreenshotToMediaStore(Bitmap bitmap) {
+        ContentResolver resolver = getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "statistics_" + System.currentTimeMillis() + ".png");
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+        Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+
+        try {
+            OutputStream outputStream = resolver.openOutputStream(imageUri);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imageUri;
+    }
+
+    private void shareScreenshot(Uri uri) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        startActivity(Intent.createChooser(shareIntent, "Share Statistics"));
     }
 }
