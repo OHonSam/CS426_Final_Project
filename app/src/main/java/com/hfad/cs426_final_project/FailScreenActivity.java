@@ -28,8 +28,8 @@ import 	android.view.animation.AnimationUtils;
 
 
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
-import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
+import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;

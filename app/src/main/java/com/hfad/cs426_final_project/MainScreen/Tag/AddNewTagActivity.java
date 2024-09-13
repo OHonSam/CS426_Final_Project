@@ -1,7 +1,11 @@
 package com.hfad.cs426_final_project.MainScreen.Tag;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,7 +27,6 @@ public class AddNewTagActivity extends AppCompatActivity {
     EditText edtTagName;
     ColorPickerView colorPickerView;
     View chosenColorView;
-
     int chosenColor;
 
     @Override
@@ -35,6 +38,29 @@ public class AddNewTagActivity extends AppCompatActivity {
         initUI();
         setupColorPicker();
         initListener();
+    }
+
+    // Lose focus for EditText when touching outside
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                    v.clearFocus();
+                    hideSoftKeyboard(v); // Hide keyboard if EditText loses focus
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    // Helper method to hide the keyboard
+    private void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private void initUI() {
@@ -71,17 +97,15 @@ public class AddNewTagActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String tagName = edtTagName.getText().toString().trim();
                 if (!tagName.isEmpty()) {
-                    if(!appContext.getCurrentUser().hasTag(tagName)) {
+                    if (!appContext.getCurrentUser().hasTag(tagName)) {
                         Toast.makeText(v.getContext(), "Tag added: " + tagName, Toast.LENGTH_SHORT).show();
-                        // tag logic
+                        // Add the new tag logic
                         Tag newTag = new Tag(appContext.getCurrentUser().getOwnTags().size(), tagName, chosenColor);
                         appContext.getCurrentUser().getOwnTags().add(newTag);
                         appContext.getCurrentUser().setFocusTag(newTag);
-                        // back to mainscreen activity
                         finish();
-                    }
-                    else {
-                        Toast.makeText(v.getContext(), "This tag has existed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(v.getContext(), "This tag already exists", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(v.getContext(), "Please enter a tag name", Toast.LENGTH_SHORT).show();

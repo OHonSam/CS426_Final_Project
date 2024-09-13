@@ -1,5 +1,8 @@
 package com.hfad.cs426_final_project;
 
+import android.app.Activity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -184,5 +187,14 @@ public class AppContext {
     }
     public void setCurrentClock(Clock currentClock) {
         this.currentClock = currentClock;
+    }
+
+    public void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View currentFocus = activity.getCurrentFocus();
+        if (currentFocus != null) {
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            currentFocus.clearFocus();
+        }
     }
 }

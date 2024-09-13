@@ -35,4 +35,7 @@
     <string name="reason_why_tree_withered_non_focus">Because you are not focus on the app</string>
     <string name="ok">OK</string>
 
+    <string name="completeText">Hooray! You\'ve planted 1 healthy tree(s) in your forest </string>
+    <string name="breakTitle">Take a Break</string>
+    <string name="breakSession">Sometimes it's okay to take a break</string>
 </resources>

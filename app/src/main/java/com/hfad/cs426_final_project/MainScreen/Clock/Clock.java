@@ -52,10 +52,12 @@ public class Clock {
     private int secondsOutside;
     private boolean runningOutside = false;
 
-    private final Handler handler;
+    private final Handler countTimeHandler;
     private Runnable runnableClock;
-    private Handler deepModeHandler;
+    private final Handler deepModeHandler;
     private Runnable runnableDeepMode;
+    private final Handler breakSessionHandler;
+    private Runnable runnableBreakSession;
 
     private TextView timeView;
     private MyButton startButton;
@@ -72,7 +74,7 @@ public class Clock {
         this.clockSetting = clockSetting;
         this.seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? 0 : clockSetting.getTargetTime();
         this.isEndSession = false;
-        this.handler = new Handler();
+        this.countTimeHandler = new Handler();
         this.deepModeHandler = new Handler();
         this.runnableClock = createClockRunnable();
         this.runnableDeepMode = createDeepModeRunnable();
@@ -179,7 +181,38 @@ public class Clock {
 
                     // Post the next tick only if still running
                     if (running) {
-                        handler.postDelayed(this, 1000);
+                        countTimeHandler.postDelayed(this, 1000);
+                    }
+                }
+            }
+        };
+    }
+
+    private Runnable createBreakSessionRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                updateTimeDisplay();
+                if (running) {
+                    seconds -= 60;
+                    if (seconds < 0) {
+                        if (!clockSetting.getIsCountExceedTime()) {
+                            stop();
+                            saveSession(true);
+                            //reset();
+                            // Notify or vibrate when the timer reaches the limit
+                            notifyOrVibrate(context);
+
+                            redirectToCongratulationScreen();
+                        }
+                        else {
+                            isEndSession = true;
+                            updateStartButton("End Session", R.color.secondary_50);
+                        }
+                    }
+                    // Post the next tick only if still running
+                    if (running) {
+                        countTimeHandler.postDelayed(this, 1000);
                     }
                 }
             }
@@ -192,7 +225,7 @@ public class Clock {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
                 saveSession(true);
-                reset();
+                //reset();
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
 
@@ -210,7 +243,7 @@ public class Clock {
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
             saveSession(true);
-            reset();
+            //reset();
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
 
@@ -251,7 +284,7 @@ public class Clock {
                         runningOutside = false;
                         stop();
                         saveSession(false);
-                        reset();
+                        //reset();
 
                         // Retrieve the string from strings.xml using the context
                         String message = context.getString(R.string.reason_why_tree_withered_non_focus);
@@ -277,20 +310,20 @@ public class Clock {
 
     public void start() {
         // Ensure no previous running clock
-        handler.removeCallbacks(runnableClock);
+        countTimeHandler.removeCallbacks(runnableClock);
         running = true;
-        handler.post(runnableClock);
+        countTimeHandler.post(runnableClock);
 
         toggleIcon.setVisibility(View.GONE);
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        startForegroundService();
+        //startForegroundService();
     }
 
     public void stop() {
         running = false;
-        handler.removeCallbacks(runnableClock);
+        countTimeHandler.removeCallbacks(runnableClock);
         updateStartButton("Plant", R.color.primary_20);
         stopForegroundService();
     }
@@ -331,7 +364,7 @@ public class Clock {
     public void giveUp() {
         stop();
         saveSession(false);
-        reset();
+        //reset();
 
         // Retrieve the string from strings.xml using the context
         String message = context.getString(R.string.reason_why_tree_withered_give_up);
