@@ -29,6 +29,9 @@
         <activity
             android:name=".ToDoScreen.ToDoScreenActivity"
             android:exported="false" />
+        <activity
+            android:name=".BreakScreenActivity"
+            android:exported="false" />
 
         <service
             android:name=".MainScreen.Clock.ClockService"

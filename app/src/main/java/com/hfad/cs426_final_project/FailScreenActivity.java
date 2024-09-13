@@ -13,17 +13,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import 	android.view.animation.AnimationUtils;
 
 
@@ -54,11 +50,40 @@ public class FailScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fail_screen);
-
-        modePickerDialog = new ModePickerDialog();
-
+        showFailureDialog();
         setupUIReference();
+        modePickerDialog = new ModePickerDialog();
         setupOnClickListener();
+    }
+
+    private void showFailureDialog() {
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_failure, null);
+
+        // Create a dialog using the AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // Create and show the dialog
+        final AlertDialog dialog = builder.create();
+
+        // Ensure the dialog is dismissible when tapping outside
+        dialog.setCanceledOnTouchOutside(true);
+
+        // Resize the dialog programmatically if needed
+        dialog.setOnShowListener(dialogInterface -> {
+            // You can adjust the width and height as needed
+            int dialogWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
+            dialog.getWindow().setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        });
+
+        // Handle the button click to dismiss the dialog
+        Button buttonOK = dialogView.findViewById(R.id.buttonOK);
+        buttonOK.setOnClickListener(v -> dialog.dismiss());
+
+        // Show the dialog
+        dialog.show();
     }
 
     private void setupOnClickListener() {

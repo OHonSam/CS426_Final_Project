@@ -22,6 +22,8 @@ import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
+import org.w3c.dom.Text;
+
 import java.util.Locale;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
@@ -32,6 +34,13 @@ public class Clock {
         TIMER
     }
 
+    public static enum SessionStatus{
+        COMPLETE,
+        GIVE_UP,
+        NON_FOCUS;
+    }
+
+    private static final double COEFFICIENT_SUN = 0.3;
     private OnClockListener onClockListener;
 
     private static final String CHANNEL_ID = "clock_channel_id";
@@ -43,6 +52,9 @@ public class Clock {
     private final int PROGRESS_MINUTES_MAX = 120;
 
 
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
 
     //Number of seconds displayed on the stopwatch.
     private int seconds;
@@ -52,10 +64,16 @@ public class Clock {
     private int secondsOutside;
     private boolean runningOutside = false;
 
-    private final Handler handler;
+    private final Handler countTimeHandler;
     private Runnable runnableClock;
-    private Handler deepModeHandler;
+    private final Handler deepModeHandler;
     private Runnable runnableDeepMode;
+    private final Handler breakSessionHandler;
+    private Runnable runnableBreakSession;
+
+    public TextView setTimeView(TextView timeView) {
+        return this.timeView = timeView;
+    }
 
     private TextView timeView;
     private MyButton startButton;
@@ -72,10 +90,12 @@ public class Clock {
         this.clockSetting = clockSetting;
         this.seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? 0 : clockSetting.getTargetTime();
         this.isEndSession = false;
-        this.handler = new Handler();
+        this.countTimeHandler = new Handler();
         this.deepModeHandler = new Handler();
         this.runnableClock = createClockRunnable();
         this.runnableDeepMode = createDeepModeRunnable();
+        this.breakSessionHandler = new Handler();
+        this.runnableBreakSession = createBreakSessionRunnable();
         this.progressBar = progressBar;
         this.toggleIcon = toggleIcon;
         this.onClockListener = onClockListener;
@@ -91,9 +111,8 @@ public class Clock {
                     setIsEndSession(false);
                     stop();
                     saveSession(true);
-                    reset();
-
-                    redirectToCongratulationScreen();
+                    completeSession(getTargetTime(),SessionStatus.COMPLETE);
+                    //onClockListener.redirectToCongratulationScreenActivity();
                     return;
                 }
 
@@ -108,6 +127,24 @@ public class Clock {
         });
     }
 
+    private void completeSession(int targetTime, SessionStatus status) {
+        int rewards = 0;
+        if(status == SessionStatus.COMPLETE){
+            rewards = (int) ((double) targetTime / 60 * COEFFICIENT_SUN);
+            AppContext.getInstance().getCurrentUser().updateSun(rewards);
+            onClockListener.redirectToCongratulationScreenActivity(rewards);
+        }
+        else if (status == SessionStatus.GIVE_UP){
+            // Retrieve the string from strings.xml using the context
+            String message = context.getString(R.string.reason_why_tree_withered_give_up);
+            onClockListener.redirectToFailScreenActivity(message,rewards);
+        }
+        else if(status == SessionStatus.NON_FOCUS){
+            // Retrieve the string from strings.xml using the context
+            String message = context.getString(R.string.reason_why_tree_withered_non_focus);
+            onClockListener.redirectToFailScreenActivity(message,rewards);
+        }
+    }
 
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
@@ -179,7 +216,28 @@ public class Clock {
 
                     // Post the next tick only if still running
                     if (running) {
-                        handler.postDelayed(this, 1000);
+                        countTimeHandler.postDelayed(this, 1000);
+                    }
+                }
+            }
+        };
+    }
+
+    private Runnable createBreakSessionRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                updateTimeDisplay();
+                if (running) {
+                    seconds -= 60;
+                    Log.d("BreakScreenActivity",""+seconds);
+                    if (seconds < 0) {
+                        running = false;
+                        breakSessionCompleteListener.onBreakSessionComplete();
+                    }
+                    // Post the next tick only if still running
+                    if (running) {
+                        breakSessionHandler.postDelayed(this, 1000);
                     }
                 }
             }
@@ -192,11 +250,12 @@ public class Clock {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
                 saveSession(true);
-                reset();
+                //reset();
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
 
-                redirectToCongratulationScreen();
+                completeSession(getTargetTime(),SessionStatus.COMPLETE);
+//                onClockListener.redirectToCongratulationScreenActivity();
             }
             else {
                 isEndSession = true;
@@ -210,11 +269,11 @@ public class Clock {
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
             saveSession(true);
-            reset();
+            //reset();
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
-
-            redirectToCongratulationScreen();
+            completeSession(getTargetTime(),SessionStatus.COMPLETE);
+//            onClockListener.redirectToCongratulationScreenActivity();
         }
     }
 
@@ -251,11 +310,12 @@ public class Clock {
                         runningOutside = false;
                         stop();
                         saveSession(false);
-                        reset();
+                        //reset();
 
-                        // Retrieve the string from strings.xml using the context
-                        String message = context.getString(R.string.reason_why_tree_withered_non_focus);
-                        onClockListener.redirectToFailScreenActivity(message);
+                        completeSession(getTargetTime(),SessionStatus.NON_FOCUS);
+//                        // Retrieve the string from strings.xml using the context
+//                        String message = context.getString(R.string.reason_why_tree_withered_non_focus);
+//                        onClockListener.redirectToFailScreenActivity(message);
                     }
                 }
                 deepModeHandler.postDelayed(this, 1000);
@@ -277,20 +337,20 @@ public class Clock {
 
     public void start() {
         // Ensure no previous running clock
-        handler.removeCallbacks(runnableClock);
+        countTimeHandler.removeCallbacks(runnableClock);
         running = true;
-        handler.post(runnableClock);
+        countTimeHandler.post(runnableClock);
 
         toggleIcon.setVisibility(View.GONE);
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        startForegroundService();
+        //startForegroundService();
     }
 
     public void stop() {
         running = false;
-        handler.removeCallbacks(runnableClock);
+        countTimeHandler.removeCallbacks(runnableClock);
         updateStartButton("Plant", R.color.primary_20);
         stopForegroundService();
     }
@@ -331,11 +391,12 @@ public class Clock {
     public void giveUp() {
         stop();
         saveSession(false);
-        reset();
+        //reset();
 
-        // Retrieve the string from strings.xml using the context
-        String message = context.getString(R.string.reason_why_tree_withered_give_up);
-        onClockListener.redirectToFailScreenActivity(message);
+        completeSession(getTargetTime(),SessionStatus.GIVE_UP);
+//        // Retrieve the string from strings.xml using the context
+//        String message = context.getString(R.string.reason_why_tree_withered_give_up);
+//        onClockListener.redirectToFailScreenActivity(message);
     }
 
     public void setClockMode(ClockMode mClockMode) {
@@ -430,4 +491,33 @@ public class Clock {
         session.setTag(user.getFocusTag());
         user.getSessions().add(session);
     }
+
+    public void enableBreakSessionCount(){
+        Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
+        running = true;
+        if(runnableBreakSession != null) {
+            breakSessionHandler.removeCallbacks(runnableBreakSession);
+        }
+        breakSessionHandler.post(runnableBreakSession);
+    }
+
+    public void disableBreakSessionCount(){
+        Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
+        if(runnableBreakSession != null) {
+            breakSessionHandler.removeCallbacks(runnableBreakSession);
+        }
+    }
+
+    // Define the listener interface
+    public interface OnBreakSessionCompleteListener {
+        void onBreakSessionComplete();
+    }
+
+    private OnBreakSessionCompleteListener breakSessionCompleteListener;
+
+    // Provide a method to set the listener
+    public void setOnBreakSessionCompleteListener(OnBreakSessionCompleteListener listener) {
+        this.breakSessionCompleteListener = listener;
+    }
+
 }

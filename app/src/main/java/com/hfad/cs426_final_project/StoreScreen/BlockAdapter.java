@@ -91,8 +91,8 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
     private void purchaseBlock(Block block) {
         // Deduct the cost from the user's balance
-        currentUser.setSun(currentUser.getSun() - block.getCost());
-
+//        currentUser.setSun(currentUser.getSun() - block.getCost());
+        currentUser.updateSun(-block.getCost());
         // Add the block to the user's owned blocks
         currentUser.getOwnBlock().add(new BlockData(block, 0));
 

@@ -120,7 +120,6 @@ public class ModePickerDialog extends DialogFragment {
                 window.setAttributes(params);
             }
         }
-
         super.onResume();
     }
 

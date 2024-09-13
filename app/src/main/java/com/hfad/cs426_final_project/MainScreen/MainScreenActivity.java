@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
+import com.hfad.cs426_final_project.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.FailScreenActivity;
@@ -71,6 +72,8 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
 
     private CircularSeekBar progressBar;
     private ActivityResultLauncher<Intent> failScreenLauncher;
+    private ActivityResultLauncher<Intent> congratulationScreenLauncher;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
@@ -105,13 +108,25 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
                     }
                 }
         );
+
+        congratulationScreenLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Start the clock for a new session
+                        clock.start();
+                    }
+                }
+        );
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Reset the clock
+        // Reset timeView
+        clock.setTimeView(timeView);
+        // Reset clock
         clock.reset();
         // Re-enable clock interaction when the user returns to this activity
         clock.getClockSetting().setModePickerDialogEnabled(true);
@@ -390,10 +405,16 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     @Override
-    public void redirectToFailScreenActivity(String message) {
+    public void redirectToFailScreenActivity(String message, int rewards) {
         Intent intent = new Intent(this, FailScreenActivity.class);
         intent.putExtra(FailScreenActivity.TAG_WHY_TREE_WITHERED, message);  // Add the extra message
         failScreenLauncher.launch(intent);
     }
 
+    @Override
+    public void redirectToCongratulationScreenActivity(int rewards) {
+        Intent intent = new Intent(this, CongratulationScreenActivity.class);
+        intent.putExtra(CongratulationScreenActivity.REWARDS,rewards);
+        congratulationScreenLauncher.launch(intent);
+    }
 }

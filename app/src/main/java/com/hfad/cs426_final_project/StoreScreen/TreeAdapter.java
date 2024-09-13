@@ -91,8 +91,8 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
 
     private void purchaseTree(Tree tree) {
         // Deduct the cost from the user's balance
-        currentUser.setSun(currentUser.getSun() - tree.getCost());
-
+//        currentUser.setSun(currentUser.getSun() - tree.getCost());
+        currentUser.updateSun(- tree.getCost());
         // Add the tree to the user's owned trees
         currentUser.getOwnTrees().add(tree);
 

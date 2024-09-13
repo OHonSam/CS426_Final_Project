@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/failure_message"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="8dp"/>
+
+    <ImageView
+        android:id="@+id/tree"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/dead_tree" />
+
+    <Button
+        android:id="@+id/buttonOK"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#14AD0C "
+        android:text="OK" />
+
+
+</LinearLayout>
