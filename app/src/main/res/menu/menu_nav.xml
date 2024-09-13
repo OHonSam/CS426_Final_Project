@@ -9,7 +9,7 @@
         <item
             android:id="@+id/nav_planting_screen"
             android:icon="@drawable/planting_screen_ic"
-            android:title="Forest"
+            android:title="Garden"
             android:checked="true" />
         <item
             android:id="@+id/nav_statistic_screen"
