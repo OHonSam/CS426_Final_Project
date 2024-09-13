@@ -1,6 +1,8 @@
 package com.hfad.cs426_final_project.DataStorage;
 
-public class UserTask {
+import java.io.Serializable;
+
+public class UserTask implements Serializable {
     private int id;
     private String title;
     private String location;

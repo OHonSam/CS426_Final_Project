@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,11 +18,13 @@ import com.hfad.cs426_final_project.R;
 import java.util.List;
 
 public class ToDoScreenActivity extends BaseScreenActivity {
+    private int UPDATE_TASK_CODE = 10;
     private MyButton btnAddNewTask;
     private RecyclerView tasksDisplayRCV;
     private AppContext appContext;
     private TaskAdapter taskAdapter;
     private ClickableImageView btnFilter;
+    private List<UserTask> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,18 @@ public class ToDoScreenActivity extends BaseScreenActivity {
         taskAdapter.updateUserTasksList();
     }
     private void setupTasksDisplayRCV() {
-        List<UserTask> tasks = appContext.getCurrentUser().getOwnUserTasksList();
+        tasks = appContext.getCurrentUser().getOwnUserTasksList();
         // TODO: Filter tasks list based on filter options
-        taskAdapter = new TaskAdapter(tasks);
+        taskAdapter = new TaskAdapter(tasks, new TaskAdapter.IClickEditListener() {
+            @Override
+            public void onClickEdit(UserTask userTask) {
+                Intent intent = new Intent(ToDoScreenActivity.this, EditTaskActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("current_task", userTask);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, UPDATE_TASK_CODE);
+            }
+        });
         tasksDisplayRCV.setLayoutManager(new LinearLayoutManager(this));
         tasksDisplayRCV.setAdapter(taskAdapter);
     }
@@ -68,6 +80,32 @@ public class ToDoScreenActivity extends BaseScreenActivity {
     protected int getLayoutId() {
         return R.layout.activity_to_do_screen;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == UPDATE_TASK_CODE && resultCode == RESULT_OK && data != null) {
+            // Retrieve the updated task from the Intent
+            UserTask updatedTask = (UserTask) data.getSerializableExtra("updated_task");
+
+            if (updatedTask != null) {
+                updateTaskInList(updatedTask);
+            }
+        }
+    }
+    private void updateTaskInList(UserTask updatedTask) {
+        // Find the task in the list by its ID and replace it
+        for (int i = 0; i < tasks.size(); i++) {
+            UserTask currentTask = tasks.get(i);
+            if (currentTask.getId() == updatedTask.getId()) {
+                tasks.set(i, updatedTask);
+                taskAdapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
 
     private void setupFilterButton() {
         btnFilter.setOnClickListener(new View.OnClickListener() {
