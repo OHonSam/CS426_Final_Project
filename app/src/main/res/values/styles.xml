@@ -60,4 +60,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_down</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="CustomDialogSlideDown" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_down</item> <!-- Use your animation -->
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item> <!-- Optional: fade out when dismissed -->
+    </style>
+
+
+
 </resources>

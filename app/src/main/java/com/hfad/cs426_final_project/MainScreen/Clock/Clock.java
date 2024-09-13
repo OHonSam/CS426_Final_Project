@@ -34,6 +34,13 @@ public class Clock {
         TIMER
     }
 
+    public static enum SessionStatus{
+        COMPLETE,
+        GIVE_UP,
+        NON_FOCUS;
+    }
+
+    private static final double COEFFICIENT_SUN = 0.3;
     private OnClockListener onClockListener;
 
     private static final String CHANNEL_ID = "clock_channel_id";
@@ -104,9 +111,8 @@ public class Clock {
                     setIsEndSession(false);
                     stop();
                     saveSession(true);
-                    reset();
-
-                    onClockListener.redirectToCongratulationScreenActivity();
+                    completeSession(getTargetTime(),SessionStatus.COMPLETE);
+                    //onClockListener.redirectToCongratulationScreenActivity();
                     return;
                 }
 
@@ -121,6 +127,24 @@ public class Clock {
         });
     }
 
+    private void completeSession(int targetTime, SessionStatus status) {
+        int rewards = 0;
+        if(status == SessionStatus.COMPLETE){
+            rewards = (int) ((double) targetTime / 60 * COEFFICIENT_SUN);
+            AppContext.getInstance().getCurrentUser().updateSun(rewards);
+            onClockListener.redirectToCongratulationScreenActivity(rewards);
+        }
+        else if (status == SessionStatus.GIVE_UP){
+            // Retrieve the string from strings.xml using the context
+            String message = context.getString(R.string.reason_why_tree_withered_give_up);
+            onClockListener.redirectToFailScreenActivity(message,rewards);
+        }
+        else if(status == SessionStatus.NON_FOCUS){
+            // Retrieve the string from strings.xml using the context
+            String message = context.getString(R.string.reason_why_tree_withered_non_focus);
+            onClockListener.redirectToFailScreenActivity(message,rewards);
+        }
+    }
 
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
@@ -230,7 +254,8 @@ public class Clock {
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
 
-                onClockListener.redirectToCongratulationScreenActivity();
+                completeSession(getTargetTime(),SessionStatus.COMPLETE);
+//                onClockListener.redirectToCongratulationScreenActivity();
             }
             else {
                 isEndSession = true;
@@ -247,8 +272,8 @@ public class Clock {
             //reset();
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
-
-            onClockListener.redirectToCongratulationScreenActivity();
+            completeSession(getTargetTime(),SessionStatus.COMPLETE);
+//            onClockListener.redirectToCongratulationScreenActivity();
         }
     }
 
@@ -287,9 +312,10 @@ public class Clock {
                         saveSession(false);
                         //reset();
 
-                        // Retrieve the string from strings.xml using the context
-                        String message = context.getString(R.string.reason_why_tree_withered_non_focus);
-                        onClockListener.redirectToFailScreenActivity(message);
+                        completeSession(getTargetTime(),SessionStatus.NON_FOCUS);
+//                        // Retrieve the string from strings.xml using the context
+//                        String message = context.getString(R.string.reason_why_tree_withered_non_focus);
+//                        onClockListener.redirectToFailScreenActivity(message);
                     }
                 }
                 deepModeHandler.postDelayed(this, 1000);
@@ -367,9 +393,10 @@ public class Clock {
         saveSession(false);
         //reset();
 
-        // Retrieve the string from strings.xml using the context
-        String message = context.getString(R.string.reason_why_tree_withered_give_up);
-        onClockListener.redirectToFailScreenActivity(message);
+        completeSession(getTargetTime(),SessionStatus.GIVE_UP);
+//        // Retrieve the string from strings.xml using the context
+//        String message = context.getString(R.string.reason_why_tree_withered_give_up);
+//        onClockListener.redirectToFailScreenActivity(message);
     }
 
     public void setClockMode(ClockMode mClockMode) {

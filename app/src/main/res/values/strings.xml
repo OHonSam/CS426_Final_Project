@@ -41,4 +41,6 @@
 
     <string name="title_cancel_break_session">Skip break session?</string>
     <string name="description_cancel_break_session">You will be guided back to focus</string>
+
+    <string name="failure_message">It\'ll get better next time!</string>
 </resources>

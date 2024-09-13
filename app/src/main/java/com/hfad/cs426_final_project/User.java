@@ -178,8 +178,8 @@ public class User {
     public int getSun() {
         return sun;
     }
-    public void setSun(int sun) {
-        this.sun = sun;
+    public void updateSun(int sun) {
+        this.sun += sun;
     }
 
     public UserSetting getUserSetting() {

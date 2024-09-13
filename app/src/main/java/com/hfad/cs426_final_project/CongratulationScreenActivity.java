@@ -5,10 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -28,6 +32,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class CongratulationScreenActivity extends AppCompatActivity implements OnClockListener {
+
+    public static final String REWARDS = "REWARDS";
     ClickableImageView backButton;
     ClickableImageView breakSession;
     ClickableImageView forest;
@@ -60,7 +66,45 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
                     }
                 }
         );
+
+        showCongratulationDialog();
     }
+
+    private void showCongratulationDialog() {
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_congratulation, null);
+
+        TextView rewardsTextView = dialogView.findViewById(R.id.rewards);
+        int rewards = getIntent().getIntExtra(REWARDS, 0);
+        rewardsTextView.setText(String.valueOf(rewards)); // Ensure rewards is set as a String
+
+        // Create a dialog using the AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // Create and show the dialog
+        final AlertDialog dialog = builder.create();
+
+        // Ensure the dialog is dismissible when tapping outside
+        dialog.setCanceledOnTouchOutside(true);
+
+        // Resize the dialog programmatically if needed
+        dialog.setOnShowListener(dialogInterface -> {
+            // You can adjust the width and height as needed
+            int dialogWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
+            dialog.getWindow().setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        });
+
+        // Handle the button click to dismiss the dialog
+        Button buttonOK = dialogView.findViewById(R.id.buttonOK);
+        buttonOK.setOnClickListener(v -> dialog.dismiss());
+
+        // Show the dialog
+        dialog.show();
+    }
+
+
 
     private void setupOnClickListener() {
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -192,12 +236,12 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
     }
 
     @Override
-    public void redirectToFailScreenActivity(String message) {
+    public void redirectToFailScreenActivity(String message, int rewards) {
         return;
     }
 
     @Override
-    public void redirectToCongratulationScreenActivity() {
+    public void redirectToCongratulationScreenActivity(int rewards) {
         return;
     }
 

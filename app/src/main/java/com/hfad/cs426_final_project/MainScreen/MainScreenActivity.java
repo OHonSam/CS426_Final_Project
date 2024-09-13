@@ -405,15 +405,16 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     @Override
-    public void redirectToFailScreenActivity(String message) {
+    public void redirectToFailScreenActivity(String message, int rewards) {
         Intent intent = new Intent(this, FailScreenActivity.class);
         intent.putExtra(FailScreenActivity.TAG_WHY_TREE_WITHERED, message);  // Add the extra message
         failScreenLauncher.launch(intent);
     }
 
     @Override
-    public void redirectToCongratulationScreenActivity() {
+    public void redirectToCongratulationScreenActivity(int rewards) {
         Intent intent = new Intent(this, CongratulationScreenActivity.class);
+        intent.putExtra(CongratulationScreenActivity.REWARDS,rewards);
         congratulationScreenLauncher.launch(intent);
     }
 }
