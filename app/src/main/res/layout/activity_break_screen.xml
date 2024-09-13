@@ -178,7 +178,7 @@
         />
 
         <Button
-            android:id="@+id/buttonBreak"
+            android:id="@+id/buttonFocus"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

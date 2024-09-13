@@ -13,6 +13,7 @@ import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.hfad.cs426_final_project.AppContext;
@@ -21,13 +22,14 @@ import com.hfad.cs426_final_project.R;
 public class TimePickerDialog extends DialogFragment {
     public static final String TAG = "TimePickerDialog";
     public interface onDismissListener {
-        void onDismiss(TimePickerDialog timePickerDialog, int breakTime, boolean isBreak);
+        void onDismiss(TimePickerDialog timePickerDialog, int breakTime, boolean isBreak, boolean autoStartSession);
     }
 
     private NumberPicker numberPicker;
     private AppContext appContext;
     private Button btnCancel, btnBreak;
     private TimePickerDialog.onDismissListener onDismissListener;
+    private SwitchCompat autoStartSessionSwitch;
 
     private int breakTime;
 
@@ -49,7 +51,7 @@ public class TimePickerDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (onDismissListener != null) {
-                    onDismissListener.onDismiss(TimePickerDialog.this, breakTime,false);
+                    onDismissListener.onDismiss(TimePickerDialog.this, breakTime,false,isAutoStartEnabled() );
                 }
                 dismiss();  // Dismiss the dialog
             }
@@ -59,7 +61,7 @@ public class TimePickerDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (onDismissListener != null) {
-                    onDismissListener.onDismiss(TimePickerDialog.this, breakTime,true);
+                    onDismissListener.onDismiss(TimePickerDialog.this, breakTime,true,isAutoStartEnabled());
                 }
                 dismiss();  // Dismiss the dialog
             }
@@ -76,12 +78,13 @@ public class TimePickerDialog extends DialogFragment {
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                breakTime = newVal;
+                breakTime = newVal*60;
             }
         });
 
         btnCancel = view.findViewById(R.id.buttonCancel);
         btnBreak = view.findViewById(R.id.buttonBreak);
+        autoStartSessionSwitch = view.findViewById(R.id.autoStartSessionSwitch);
     }
 
     @Override
@@ -106,6 +109,10 @@ public class TimePickerDialog extends DialogFragment {
 
     public void setOnDismissListener(TimePickerDialog.onDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
+    }
+
+    private boolean isAutoStartEnabled() {
+        return autoStartSessionSwitch != null && autoStartSessionSwitch.isChecked();
     }
 }
 

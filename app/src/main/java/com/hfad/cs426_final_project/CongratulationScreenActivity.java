@@ -1,32 +1,32 @@
 package com.hfad.cs426_final_project;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.transition.Visibility;
 
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
+import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
 import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Time;
 
-public class CongratulationScreenActivity extends AppCompatActivity {
+public class CongratulationScreenActivity extends AppCompatActivity implements OnClockListener {
     ClickableImageView backButton;
     ClickableImageView breakSession;
     ClickableImageView forest;
@@ -35,12 +35,30 @@ public class CongratulationScreenActivity extends AppCompatActivity {
     private MyButton btnClockModePicker;
     private ModePickerDialog modePickerDialog;
     private TimePickerDialog timePickerDialog;
+
+    private ActivityResultLauncher<Intent> breakScreenLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_congratulation_screen);
         setupUIReference();
         setupOnClickListener();
+        breakScreenLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Start the clock for a new session
+                        Log.d("CongratulationScreenActivity","focusAgain triggered");
+                        focusAgain();
+                    }
+                    else if (result.getResultCode() == RESULT_CANCELED) {
+                        // Start the clock for a new session
+                        Log.d("CongratulationScreenActivity","focusAgain triggered");
+                        finish();
+                    }
+                }
+        );
     }
 
     private void setupOnClickListener() {
@@ -84,8 +102,14 @@ public class CongratulationScreenActivity extends AppCompatActivity {
 
         timePickerDialog.setOnDismissListener(new TimePickerDialog.onDismissListener() {
             @Override
-            public void onDismiss(TimePickerDialog timePickerDialog, int breakTime, boolean isBreak) {
-
+            public void onDismiss(TimePickerDialog timePickerDialog, int breakTime, boolean isBreak, boolean autoStartSession) {
+                if(!isBreak){
+                    showDialogReassertCancelBreakSession();
+                }
+                else {
+                    redirectToBreakScreenActivity(breakTime,autoStartSession);
+                    Log.d("CongratulationScreenActivity","redirectToBreakScreenActivity triggered");
+                }
             }
         });
 
@@ -163,5 +187,61 @@ public class CongratulationScreenActivity extends AppCompatActivity {
     private void showModePickerDialog() {
         if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
             modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
+    }
+
+    @Override
+    public void redirectToFailScreenActivity(String message) {
+        return;
+    }
+
+    @Override
+    public void redirectToCongratulationScreenActivity() {
+        return;
+    }
+
+    private void redirectToBreakScreenActivity(int breakTime, boolean isAutoStart) {
+        Intent intent = new Intent(this,BreakScreenActivity.class);
+        intent.putExtra(BreakScreenActivity.TIME_BREAK,breakTime);
+        intent.putExtra(BreakScreenActivity.AUTO_START,isAutoStart);
+        breakScreenLauncher.launch(intent);
+    }
+
+    private void focusAgain(){
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void showDialogReassertCancelBreakSession() {
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_reassert_cancel_break_session, null);
+
+        // Create a dialog using the AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // Create and show the dialog
+        final AlertDialog dialog = builder.create();
+
+        // Ensure the dialog is dismissible when tapping outside
+        dialog.setCanceledOnTouchOutside(true);
+
+        // Resize the dialog programmatically if needed
+        dialog.setOnShowListener(dialogInterface -> {
+            // You can adjust the width and height as needed
+            int dialogWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
+            dialog.getWindow().setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        });
+
+        // Handle the button click to dismiss the dialog
+        Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+        buttonCancel.setOnClickListener(v -> dialog.dismiss());
+
+        // Handle the button click to focus again
+        Button buttonFocus = dialogView.findViewById(R.id.buttonFocus);
+        buttonFocus.setOnClickListener(v -> focusAgain());
+
+        // Show the dialog
+        dialog.show();
     }
 }

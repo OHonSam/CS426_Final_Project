@@ -22,6 +22,8 @@ import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.User;
 
+import org.w3c.dom.Text;
+
 import java.util.Locale;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
@@ -43,6 +45,9 @@ public class Clock {
     private final int PROGRESS_MINUTES_MAX = 120;
 
 
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
 
     //Number of seconds displayed on the stopwatch.
     private int seconds;
@@ -58,6 +63,10 @@ public class Clock {
     private Runnable runnableDeepMode;
     private final Handler breakSessionHandler;
     private Runnable runnableBreakSession;
+
+    public TextView setTimeView(TextView timeView) {
+        return this.timeView = timeView;
+    }
 
     private TextView timeView;
     private MyButton startButton;
@@ -78,6 +87,8 @@ public class Clock {
         this.deepModeHandler = new Handler();
         this.runnableClock = createClockRunnable();
         this.runnableDeepMode = createDeepModeRunnable();
+        this.breakSessionHandler = new Handler();
+        this.runnableBreakSession = createBreakSessionRunnable();
         this.progressBar = progressBar;
         this.toggleIcon = toggleIcon;
         this.onClockListener = onClockListener;
@@ -95,7 +106,7 @@ public class Clock {
                     saveSession(true);
                     reset();
 
-                    redirectToCongratulationScreen();
+                    onClockListener.redirectToCongratulationScreenActivity();
                     return;
                 }
 
@@ -195,24 +206,14 @@ public class Clock {
                 updateTimeDisplay();
                 if (running) {
                     seconds -= 60;
+                    Log.d("BreakScreenActivity",""+seconds);
                     if (seconds < 0) {
-                        if (!clockSetting.getIsCountExceedTime()) {
-                            stop();
-                            saveSession(true);
-                            //reset();
-                            // Notify or vibrate when the timer reaches the limit
-                            notifyOrVibrate(context);
-
-                            redirectToCongratulationScreen();
-                        }
-                        else {
-                            isEndSession = true;
-                            updateStartButton("End Session", R.color.secondary_50);
-                        }
+                        running = false;
+                        breakSessionCompleteListener.onBreakSessionComplete();
                     }
                     // Post the next tick only if still running
                     if (running) {
-                        countTimeHandler.postDelayed(this, 1000);
+                        breakSessionHandler.postDelayed(this, 1000);
                     }
                 }
             }
@@ -229,7 +230,7 @@ public class Clock {
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
 
-                redirectToCongratulationScreen();
+                onClockListener.redirectToCongratulationScreenActivity();
             }
             else {
                 isEndSession = true;
@@ -247,7 +248,7 @@ public class Clock {
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
 
-            redirectToCongratulationScreen();
+            onClockListener.redirectToCongratulationScreenActivity();
         }
     }
 
@@ -463,4 +464,24 @@ public class Clock {
         session.setTag(user.getFocusTag());
         user.getSessions().add(session);
     }
+
+    public void enableBreakSessionCount(){
+        Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
+        running = true;
+        breakSessionHandler.removeCallbacks(runnableBreakSession);
+        breakSessionHandler.post(runnableBreakSession);
+    }
+
+    // Define the listener interface
+    public interface OnBreakSessionCompleteListener {
+        void onBreakSessionComplete();
+    }
+
+    private OnBreakSessionCompleteListener breakSessionCompleteListener;
+
+    // Provide a method to set the listener
+    public void setOnBreakSessionCompleteListener(OnBreakSessionCompleteListener listener) {
+        this.breakSessionCompleteListener = listener;
+    }
+
 }

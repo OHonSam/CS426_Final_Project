@@ -37,5 +37,8 @@
 
     <string name="completeText">Hooray! You\'ve planted 1 healthy tree(s) in your forest </string>
     <string name="breakTitle">Take a Break</string>
-    <string name="breakSession">Sometimes it's okay to take a break</string>
+    <string name="breakSession">Sometimes it\'s okay to take a break</string>
+
+    <string name="title_cancel_break_session">Skip break session?</string>
+    <string name="description_cancel_break_session">You will be guided back to focus</string>
 </resources>
