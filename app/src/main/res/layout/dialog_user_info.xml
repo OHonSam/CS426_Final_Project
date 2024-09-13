@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardCornerRadius="8dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/user_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_avatar"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            style="@style/Headline"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/user_image" />
+
+        <TextView
+            android:id="@+id/user_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Email"
+            style="@style/Title"
+            android:layout_marginTop="4dp"
+            android:layout_below="@id/user_name"
+            android:layout_alignStart="@id/user_name"/>
+
+        <TextView
+            android:id="@+id/user_focus_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Focus Time"
+            style="@style/Title"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/user_email"
+            android:layout_alignStart="@id/user_email"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

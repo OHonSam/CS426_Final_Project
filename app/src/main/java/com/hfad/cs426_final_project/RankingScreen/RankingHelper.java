@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -164,6 +165,45 @@ public class RankingHelper extends BaseAdapter {
                 cardView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Accent2));
                 break;
         }
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Inflate the dialog layout
+                LayoutInflater inflater = LayoutInflater.from(context);
+                View dialogView = inflater.inflate(R.layout.dialog_user_info, null);
+
+                // Initialize the dialog views
+                ImageView userImageView = dialogView.findViewById(R.id.user_image);
+                TextView userNameTextView = dialogView.findViewById(R.id.user_name);
+                TextView userEmailTextView = dialogView.findViewById(R.id.user_email);
+                TextView userFocusTimeTextView = dialogView.findViewById(R.id.user_focus_time);
+
+                // Set user data
+                userNameTextView.setText(user.getName());
+                userEmailTextView.setText(user.getEmail());
+                Glide.with(userImageView)
+                        .load(user.getImgUri())
+                        .error(R.drawable.default_avatar)
+                        .into(userImageView);
+
+                // If focus time or streak is required, format it appropriately
+                if (isStreak) {
+                    userFocusTimeTextView.setText("Streak: " + user.getStreak() + " days");
+                } else {
+                    long focusTime = focusTimeMap.getOrDefault(user.getId(), 0L);
+                    long hours = focusTime / 3600;
+                    long minutes = (focusTime % 3600) / 60;
+                    userFocusTimeTextView.setText(String.format(Locale.getDefault(), "%dh %dm focus", hours, minutes));
+                }
+
+                // Create and show the dialog
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+                builder.setView(dialogView)
+                        .setPositiveButton("OK", null)  // Close the dialog with OK button                       .create()
+                        .show();
+            }
+        });
+
 
         if (user.getId() == currentUser.getId()) {
             usernameTextView.setText(user.getName() + " (you)");
