@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
+import com.hfad.cs426_final_project.PlantingScreen.PlantingScreenActivity;
 import com.hfad.cs426_final_project.RankingScreen.RankingScreenActivity;
 import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;
 import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
@@ -105,6 +106,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_timeline_screen).setChecked(true);
         } else if (curLayoutId == R.layout.activity_to_do_screen) {
             navigationView.getMenu().findItem(R.id.nav_to_do_screen).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_planting_screen) {
+            navigationView.getMenu().findItem(R.id.nav_planting_screen).setChecked(true);
         }
     }
 
@@ -149,6 +152,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, TimelineScreenActivity.class);
         } else if (id == R.id.nav_to_do_screen) {
             intent = new Intent(this, ToDoScreenActivity.class);
+        } else if (id == R.id.nav_planting_screen) {
+            intent = new Intent(this, PlantingScreenActivity.class);
         }
 
         // If an intent is created, start the new activity
@@ -201,4 +206,5 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
     protected void setToggleColor(int color) {
         toggleIcon.setColorFilter(color);
     }
+
 }

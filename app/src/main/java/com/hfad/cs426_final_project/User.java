@@ -5,6 +5,7 @@ import android.util.Pair;
 import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.DataStorage.BlockData;
 import com.hfad.cs426_final_project.DataStorage.Favourite;
+import com.hfad.cs426_final_project.DataStorage.LandState;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
@@ -36,6 +37,7 @@ public class User {
     private List<Tag> ownTags = new ArrayList<>();
     private List<UserTask> ownUserTasksList = new ArrayList<>();
     private ClockSetting clockSetting;
+    private LandState landState;
 
     public User() {}
 
@@ -64,6 +66,7 @@ public class User {
         ownBlock.add(new BlockData(block, 1));
 
         this.clockSetting = new ClockSetting();
+        this.landState = new LandState();
     }
 
     public long getId() {
@@ -217,6 +220,14 @@ public class User {
 
     public void addUserTask (UserTask userTask) {
         ownUserTasksList.add(userTask);
+    }
+
+    public LandState getLandState() {
+        return landState;
+    }
+
+    public void setLandState(LandState landState) {
+        this.landState = landState;
     }
 
     public boolean hasTree(Tree tree) {
