@@ -4,6 +4,7 @@ import android.view.MenuItem;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -48,6 +49,9 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     private FocusTimeChart focusTimeChart;
     private List<Session> sessions = new ArrayList<>();
     private SessionMode currentSessionMode = SessionMode.FOCUS_COMPLETED;
+    private MyButton itemTypeBtn;
+    private ImageView itemTypeImage;
+    private boolean isTreeMode = true;
 
     private enum SessionMode {
         ALL("All"),
@@ -91,6 +95,27 @@ public class StatisticScreenActivity extends BaseScreenActivity {
                 sessionModeBtn.setOnClickListener(v -> showSessionModePopup());
             }
         });
+        setupItemTypeButton();
+    }
+
+    private void setupItemTypeButton() {
+        itemTypeBtn = findViewById(R.id.item_type_btn);
+        itemTypeImage = findViewById(R.id.item_type_image);
+        itemTypeBtn.setOnClickListener(v -> toggleItemType());
+    }
+
+    private void toggleItemType() {
+        isTreeMode = !isTreeMode;
+
+        if (isTreeMode) {
+            itemTypeBtn.setText("Tree");
+            itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_40));
+            itemTypeImage.setImageResource(R.drawable.favorite_tree);
+        } else {
+            itemTypeBtn.setText("Block");
+            itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_90));
+            itemTypeImage.setImageResource(R.drawable.piece);
+        }
     }
 
     private void initializeViews() {

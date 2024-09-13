@@ -19,8 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-
-
     <LinearLayout
         android:id="@+id/sunDisplay"
         android:layout_width="wrap_content"
