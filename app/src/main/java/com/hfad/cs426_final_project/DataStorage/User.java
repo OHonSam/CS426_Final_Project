@@ -24,6 +24,30 @@ public class User {
     private Block selectedBlock;
     private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
+
+    public void setHasCompletedASessionToday(boolean hasCompletedASessionToday) {
+        this.hasCompletedASessionToday = hasCompletedASessionToday;
+    }
+
+    public void setStreakDays(int streakDays) {
+        this.streakDays = streakDays;
+    }
+
+    public boolean isHasCompletedASessionToday() {
+        return hasCompletedASessionToday;
+    }
+
+    public int getStreakDays() {
+        return streakDays;
+    }
+
+    private boolean hasCompletedASessionToday;
+    private int streakDays;
+
+    public void setSun(int sun) {
+        this.sun = sun;
+    }
+
     private int sun; // money
     private UserSetting userSetting;
     private List<Tree> ownTrees = new ArrayList<>();
