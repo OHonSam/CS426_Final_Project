@@ -29,6 +29,7 @@ public class EditTaskActivity extends AppCompatActivity {
     private ClickableImageView btnBack;
     private MyButton btnSaveTask;
     private EditText edtTaskTitle, edtTaskStartDate, edtTaskEndDate, edtTaskStartTime, edtTaskEndTime;
+    private EditText edtTaskLocation, edtTaskDescription;
     private Spinner searchTagSpinner;
     private TagAdapterSpinner tagAdapterSpinner;
     private AppContext appContext;
@@ -165,6 +166,8 @@ public class EditTaskActivity extends AppCompatActivity {
         String endDate = edtTaskEndDate.getText().toString();
         String startTime = edtTaskStartTime.getText().toString();
         String endTime = edtTaskEndTime.getText().toString();
+        String location = edtTaskLocation.getText().toString();
+        String description = edtTaskDescription.getText().toString();
 
         long startDateMillis = CalendarUtils.convertDateToMillis(startDate);
         long endDateMillis = CalendarUtils.convertDateToMillis(endDate);
@@ -177,7 +180,7 @@ public class EditTaskActivity extends AppCompatActivity {
 
         Tag selectedTag = tagAdapterSpinner.getSelectedTag();
 
-        UserTask updatedTask = new UserTask(userTask.getId(), title, startDateMillis, endDateMillis, startTimeInMinutes, endTimeInMinutes, selectedTag);
+        UserTask updatedTask = new UserTask(userTask.getId(), title, startDateMillis, endDateMillis, startTimeInMinutes, endTimeInMinutes, selectedTag, location, description);
         Intent resultIntent = new Intent();
         resultIntent.putExtra("updated_task", updatedTask);
         setResult(RESULT_OK, resultIntent);
@@ -221,6 +224,8 @@ public class EditTaskActivity extends AppCompatActivity {
         edtTaskStartTime = findViewById(R.id.edtTaskStartTime);
         edtTaskEndTime = findViewById(R.id.edtTaskEndTime);
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
+        edtTaskLocation = findViewById(R.id.edtTaskLocation);
+        edtTaskDescription = findViewById(R.id.edtTaskDescription);
     }
 
 
@@ -230,6 +235,8 @@ public class EditTaskActivity extends AppCompatActivity {
         edtTaskEndDate.setText(CalendarUtils.convertMillisToDate(userTask.getEndDate()));
         edtTaskStartTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getStartTimeInMinutes()));
         edtTaskEndTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getEndTimeInMinutes()));
+        edtTaskDescription.setText(userTask.getDescription());
+        edtTaskLocation.setText(userTask.getLocation());
 
         int curTagPos = 0;
         List<Tag> tagList = appContext.getCurrentUser().getOwnTags();

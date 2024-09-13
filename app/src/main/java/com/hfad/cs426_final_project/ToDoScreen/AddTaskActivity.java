@@ -171,7 +171,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
         Tag selectedTag = tagAdapterSpinner.getSelectedTag();
 
-        UserTask newUserTask = new UserTask(getNextTaskId(), title, startDateMillis, endDateMillis, startTimeInMinutes, endTimeInMinutes, selectedTag);
+        UserTask newUserTask = new UserTask(getNextTaskId(), title, startDateMillis, endDateMillis, startTimeInMinutes, endTimeInMinutes, selectedTag, location, description);
         appContext.getCurrentUser().getOwnUserTasksList().add(newUserTask);
         finish();
     }

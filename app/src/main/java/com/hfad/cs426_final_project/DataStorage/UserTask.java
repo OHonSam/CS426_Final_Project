@@ -33,6 +33,19 @@ public class UserTask implements Serializable {
         this.isComplete = false;
     }
 
+    public UserTask(int id, String title, long startDate, long endDate, long startTimeInMinutes, long endTimeInMinutes, Tag selectedTag, String location, String description) {
+        this.id = id;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startTimeInMinutes = startTimeInMinutes;
+        this.endTimeInMinutes = endTimeInMinutes;
+        this.tag = selectedTag;
+        this.description = description;
+        this.location = location;
+        this.isComplete = false;
+    }
+
     public UserTask(int id, String title, String location, long startDate, long endDate, String description) {
         this.id = id;
         this.title = title;

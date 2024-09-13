@@ -95,6 +95,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskTag.setText(userTask.getTag().getName()); // Placeholder for Tag if needed
             ivTag.setColorFilter(userTask.getTag().getColor());
             btnCheckComplete.setChecked(userTask.getIsComplete());
+            tvTaskDescription.setText(userTask.getDescription() != null ? userTask.getDescription() : "None");
 
             btnEditTask.setOnClickListener(new View.OnClickListener() {
                 @Override

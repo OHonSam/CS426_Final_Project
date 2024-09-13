@@ -1,8 +1,10 @@
 package com.hfad.cs426_final_project.ToDoScreen;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -94,6 +96,7 @@ public class ToDoScreenActivity extends BaseScreenActivity {
             }
         }
     }
+
     private void updateTaskInList(UserTask updatedTask) {
         // Find the task in the list by its ID and replace it
         for (int i = 0; i < tasks.size(); i++) {
@@ -106,7 +109,6 @@ public class ToDoScreenActivity extends BaseScreenActivity {
         }
     }
 
-
     private void setupFilterButton() {
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +119,9 @@ public class ToDoScreenActivity extends BaseScreenActivity {
     }
 
     private void redirectToFilterTaskActivity() {
-//        Intent intent = new Intent(this, FilterTaskActivity.class);
-//        startActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Under development");
+        builder.setMessage("Filter Task function is coming soon! Wait for the next version!");
+        builder.show();
     }
 }
