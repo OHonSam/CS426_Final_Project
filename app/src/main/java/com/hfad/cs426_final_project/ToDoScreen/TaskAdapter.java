@@ -92,7 +92,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskStartTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getStartTimeInMinutes()));
             tvTaskEndTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getEndTimeInMinutes()));
             tvTaskLocation.setText(userTask.getLocation() != null ? userTask.getLocation() : "None");
-            tvTaskTag.setText(userTask.getTag().getName()); // Placeholder for Tag if needed
+            tvTaskTag.setText(userTask.getTag() == null ? userTask.getTag().getName() : "None"); // Placeholder for Tag if needed
             ivTag.setColorFilter(userTask.getTag().getColor());
             btnCheckComplete.setChecked(userTask.getIsComplete());
             tvTaskDescription.setText(userTask.getDescription() != null ? userTask.getDescription() : "None");

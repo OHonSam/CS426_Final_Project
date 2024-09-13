@@ -297,6 +297,9 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
 
     private void setupSearchTag() {
         List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
+        if (tagList.isEmpty()) {
+            tagList.add(new Tag());
+        }
         TagAdapterSpinner tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
         searchTagSpinner.setAdapter(tagAdapterSpinner);
         searchTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
