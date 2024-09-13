@@ -34,7 +34,6 @@ import com.hfad.cs426_final_project.DataStorage.Session;
 
 public class StatisticScreenActivity extends BaseScreenActivity {
 
-    // Fields
     private MaterialButtonToggleGroup toggleGroup;
     private ClickableImageView shareBtn, backBtn, forwardBtn, cancelBtn;
     private TextView timeSelectionText, totalFocusTimeText, numLiveTree, numDeadTree;
@@ -127,36 +126,6 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         if(callback != null) {
             callback.onDataFetched();
         }
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        User currentUser = AppContext.getInstance().getCurrentUser();
-//        if (currentUser == null) {
-//            // Handle the case where there's no current user logged in (e.g., show an error message)
-//            return;
-//        }
-//
-//        DatabaseReference usersRef = database.getReference("Users");
-//        DatabaseReference userRef = usersRef.child("User" + currentUser.getId());
-//        DatabaseReference databaseRef = userRef.child("sessions");
-//
-//        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-//                    Session session = sessionSnapshot.getValue(Session.class);
-//                    assert session != null;
-//                    sessions.add(session);
-//                }
-//
-//                if (callback != null) {
-//                    callback.onDataFetched();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Handle possible errors.
-//            }
-//        });
     }
 
     private void setupViewByButton() {
@@ -221,7 +190,6 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         sessionModeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, colorResId));
     }
 
-    // Chart update methods
     private void updateCharts(List<Session> sessions) {
         List<Session> filteredSessions = new ArrayList<>();
 
@@ -270,7 +238,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         if (!tagDurations.isEmpty()) {
             mostFocusedTag = Collections.max(tagDurations.entrySet(), Map.Entry.comparingByValue()).getKey();
         } else {
-            mostFocusedTag = "Try better";
+            mostFocusedTag = "Let's try to focus!!!";
         }
 
         int mostFocusedTagColor = 0;

@@ -18,8 +18,6 @@ import com.hfad.cs426_final_project.R;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,10 +55,6 @@ public class TagDistributionChart {
         LocalDateTime endTime = chartUtils.getEndOfPeriod(period, startTime);
 
         for (Session session : sessions) {
-//            if (!session.isStatus()) {
-//                continue;
-//            } later use
-
             LocalDateTime sessionDateTime = LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(session.getTimestamp()), java.time.ZoneId.systemDefault());
             if (chartUtils.isWithinPeriod(sessionDateTime, startTime, endTime)) {
                 filteredSessions.add(session);

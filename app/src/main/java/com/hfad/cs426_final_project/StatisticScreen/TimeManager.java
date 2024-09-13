@@ -22,8 +22,6 @@ public class TimeManager {
         return instance;
     }
 
-
-
     public String getCurrentPeriod() {
         return currentPeriod;
     }

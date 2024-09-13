@@ -13,7 +13,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Locale;
 
 public class ChartUtils {
@@ -43,7 +42,6 @@ public class ChartUtils {
                 return currentDate;
         }
     }
-
 
     public LocalDateTime getEndOfPeriod(String period, LocalDateTime start) {
         switch (period) {

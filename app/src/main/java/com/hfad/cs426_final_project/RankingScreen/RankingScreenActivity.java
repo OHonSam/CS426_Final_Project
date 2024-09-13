@@ -1,11 +1,14 @@
 package com.hfad.cs426_final_project.RankingScreen;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.hfad.cs426_final_project.AppContext;
@@ -22,6 +25,9 @@ public class RankingScreenActivity extends BaseScreenActivity {
     private User currentUser;
     private boolean isStreak = true;
     private boolean isToday = true;
+    private ConstraintLayout loadingView;
+    private RankingHelper adapter;
+
 
     @Override
     protected int getLayoutId() {
@@ -39,6 +45,7 @@ public class RankingScreenActivity extends BaseScreenActivity {
     private void initializeComponents() {
         rankingModeBtn = findViewById(R.id.ranking_mode_btn);
         rankingModeText = findViewById(R.id.ranking_mode_text);
+        loadingView = findViewById(R.id.loading_view);
         initializeRankingList();
     }
 
@@ -60,8 +67,17 @@ public class RankingScreenActivity extends BaseScreenActivity {
     }
 
     private void updateAdapter() {
-        RankingHelper adapter = new RankingHelper(this, currentUser, isToday, isStreak);
+        showLoadingView();
+        adapter = new RankingHelper(this, currentUser, isToday, isStreak, this::hideLoadingView);
         listView.setAdapter(adapter);
+    }
+
+    private void showLoadingView() {
+        loadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingView() {
+        loadingView.setVisibility(View.GONE);
     }
 
     private void setupRankingModeButton() {

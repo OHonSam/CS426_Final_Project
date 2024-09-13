@@ -69,8 +69,6 @@ public class FocusTimeChart {
         lineChart.setDrawGridBackground(false);
         lineChart.getLegend().setEnabled(false);
 
-
-        // Customize X-axis
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
@@ -79,10 +77,8 @@ public class FocusTimeChart {
         xAxis.setTextSize(8f);
         lineChart.setExtraOffsets(20, 0, 20, 0);
 
-        // Disable Y-axis
         lineChart.getAxisLeft().setEnabled(false);
         lineChart.getAxisRight().setEnabled(false);
-        // Set custom marker view
         ChartUtils.FocusTimeMarkerView mv = new ChartUtils.FocusTimeMarkerView(context, R.layout.custom_marker_view);
         mv.setChartView(lineChart);
         lineChart.setMarker(mv);
@@ -174,7 +170,6 @@ public class FocusTimeChart {
             }
         }
 
-        // Update the statistic screen
         numLiveTree.setText(String.valueOf(liveTree));
         numDeadTree.setText(String.valueOf(deadTree));
         totalFocusTimeText.setText(String.format("%d hours %d min", totalDuration / 3600, (totalDuration % 3600) / 60));
@@ -218,7 +213,6 @@ public class FocusTimeChart {
         lineChart.setData(lineData);
         lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
 
-        // Animate chart drawing
         lineChart.animateX(2000, Easing.EaseInCubic);
         lineChart.invalidate();
     }

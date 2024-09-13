@@ -37,14 +37,16 @@ public class RankingHelper extends BaseAdapter {
     private boolean isToday;
     private boolean isStreak;
     private Map<Long, Long> focusTimeMap;
+    private Runnable onDataFetchedCallback;
 
-    public RankingHelper(Context context, User currentUser, boolean isToday, boolean isStreak) {
+    public RankingHelper(Context context, User currentUser, boolean isToday, boolean isStreak,  Runnable onDataFetchedCallback) {
         this.context = context;
         this.users = new ArrayList<>();
         this.currentUser = currentUser;
         this.isToday = isToday;
         this.isStreak = isStreak;
         this.focusTimeMap = new HashMap<>();
+        this.onDataFetchedCallback = onDataFetchedCallback;
         fetchUsers();
     }
 
@@ -66,11 +68,16 @@ public class RankingHelper extends BaseAdapter {
                 }
                 sortUsers();
                 notifyDataSetChanged();
+                if (onDataFetchedCallback != null) {
+                    onDataFetchedCallback.run();
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println("Error fetching users: " + databaseError.getMessage());
+                if (onDataFetchedCallback != null) {
+                    onDataFetchedCallback.run();
+                }
             }
         });
     }

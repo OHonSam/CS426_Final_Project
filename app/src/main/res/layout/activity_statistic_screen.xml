@@ -341,18 +341,8 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/statistic_card">
+                android:background="@drawable/statistic_card_favourite_item">
 
-                <TextView
-                    android:id="@+id/coming_soon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Coming soon..."
-                    android:elegantTextHeight="true"
-                    android:textColor="@color/secondary_40"
-                    style="@style/SubTitle"
-                    android:layout_gravity="center|top"
-                    android:layout_marginTop="15dp"/>
             </FrameLayout>
 
         </LinearLayout>
