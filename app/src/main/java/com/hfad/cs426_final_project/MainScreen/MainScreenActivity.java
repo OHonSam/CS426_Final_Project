@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,11 +72,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
     }
-
-    CircularSeekBar progressBar;
-    private final int interval = 5;
-    private final int totalInterval = 24;
-    private final int interval = 5;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -181,30 +175,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     private void setupClockModePickerDialog() {
-        btnClockModePicker.setOnClickListener(v -> {
-            showModePickerDialog();
-        });
-    }
-
-    private void showModePickerDialog() {
-        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
-            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
-    }
-
-    private void setupClock() {
-        clock = new Clock(this, timeView, startButton, appContext.getCurrentUser().getClockSetting(), progressBar, btnClockModePicker, toggle, this);
-        appContext.setCurrentClock(clock);
-    }
-
-    private void setupClockModePickerDialog() {
-        enableClockModePickerDialog(); // Initially enable the click listener
-    }
-
-    private void disableClockModePickerDialog() {
-        btnClockModePicker.setOnClickListener(null);
-    }
-
-    private void enableClockModePickerDialog() {
         btnClockModePicker.setOnClickListener(v -> {
             showModePickerDialog();
         });

@@ -27,7 +27,6 @@
         <activity
             android:name=".TimelineScreen.TimelineScreenActivity"
             android:exported="false" />
-
         <activity
             android:name=".CongratulationScreenActivity"
             android:exported="false" />
@@ -77,8 +76,8 @@
                 <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
