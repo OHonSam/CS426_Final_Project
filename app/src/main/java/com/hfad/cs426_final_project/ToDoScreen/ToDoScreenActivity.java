@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
+import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.R;
@@ -33,10 +34,7 @@ public class ToDoScreenActivity extends BaseScreenActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Get the updated task list
-        List<UserTask> updatedTaskList = appContext.getCurrentUser().getOwnUserTasksList();
-        // Update the adapter's task list and notify that the data has changed
-        taskAdapter.updateUserTasksList(updatedTaskList);
+        taskAdapter.updateUserTasksList();
     }
 
     private void setupTasksDisplayRCV() {

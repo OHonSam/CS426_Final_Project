@@ -17,6 +17,7 @@ import com.hfad.cs426_final_project.R;
 import java.util.List;
 
 public class TagAdapterSpinner extends ArrayAdapter<Tag> {
+    private int curPosition = -1;
     public TagAdapterSpinner(@NonNull Context context, int resource, @NonNull List<Tag> objects) {
         super(context, resource, objects);
     }
@@ -27,7 +28,7 @@ public class TagAdapterSpinner extends ArrayAdapter<Tag> {
         convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag_selected, parent, false);
         TextView tvTag = convertView.findViewById(R.id.tvSelectTag);
         ImageView tagColorView = convertView.findViewById(R.id.tagColorView);
-
+        curPosition = position;
         Tag tag = this.getItem(position);
         if(tag != null) {
             tvTag.setText(tag.getName());
@@ -56,5 +57,9 @@ public class TagAdapterSpinner extends ArrayAdapter<Tag> {
             tagColorView.setColorFilter(R.color.white);
         }
         return convertView;
+    }
+
+    public Tag getSelectedTag() {
+        return this.getItem(curPosition);
     }
 }

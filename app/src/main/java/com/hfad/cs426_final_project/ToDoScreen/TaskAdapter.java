@@ -3,11 +3,15 @@ package com.hfad.cs426_final_project.ToDoScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.DataStorage.UserTask;
 import com.hfad.cs426_final_project.R;
 
@@ -38,14 +42,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return userTaskList.size();
     }
 
-    public void updateUserTasksList(List<UserTask> updatedTaskList) {
-        userTaskList = updatedTaskList;
+    public void updateUserTasksList() {
         notifyDataSetChanged();
     }
 
-    static class TaskViewHolder extends RecyclerView.ViewHolder {
+    class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTaskTitle, tvTaskStartDate, tvTaskEndDate, tvTaskStartTime, tvTaskEndTime, tvTaskLocation, tvTaskTag;
+        ClickableImageView btnDeleteTask;
+        CheckBox btnCheckComplete;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,6 +61,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskEndTime = itemView.findViewById(R.id.tvTaskEndTime);
             tvTaskLocation = itemView.findViewById(R.id.tvTaskLocation);
             tvTaskTag = itemView.findViewById(R.id.tvTaskTag);
+            btnDeleteTask = itemView.findViewById(R.id.btnDeleteTask);
+            btnCheckComplete = itemView.findViewById(R.id.btnCheckComplete);
         }
 
         public void bind(UserTask userTask, int position) {
@@ -65,7 +72,40 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskStartTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getStartTimeInMinutes()));
             tvTaskEndTime.setText(CalendarUtils.convertMinutesToTimeFormat(userTask.getEndTimeInMinutes()));
             tvTaskLocation.setText(userTask.getLocation() != null ? userTask.getLocation() : "None");
-            tvTaskTag.setText("None"); // Placeholder for Tag if needed
+            tvTaskTag.setText(userTask.getTag().getName()); // Placeholder for Tag if needed
+
+            btnDeleteTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Show a confirmation dialog to delete the task
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Delete Task")
+                            .setMessage("Are you sure you want to delete this task?")
+                            .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                                // Remove the task from the list and notify the adapter
+                                userTaskList.remove(position);
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, userTaskList.size());
+
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .show();
+                }
+            });
+
+            btnCheckComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Toggle the isComplete status of the task
+                    userTask.setIsComplete(btnCheckComplete.isChecked());
+
+                    // Optionally, you can update the task in persistent storage
+                    // For example, appContext.getCurrentUser().updateTask(userTask);
+
+                    // Notify the adapter to update the UI
+                    notifyItemChanged(position);
+                }
+            });
         }
     }
 

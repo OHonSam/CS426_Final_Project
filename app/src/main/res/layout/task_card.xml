@@ -4,154 +4,207 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_white_bar_16dp_radius"
-    android:padding="16dp" >
+    android:padding="16dp"
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginVertical="10dp" >
 
     <!-- Task Title -->
-    <TextView
-        android:id="@+id/tvTaskTitleLabel"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Title: "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTaskTitle"
-        style="@style/Title"
-        android:layout_width="wrap_content"
+        style="@style/Headline"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="Doing Something"
-        app:layout_constraintStart_toEndOf="@+id/tvTaskTitleLabel"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Start Date -->
-    <TextView
-        android:id="@+id/tvTaskStartDateLabel"
-        style="@style/SubHead"
+    <CheckBox
+        android:id="@+id/btnCheckComplete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Start Date: "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskTitle" />
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toStartOf="@+id/btnDeleteTask"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
-    <TextView
-        android:id="@+id/tvTaskStartDate"
-        style="@style/Title"
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/btnDeleteTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="12/09/2024"
-        app:layout_constraintStart_toStartOf="@+id/tvTaskStartDateLabel"
-        app:layout_constraintTop_toBottomOf="@id/tvTaskStartDateLabel" />
-
-    <!-- End Date -->
-    <TextView
-        android:id="@+id/tvTaskEndDateLabel"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="End Date: "
-        android:layout_marginEnd="40dp"
+        android:src="@drawable/ic_garbage"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskTitle" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
-    <TextView
-        android:id="@+id/tvTaskEndDate"
-        style="@style/Title"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="14/09/2024"
-        app:layout_constraintStart_toStartOf="@id/tvTaskEndDateLabel"
-        app:layout_constraintTop_toBottomOf="@id/tvTaskEndDateLabel" />
-
-    <!-- Start Time -->
-    <TextView
-        android:id="@+id/tvTaskStartTimeLabel"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Start Time: "
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/rounded_white_bar_16dp_radius"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskStartDate" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTaskTitle">
 
-    <TextView
-        android:id="@+id/tvTaskStartTime"
-        style="@style/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="12:00"
-        app:layout_constraintStart_toStartOf="@+id/tvTaskStartTimeLabel"
-        app:layout_constraintTop_toBottomOf="@id/tvTaskStartTimeLabel" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <!-- End Time -->
-    <TextView
-        android:id="@+id/tvTaskEndTimeLabel"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="End Time: "
-        app:layout_constraintStart_toStartOf="@+id/tvTaskEndDate"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskEndDate" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp">
+                <!-- Start Date -->
 
-    <TextView
-        android:id="@+id/tvTaskEndTime"
-        style="@style/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="17:00"
-        app:layout_constraintStart_toStartOf="@+id/tvTaskEndTimeLabel"
-        app:layout_constraintTop_toBottomOf="@id/tvTaskEndTimeLabel" />
+                <TextView
+                    android:id="@+id/tvTaskStartDateLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Start Date: "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Tag -->
-    <TextView
-        android:id="@+id/tvTaskTagLabel"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Tag: "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime" />
+                <TextView
+                    android:id="@+id/tvTaskStartDate"
+                    style="@style/Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="12/09/2024"
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskStartDateLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskStartDateLabel" />
 
-    <TextView
-        android:id="@+id/tvTaskTag"
-        style="@style/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="None"
-        app:layout_constraintStart_toEndOf="@+id/tvTaskTagLabel"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime" />
+                <!-- End Date -->
+                <TextView
+                    android:id="@+id/tvTaskEndDateLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:text="End Date: "
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Location -->
-    <TextView
-        android:id="@+id/tvTaskLocationLabel"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Location: "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskTagLabel" />
+                <TextView
+                    android:id="@+id/tvTaskEndDate"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="14/09/2024"
+                    app:layout_constraintStart_toStartOf="@id/tvTaskEndDateLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskEndDateLabel" />
 
-    <TextView
-        android:id="@+id/tvTaskLocation"
-        style="@style/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="None"
-        app:layout_constraintStart_toEndOf="@+id/tvTaskLocationLabel"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskTag" />
+                <!-- Start Time -->
+                <TextView
+                    android:id="@+id/tvTaskStartTimeLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Start Time: "
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskStartDate"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartDate" />
+
+                <TextView
+                    android:id="@+id/tvTaskStartTime"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="12:00"
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskStartTimeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskStartTimeLabel" />
+
+                <!-- End Time -->
+                <TextView
+                    android:id="@+id/tvTaskEndTimeLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="End Time: "
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskEndDate"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskEndDate" />
+
+                <TextView
+                    android:id="@+id/tvTaskEndTime"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="17:00"
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskEndTimeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskEndTimeLabel" />
+
+
+                <!-- Location -->
+                <TextView
+                    android:id="@+id/tvTaskLocationLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:text="Location: "
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime" />
+
+                <TextView
+                    android:id="@+id/tvTaskLocation"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="15dp"
+                    android:text="None"
+                    app:layout_constraintStart_toEndOf="@+id/tvTaskLocationLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary_30"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp">
+
+                <ImageView
+                    android:id="@+id/tagLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tag"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Tag -->
+
+                <TextView
+                    android:id="@+id/tvTaskTag"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="None"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tagLabel"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

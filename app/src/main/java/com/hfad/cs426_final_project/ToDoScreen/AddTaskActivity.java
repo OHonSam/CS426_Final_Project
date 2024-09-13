@@ -29,6 +29,7 @@ public class AddTaskActivity extends AppCompatActivity {
     private MyButton btnSaveTask;
     private EditText edtTaskTitle, edtTaskStartDate, edtTaskEndDate, edtTaskStartTime, edtTaskEndTime;
     private Spinner searchTagSpinner;
+    private TagAdapterSpinner tagAdapterSpinner;
     private AppContext appContext;
 
     @Override
@@ -58,7 +59,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private void setupSearchTag() {
         List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
-        TagAdapterSpinner tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
+        tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
         searchTagSpinner.setAdapter(tagAdapterSpinner);
         searchTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -165,8 +166,9 @@ public class AddTaskActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO add Tag attribute later
-        UserTask newUserTask = new UserTask(getNextTaskId(), title, startDateMillis, endDateMillis, startTimeInMinutes, endTimeInMinutes);
+        Tag selectedTag = tagAdapterSpinner.getSelectedTag();
+
+        UserTask newUserTask = new UserTask(getNextTaskId(), title, startDateMillis, endDateMillis, startTimeInMinutes, endTimeInMinutes, selectedTag);
         appContext.getCurrentUser().getOwnUserTasksList().add(newUserTask);
         finish();
     }

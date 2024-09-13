@@ -2,6 +2,8 @@ package com.hfad.cs426_final_project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,13 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         setupToolbar();
         setupNavigationDrawer();
         setupCustomToggle();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        Log.d("BaseScreenTest", "onSave invoked");
+        AppContext.getInstance().saveUserInfo();
     }
 
     private void loadChildActivityLayout(int layoutId) {
