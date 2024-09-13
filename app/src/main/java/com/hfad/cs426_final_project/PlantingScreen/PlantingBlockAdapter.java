@@ -67,7 +67,7 @@ public class PlantingBlockAdapter extends RecyclerView.Adapter<PlantingBlockAdap
         });
     }
 
-    private void selectPosition(int position) {
+    void selectPosition(int position) {
         int previousPosition = selectedPosition;
         selectedPosition = position;
         notifyItemChanged(previousPosition);
