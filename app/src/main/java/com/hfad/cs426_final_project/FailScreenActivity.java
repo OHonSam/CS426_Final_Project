@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,8 +24,12 @@ import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import 	android.view.animation.AnimationUtils;
+
 
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
+import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,16 +40,23 @@ public class FailScreenActivity extends AppCompatActivity {
 
     public static final String TAG_WHY_TREE_WITHERED = "WHY_TREE_WITHERED_MESSAGE";
 
-    ClickableImageView backButton;
-    TextView whyTreeWitheredTextView;
-    ClickableImageView focusAgain;
-    ClickableImageView forest;
-    ClickableImageView shareSession;
+    private ClickableImageView backButton;
+    private TextView whyTreeWitheredTextView;
+    private ClickableImageView focusAgain;
+    private ClickableImageView forest;
+    private ClickableImageView shareSession;
+
+    private MyButton btnClockMode;
+
+    private ModePickerDialog modePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fail_screen);
+
+        modePickerDialog = new ModePickerDialog();
+
         setupUIReference();
         setupOnClickListener();
     }
@@ -86,6 +99,13 @@ public class FailScreenActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnClockMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showModePickerDialog();
+            }
+        });
     }
 
     private void setupUIReference() {
@@ -94,7 +114,7 @@ public class FailScreenActivity extends AppCompatActivity {
         focusAgain = findViewById(R.id.clock);
         forest = findViewById(R.id.forest);
         shareSession = findViewById(R.id.share);
-
+        btnClockMode = findViewById(R.id.clockMode);
     }
 
     private void showDialogWhyTreeWhithered() {
@@ -107,6 +127,7 @@ public class FailScreenActivity extends AppCompatActivity {
         if (message != null && !message.isEmpty()) {
             whyTreeWithered.setText(message);
         }
+
         // Create a dialog using the AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
@@ -126,6 +147,20 @@ public class FailScreenActivity extends AppCompatActivity {
 
         // Handle the button click to dismiss the dialog
         Button buttonClose = dialogView.findViewById(R.id.buttonClose);
+        Animation scaleUp, scaleDown;
+        scaleUp = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this,R.anim.scale_down);
+        buttonClose.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    buttonClose.startAnimation(scaleUp);
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    buttonClose.startAnimation(scaleDown);
+                }
+                return false;
+            }
+        });
         buttonClose.setOnClickListener(v -> dialog.dismiss());
 
         // Show the dialog
@@ -200,5 +235,10 @@ public class FailScreenActivity extends AppCompatActivity {
 
         // Share the screenshot
         shareScreenshot(screenshotUri);
+    }
+
+    private void showModePickerDialog() {
+        if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
+            modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 }

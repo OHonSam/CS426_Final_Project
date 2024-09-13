@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -36,9 +37,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.LoginScreenActivity;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
+import com.hfad.cs426_final_project.User;
+import com.hfad.cs426_final_project.WelcomeScreenActivity;
 
 public class ProfileDetailsScreenActivity extends AppCompatActivity {
     public static final int MY_REQUEST_CODE = 10;
@@ -121,7 +125,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
         btnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickSaveChanges();
+                updateUserEmail();
             }
         });
     }
@@ -178,7 +182,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                 });
     }
 
-    private void onClickSaveChanges() {
+    private void updateUserEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             return;
@@ -188,15 +192,16 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
         String newEmail = edtEmail.getText().toString().trim();
         String name = edtName.getText().toString().trim();
 
-        if(!oldEmail.equals(newEmail)) {
-            // Send a verification email before updating the email
-            user.verifyBeforeUpdateEmail(newEmail)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                updateUserInDB(oldEmail, newEmail, name);
-                                updateUserProfile(name);
+        // Send a verification email before updating the email
+        user.verifyBeforeUpdateEmail(newEmail)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            updateUserInDB(oldEmail, newEmail, name);
+                            updateUserProfile(name);
+
+                            if(!oldEmail.equals(newEmail)){
                                 // Notify the user to check their email for verification
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfileDetailsScreenActivity.this);
                                 builder.setTitle("Verification email sent");
@@ -210,21 +215,17 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                                     }
                                 });
                                 builder.show();
+                            }
+                        } else {
+                            // Handle errors (e.g., re-authentication required or other errors)
+                            if (task.getException() instanceof FirebaseAuthRecentLoginRequiredException) {
+                                showReAuthenticateDialog();
                             } else {
-                                // Handle errors (e.g., re-authentication required or other errors)
-                                if (task.getException() instanceof FirebaseAuthRecentLoginRequiredException) {
-                                    showReAuthenticateDialog();
-                                } else {
-                                    Toast.makeText(ProfileDetailsScreenActivity.this, "Failed to send verification email: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                Toast.makeText(ProfileDetailsScreenActivity.this, "Failed to send verification email: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
-                    });
-        }
-        else {
-            updateUserInDB(oldEmail, newEmail, name);
-            updateUserProfile(name);
-        }
+                    }
+                });
     }
 
 
@@ -240,7 +241,6 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                     // Update the email
                     userSnapshot.getRef().child("email").setValue(newEmail);
                     userSnapshot.getRef().child("name").setValue(newName);
-                    userSnapshot.getRef().child("imgUri").setValue(String.valueOf(mUri));
                 }
             }
 
@@ -307,7 +307,7 @@ public class ProfileDetailsScreenActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()) {
-                            onClickSaveChanges();
+                            updateUserEmail();
                         } else {
                             Toast.makeText(ProfileDetailsScreenActivity.this, "Re-authentication failed.", Toast.LENGTH_SHORT).show();
                         }

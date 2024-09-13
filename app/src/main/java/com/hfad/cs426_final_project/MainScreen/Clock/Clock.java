@@ -108,6 +108,7 @@ public class Clock {
         });
     }
 
+
     private void redirectToCongratulationScreen() {
         Intent intent = new Intent(context, CongratulationScreenActivity.class);
         context.startActivity(intent);
