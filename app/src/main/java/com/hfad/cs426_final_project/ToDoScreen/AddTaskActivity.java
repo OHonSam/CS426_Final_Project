@@ -28,6 +28,7 @@ public class AddTaskActivity extends AppCompatActivity {
     private ClickableImageView btnBack;
     private MyButton btnSaveTask;
     private EditText edtTaskTitle, edtTaskStartDate, edtTaskEndDate, edtTaskStartTime, edtTaskEndTime;
+    private EditText edtTaskLocation, edtTaskDescription;
     private Spinner searchTagSpinner;
     private TagAdapterSpinner tagAdapterSpinner;
     private AppContext appContext;
@@ -156,6 +157,8 @@ public class AddTaskActivity extends AppCompatActivity {
         String endDate = edtTaskEndDate.getText().toString();
         String startTime = edtTaskStartTime.getText().toString();
         String endTime = edtTaskEndTime.getText().toString();
+        String location = edtTaskLocation.getText().toString();
+        String description = edtTaskDescription.getText().toString();
 
         long startDateMillis = CalendarUtils.convertDateToMillis(startDate);
         long endDateMillis = CalendarUtils.convertDateToMillis(endDate);
@@ -222,5 +225,7 @@ public class AddTaskActivity extends AppCompatActivity {
         edtTaskStartTime = findViewById(R.id.edtTaskStartTime);
         edtTaskEndTime = findViewById(R.id.edtTaskEndTime);
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
+        edtTaskDescription = findViewById(R.id.edtTaskDescription);
+        edtTaskLocation = findViewById(R.id.edtTaskLocation);
     }
 }

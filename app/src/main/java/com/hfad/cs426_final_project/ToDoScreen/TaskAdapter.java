@@ -47,7 +47,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvTaskTitle, tvTaskStartDate, tvTaskEndDate, tvTaskStartTime, tvTaskEndTime, tvTaskLocation, tvTaskTag;
         ClickableImageView btnDeleteTask;
         CheckBox btnCheckComplete;

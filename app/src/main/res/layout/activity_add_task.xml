@@ -17,207 +17,277 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
-    <TextView
-        android:id="@+id/tvTaskDetails"
-        style="@style/SubHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_gravity="center"
-        android:text="Task Details"
-        android:layout_marginVertical="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <LinearLayout
-        android:id="@+id/taskTitleLayout"
+    <ScrollView
+        android:id="@+id/scrollViewTaskDetails"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/tvTaskDetails"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:layout_marginBottom="5dp"
-            android:textAllCaps="true"
-            />
-        <EditText
-            android:id="@+id/edtTaskTitle"
-            style="@style/Title"
+        app:layout_constraintBottom_toTopOf="@+id/btnSaveTask" >
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/white"
-            android:paddingStart="32dp"
-            android:hint="Enter your task title"
-            />
-    </LinearLayout>
+            android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/tvTaskDetails"
+                style="@style/SubHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Task Details"
+                android:layout_marginVertical="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
-    <LinearLayout
-        android:id="@+id/taskStartDateLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/taskTitleLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/taskEndDateLayout"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Date"
-            android:layout_marginBottom="5dp"
-            android:textAllCaps="true"
-            />
+            <LinearLayout
+                android:id="@+id/taskTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/tvTaskDetails"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Title"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/edtTaskTitle"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:paddingStart="32dp"
+                    android:hint="Enter your task title"
+                    />
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/edtTaskStartDate"
-            style="@style/Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/white"
-            android:focusable="false"
-            android:hint="dd/mm/yyyy"
-            android:paddingStart="32dp" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/taskStartDateLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskTitleLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/taskEndDateLayout"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
 
-    <LinearLayout
-        android:id="@+id/taskEndDateLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/taskTitleLayout"
-        app:layout_constraintStart_toEndOf="@+id/taskStartDateLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="End Date"
-            android:layout_marginBottom="5dp"
-            android:textAllCaps="true"
-            />
-        <EditText
-            android:id="@+id/edtTaskEndDate"
-            style="@style/Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/white"
-            android:focusable="false"
-            android:paddingStart="32dp"
-            android:hint="dd/mm/yyyy"
-            />
-    </LinearLayout>
+                <EditText
+                    android:id="@+id/edtTaskStartDate"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:focusable="false"
+                    android:hint="dd/mm/yyyy"
+                    android:paddingStart="32dp" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/taskStartTimeLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/taskStartDateLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/taskEndTimeLayout"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Time"
-            android:layout_marginBottom="5dp"
-            android:textAllCaps="true"
-            />
-        <EditText
-            android:id="@+id/edtTaskStartTime"
-            style="@style/Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/white"
-            android:focusable="false"
-            android:paddingStart="32dp"
-            android:hint="hh/mm"
-            />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/taskEndDateLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskTitleLayout"
+                app:layout_constraintStart_toEndOf="@+id/taskStartDateLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/edtTaskEndDate"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:focusable="false"
+                    android:paddingStart="32dp"
+                    android:hint="dd/mm/yyyy"
+                    />
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/taskEndTimeLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/taskStartDateLayout"
-        app:layout_constraintStart_toEndOf="@+id/taskStartTimeLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="End Time"
-            android:layout_marginBottom="5dp"
-            android:textAllCaps="true"
-            />
-        <EditText
-            android:id="@+id/edtTaskEndTime"
-            style="@style/Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/white"
-            android:focusable="false"
-            android:paddingStart="32dp"
-            android:hint="hh/mm"
-            />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/taskStartTimeLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskStartDateLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/taskEndTimeLayout"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Time"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/edtTaskStartTime"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:focusable="false"
+                    android:paddingStart="32dp"
+                    android:hint="hh/mm"
+                    />
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/taskTagSelection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/taskStartTimeLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tag Selection"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="40dp"
-            android:textAllCaps="true"
-            />
-        <Spinner
-            android:id="@+id/search_tag_spinner"
-            style="@style/Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:background="@color/transparent"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="10dp"
-            android:textAlignment="center" />
+            <LinearLayout
+                android:id="@+id/taskEndTimeLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskStartDateLayout"
+                app:layout_constraintStart_toEndOf="@+id/taskStartTimeLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Time"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/edtTaskEndTime"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:focusable="false"
+                    android:paddingStart="32dp"
+                    android:hint="hh/mm"
+                    />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/taskLocationLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskStartTimeLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/edtTaskLocation"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:paddingStart="32dp"
+                    android:hint="Location to do your task"
+                    />
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/taskTagSelection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskLocationLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tag Selection"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="40dp"
+                    android:textAllCaps="true"
+                    />
+                <Spinner
+                    android:id="@+id/search_tag_spinner"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="40dp"
+                    android:background="@color/transparent"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="10dp"
+                    android:textAlignment="center" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/taskDescriptionLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/taskTagSelection"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:layout_marginBottom="5dp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/edtTaskDescription"
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border"
+                    android:backgroundTint="@color/white"
+                    android:paddingStart="32dp"
+                    android:hint="Detailed plan for your task"
+                    />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <com.hfad.cs426_final_project.CustomUIComponent.MyButton
         android:id="@+id/btnSaveTask"
@@ -230,9 +300,7 @@
         style="@style/ButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskStartTimeLayout"
-        app:layout_constraintVertical_bias="0.777" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

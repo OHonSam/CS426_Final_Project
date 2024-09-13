@@ -2,6 +2,7 @@ package com.hfad.cs426_final_project.ToDoScreen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ public class ToDoScreenActivity extends BaseScreenActivity {
     private RecyclerView tasksDisplayRCV;
     private AppContext appContext;
     private TaskAdapter taskAdapter;
+    private ClickableImageView btnFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class ToDoScreenActivity extends BaseScreenActivity {
         initWidgets();
         setupAddNewTaskButton();
         setupTasksDisplayRCV();
+        setupFilterButton();
     }
 
     @Override
@@ -36,7 +39,6 @@ public class ToDoScreenActivity extends BaseScreenActivity {
         super.onResume();
         taskAdapter.updateUserTasksList();
     }
-
     private void setupTasksDisplayRCV() {
         List<UserTask> tasks = appContext.getCurrentUser().getOwnUserTasksList();
         // TODO: Filter tasks list based on filter options
@@ -59,10 +61,25 @@ public class ToDoScreenActivity extends BaseScreenActivity {
     private void initWidgets() {
         btnAddNewTask = findViewById(R.id.btnAddNewTask);
         tasksDisplayRCV = findViewById(R.id.TasksDisplayRCV);
+        btnFilter = findViewById(R.id.btnFilter);
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_to_do_screen;
+    }
+
+    private void setupFilterButton() {
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToFilterTaskActivity();
+            }
+        });
+    }
+
+    private void redirectToFilterTaskActivity() {
+//        Intent intent = new Intent(this, FilterTaskActivity.class);
+//        startActivity();
     }
 }
