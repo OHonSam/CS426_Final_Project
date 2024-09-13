@@ -1,5 +1,6 @@
 package com.hfad.cs426_final_project.PlantingScreen;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.DataStorage.BlockData;
+import com.hfad.cs426_final_project.DataStorage.LandState;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,10 +64,10 @@ public class HexagonalLandView extends View {
     private static final float HORIZONTAL_SPACING = TILE_SIZE * 0.76f;
     private static final float VERTICAL_SPACING = TILE_SIZE * 0.41f;
     private static final float LAND_SPACING = 0.84f;
-    private static final String TILES_KEY = "tiles-tiles";
     private boolean hasUnsavedChanges = false;
     private boolean isPlantingMode = true;
     private Bitmap defaultTile;
+    private User currentUser;
 
     private Map<Coordinate, TileType> tiles = new HashMap<>();
     private Bitmap plusTile;
@@ -98,9 +101,6 @@ public class HexagonalLandView extends View {
     }
 
     private void init(Context context) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        tilesRef = database.getReference(TILES_KEY);
-
         Bitmap originalDefaultTile = BitmapFactory.decodeResource(getResources(), R.drawable.piece);
         defaultTile = Bitmap.createScaledBitmap(originalDefaultTile, (int)TILE_SIZE, (int)TILE_SIZE, true);
         originalDefaultTile.recycle();
@@ -113,7 +113,6 @@ public class HexagonalLandView extends View {
 
         offsetX = offsetY = 0f;
         scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-        loadTiles();
 
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
@@ -123,6 +122,77 @@ public class HexagonalLandView extends View {
 
         preloadBitmaps();
         postInvalidateOnAnimation();
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        loadLandState();
+    }
+
+    private void loadLandState() {
+        if (currentUser != null && currentUser.getLandState() != null) {
+            tiles.clear();
+            blockTiles.clear();
+
+            for (Map.Entry<String, LandState.TileInfo> entry : currentUser.getLandState().getTiles().entrySet()) {
+                String[] coords = entry.getKey().split(",");
+                int q = Integer.parseInt(coords[0]);
+                int r = Integer.parseInt(coords[1]);
+                Coordinate coord = new Coordinate(q, r);
+
+                LandState.TileInfo tileInfo = entry.getValue();
+                if ("NORMAL".equals(tileInfo.getType())) {
+                    tiles.put(coord, TileType.NORMAL);
+                    if (tileInfo.getBlockId() != null) {
+                        Block block = findBlockById(tileInfo.getBlockId());
+                        if (block != null) {
+                            blockTiles.put(coord, block);
+                        }
+                    }
+                } else if ("PLUS".equals(tileInfo.getType())) {
+                    tiles.put(coord, TileType.PLUS);
+                }
+            }
+
+            invalidate();
+        } else {
+            // Initialize with center tile if no saved state
+            Coordinate center = new Coordinate(0, 0);
+            tiles.put(center, TileType.PLUS);
+        }
+    }
+
+    private Block findBlockById(int id) {
+        for (BlockData blockData : currentUser.getOwnBlock()) {
+            if (blockData.getBlock().getId() == id) {
+                return blockData.getBlock();
+            }
+        }
+        return null;
+    }
+
+    public void saveLandState() {
+        if (currentUser != null) {
+            LandState landState = new LandState();
+            Map<String, LandState.TileInfo> tileMap = new HashMap<>();
+
+            for (Map.Entry<Coordinate, TileType> entry : tiles.entrySet()) {
+                Coordinate coord = entry.getKey();
+                TileType tileType = entry.getValue();
+                String key = coord.q + "," + coord.r;
+
+                if (tileType == TileType.NORMAL) {
+                    Block block = blockTiles.get(coord);
+                    Integer blockId = block != null ? block.getId() : null;
+                    tileMap.put(key, new LandState.TileInfo("NORMAL", blockId));
+                } else if (tileType == TileType.PLUS) {
+                    tileMap.put(key, new LandState.TileInfo("PLUS", null));
+                }
+            }
+
+            landState.setTiles(tileMap);
+            currentUser.setLandState(landState);
+        }
     }
 
     private void preloadBitmaps() {
@@ -191,39 +261,6 @@ public class HexagonalLandView extends View {
         }
         return null;
     }
-
-    private void loadTiles() {
-        tilesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                tiles.clear();
-                for (DataSnapshot tileSnapshot : dataSnapshot.getChildren()) {
-                    String[] coords = tileSnapshot.getKey().split(",");
-                    if (coords.length == 2) {
-                        int q = Integer.parseInt(coords[0]);
-                        int r = Integer.parseInt(coords[1]);
-                        Coordinate coord = new Coordinate(q, r);
-                        String tileTypeString = tileSnapshot.getValue(String.class);
-                        TileType tileType = TileType.valueOf(tileTypeString);
-                        tiles.put(coord, tileType);
-                    }
-                }
-                if (tiles.isEmpty()) {
-                    // Initialize with center tile if no saved state
-                    Coordinate center = new Coordinate(0, 0);
-                    tiles.put(center, TileType.NORMAL);
-                    addSurroundingPlusTiles(center);
-                }
-                invalidate();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle possible errors.
-            }
-        });
-    }
-
 
     public void setPlantingMode(boolean plantingMode) {
         isPlantingMode = plantingMode;
@@ -387,28 +424,74 @@ public class HexagonalLandView extends View {
     }
 
     private void handleTileConversion(float x, float y) {
-        try {
-            float scaledX = (x - offsetX) / scaleFactor;
-            float scaledY = (y - offsetY) / scaleFactor;
-            Coordinate tappedCoord = pixelToHex(scaledX, scaledY);
+        float scaledX = (x - offsetX) / scaleFactor;
+        float scaledY = (y - offsetY) / scaleFactor;
+        Coordinate tappedCoord = pixelToHex(scaledX, scaledY);
 
-            if (tiles.containsKey(tappedCoord)) {
-                if (tiles.get(tappedCoord) == TileType.PLUS) {
-                    if (selectedBlockData != null && selectedBlockData.getQuantity() > 0) {
-                        Log.d("HexagonalLandView", "Expanding tile at " + tappedCoord.q + ", " + tappedCoord.r);
-                        expandTile(tappedCoord);
-                    } else {
-                        Log.d("HexagonalLandView", "No more blocks of this type available");
-                    }
+        if (tiles.containsKey(tappedCoord)) {
+            if (tiles.get(tappedCoord) == TileType.PLUS) {
+                if (selectedBlockData != null && selectedBlockData.getQuantity() > 0) {
+                    Log.d("HexagonalLandView", "Expanding tile at " + tappedCoord.q + ", " + tappedCoord.r);
+                    expandTile(tappedCoord);
+                } else if (isAllTilesOutOfStock()) {
+                    showOutOfStockDialog();
                 } else {
-                    convertToPlus(tappedCoord);
+                    Log.d("HexagonalLandView", "No more blocks of this type available");
                 }
-                markUnsavedChanges();
-                invalidate();
+            } else {
+                convertToPlus(tappedCoord);
             }
-        } catch (Exception e) {
-            Log.e("HexagonalLandView", "Error in handleTileConversion", e);
+            markUnsavedChanges();
+            removeIsolatedPlusTiles();
+            invalidate();
         }
+    }
+
+    private boolean isAllTilesOutOfStock() {
+        for (BlockData blockData : blockDataList) {
+            if (blockData.getQuantity() > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void showOutOfStockDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Out of Stock")
+                .setMessage("Your tiles are out of stock! Please focus more to get more tiles.")
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    private void removeIsolatedPlusTiles() {
+        Map<Coordinate, TileType> tilesToRemove = new HashMap<>();
+        for (Map.Entry<Coordinate, TileType> entry : tiles.entrySet()) {
+            if (entry.getValue() == TileType.PLUS && !hasNormalNeighbor(entry.getKey())) {
+                tilesToRemove.put(entry.getKey(), entry.getValue());
+            }
+        }
+        for (Coordinate coord : tilesToRemove.keySet()) {
+            tiles.remove(coord);
+        }
+
+        // Check if the land is empty after removing isolated tiles
+        if (tiles.isEmpty()) {
+            // If empty, add a plus tile at the center (0,0)
+            tiles.put(new Coordinate(0, 0), TileType.PLUS);
+            markUnsavedChanges();
+        }
+    }
+
+    private boolean hasNormalNeighbor(Coordinate coord) {
+        int[][] directions = {{1, 0}, {1, -1}, {0, -1}, {-1, 0}, {-1, 1}, {0, 1}};
+        for (int[] dir : directions) {
+            Coordinate newCoord = new Coordinate(coord.q + dir[0], coord.r + dir[1]);
+            if (tiles.containsKey(newCoord) && tiles.get(newCoord) == TileType.NORMAL && !newCoord.equals(coord)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Coordinate pixelToHex(float x, float y) {
@@ -510,20 +593,20 @@ public class HexagonalLandView extends View {
         for (int[] dir : directions) {
             Coordinate newCoord = new Coordinate(center.q + dir[0], center.r + dir[1]);
             if (tiles.containsKey(newCoord) && tiles.get(newCoord) == TileType.PLUS) {
-                boolean hasNormalNeighbor = false;
-                for (int[] checkDir : directions) {
-                    Coordinate checkCoord = new Coordinate(newCoord.q + checkDir[0], newCoord.r + checkDir[1]);
-                    if (tiles.containsKey(checkCoord) && tiles.get(checkCoord) == TileType.NORMAL && !checkCoord.equals(center)) {
-                        hasNormalNeighbor = true;
-                        break;
-                    }
-                }
-                if (!hasNormalNeighbor) {
+                if (!hasNormalNeighbor(newCoord)) {
                     tiles.remove(newCoord);
                     markUnsavedChanges();
                 }
             }
         }
+
+        // Check if the land is empty after updating surrounding tiles
+        if (tiles.isEmpty()) {
+            // If empty, add a plus tile at the center (0,0)
+            tiles.put(new Coordinate(0, 0), TileType.PLUS);
+            markUnsavedChanges();
+        }
+
     }
 
     private Coordinate hexRound(float q, float r) {

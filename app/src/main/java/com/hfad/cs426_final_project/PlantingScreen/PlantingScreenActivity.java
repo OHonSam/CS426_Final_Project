@@ -1,9 +1,6 @@
 package com.hfad.cs426_final_project.PlantingScreen;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.widget.ImageView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +10,6 @@ import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.DataStorage.BlockData;
-import com.hfad.cs426_final_project.MainScreen.BottomSheet.OwnBlockAdapter;
 import com.hfad.cs426_final_project.R;
 
 import java.util.List;
@@ -22,76 +18,64 @@ public class PlantingScreenActivity extends BaseScreenActivity implements Hexago
     private HexagonalLandView hexagonalLandView;
     private ClickableImageView zoomInButton, zoomOutButton, zoomResetButton;
     private ImageView gardenModeBtn;
-    private boolean isPlantingMode = false;
-
     private RecyclerView rcvLandSelection;
     private List<BlockData> blockDataList;
-    private BlockData curBlockData;
     private PlantingBlockAdapter plantingBlockAdapter;
+    private boolean isPlantingMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blockDataList = AppContext.getInstance().getCurrentUser().getOwnBlock();
-        // curBlockData.getBlock().getImgUri() URI to bitmap ?
         initializeComponents();
-        initRCVLandSelection();
-        hexagonalLandView.setOnBlockRestoredListener(this);
-    }
-
-    public void onBlockRestored(BlockData restoredBlockData) {
-        // Find the matching block in the blockDataList
-        for (BlockData blockData : blockDataList) {
-            if (blockData.getBlock().getId() == (restoredBlockData.getBlock().getId())) {
-                // Increment the quantity
-                blockData.setQuantity(blockData.getQuantity() + 1);
-                // Notify the adapter of the change
-                int position = blockDataList.indexOf(blockData);
-                plantingBlockAdapter.notifyItemChanged(position);
-                break;
-            }
-        }
+        setupRecyclerView();
+        setupListeners();
     }
 
     private void initializeComponents() {
         gardenModeBtn = findViewById(R.id.garden_mode);
         hexagonalLandView = findViewById(R.id.hexagonalLandView);
         rcvLandSelection = findViewById(R.id.land_selection);
-
         zoomInButton = findViewById(R.id.zoom_in_btn);
         zoomOutButton = findViewById(R.id.zoom_out_btn);
         zoomResetButton = findViewById(R.id.zoom_reset_btn);
 
-        gardenModeBtn.setOnClickListener(v -> toggleGardenMode());
+        hexagonalLandView.setCurrentUser(AppContext.getInstance().getCurrentUser());
+    }
 
+    private void setupRecyclerView() {
+        rcvLandSelection.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        plantingBlockAdapter = new PlantingBlockAdapter(blockDataList, this::onBlockSelected);
+        rcvLandSelection.setAdapter(plantingBlockAdapter);
+
+        if (!blockDataList.isEmpty()) {
+            hexagonalLandView.setSelectedBlockData(blockDataList.get(0));
+        }
+    }
+
+    private void setupListeners() {
+        gardenModeBtn.setOnClickListener(v -> toggleGardenMode());
         zoomInButton.setOnClickListener(v -> hexagonalLandView.zoomIn());
         zoomOutButton.setOnClickListener(v -> hexagonalLandView.zoomOut());
         zoomResetButton.setOnClickListener(v -> hexagonalLandView.resetZoom());
 
-        hexagonalLandView.setOnBlockUsedListener(new HexagonalLandView.OnBlockUsedListener() {
-            @Override
-            public void onBlockUsed(BlockData blockData) {
-                updateBlockQuantity(blockData);
-            }
-        });
+        hexagonalLandView.setOnBlockUsedListener(this::updateBlockQuantity);
+        hexagonalLandView.setOnBlockRestoredListener(this);
     }
 
-    private void initRCVLandSelection() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        rcvLandSelection.setLayoutManager(layoutManager);
+    private void onBlockSelected(BlockData blockData) {
+        hexagonalLandView.setSelectedBlockData(blockData);
+    }
 
-        plantingBlockAdapter = new PlantingBlockAdapter(blockDataList, new PlantingBlockAdapter.IClickPlantingBlockListener() {
-            @Override
-            public void onClickPlantingBlock(BlockData blockData) {
-                curBlockData = blockData;
-                hexagonalLandView.setSelectedBlockData(blockData);
+    @Override
+    public void onBlockRestored(BlockData restoredBlockData) {
+        for (BlockData blockData : blockDataList) {
+            if (blockData.getBlock().getId() == restoredBlockData.getBlock().getId()) {
+                blockData.setQuantity(blockData.getQuantity() + 1);
+                int position = blockDataList.indexOf(blockData);
+                plantingBlockAdapter.notifyItemChanged(position);
+                break;
             }
-        });
-        rcvLandSelection.setAdapter(plantingBlockAdapter);
-
-        if (!blockDataList.isEmpty()) {
-            curBlockData = blockDataList.get(0);
-            hexagonalLandView.setSelectedBlockData(curBlockData);
         }
     }
 
@@ -101,16 +85,14 @@ public class PlantingScreenActivity extends BaseScreenActivity implements Hexago
             plantingBlockAdapter.notifyItemChanged(position);
         }
 
-        // If the current block is depleted, select the next available block
         if (blockData.getQuantity() == 0) {
-           selectNextAvailableBlock();
+            selectNextAvailableBlock();
         }
     }
 
     private void selectNextAvailableBlock() {
         for (BlockData blockData : blockDataList) {
             if (blockData.getQuantity() > 0) {
-                curBlockData = blockData;
                 hexagonalLandView.setSelectedBlockData(blockData);
                 int position = blockDataList.indexOf(blockData);
                 plantingBlockAdapter.selectPosition(position);
@@ -121,13 +103,9 @@ public class PlantingScreenActivity extends BaseScreenActivity implements Hexago
 
     private void toggleGardenMode() {
         isPlantingMode = !isPlantingMode;
-        if (isPlantingMode) {
-            gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.plant_mode, null));
-            hexagonalLandView.setPlantingMode(true);
-        } else {
-            gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.watch_garden_mode, null));
-            hexagonalLandView.setPlantingMode(false);
-        }
+        int drawableRes = isPlantingMode ? R.drawable.plant_mode : R.drawable.watch_garden_mode;
+        gardenModeBtn.setImageDrawable(ResourcesCompat.getDrawable(getResources(), drawableRes, null));
+        hexagonalLandView.setPlantingMode(isPlantingMode);
     }
 
     @Override
@@ -135,18 +113,15 @@ public class PlantingScreenActivity extends BaseScreenActivity implements Hexago
         return R.layout.activity_planting_screen;
     }
 
+    @Override
     protected void onPause() {
-        if (hexagonalLandView != null) {
-            hexagonalLandView.saveAllTiles();
-        }
         super.onPause();
+        hexagonalLandView.saveLandState();
     }
 
     @Override
     protected void onDestroy() {
-        if (hexagonalLandView != null) {
-            hexagonalLandView.saveAllTiles();
-        }
+        hexagonalLandView.saveLandState();
         super.onDestroy();
     }
 }
