@@ -13,24 +13,37 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        >
+        android:paddingVertical="4dp">
         <TextView
-            android:id="@+id/ranking"
+            android:id="@+id/rankingOutTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:paddingHorizontal="16dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:elegantTextHeight="true"
+            style="@style/SubTitle2" />
+        <TextView
+            android:id="@+id/rankingTop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
+            android:paddingHorizontal="16dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
             android:elegantTextHeight="true"
-            android:paddingHorizontal="18dp"
-            android:paddingVertical="8dp"
             style="@style/SubTitle2" />
         <ImageView
             android:id="@+id/medal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/medal"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            />
+            android:layout_alignEnd="@+id/rankingTop"
+            android:layout_alignStart="@+id/rankingTop"
+            android:layout_centerVertical="true" />
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"

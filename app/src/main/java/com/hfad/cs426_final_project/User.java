@@ -21,6 +21,7 @@ public class User {
     private String email;
     private String password;
     private String name;
+    private String imgUri;
     private long lastAccessDate; // Store date as a timestamp (milliseconds)
 
     private List<Session> sessions = new ArrayList<>();
@@ -44,6 +45,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.imgUri = null;
 
         // default
         this.sessions = new ArrayList<>();
@@ -91,6 +93,14 @@ public class User {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImgUri() {
+        return imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
     }
 
     public long getLastAccessDate() {
