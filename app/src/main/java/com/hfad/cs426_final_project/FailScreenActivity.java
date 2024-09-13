@@ -13,23 +13,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import 	android.view.animation.AnimationUtils;
 
 
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
+import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
-import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,6 +52,7 @@ public class FailScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fail_screen);
         showFailureDialog();
         setupUIReference();
+        modePickerDialog = new ModePickerDialog();
         setupOnClickListener();
     }
 
