@@ -2,6 +2,8 @@ package com.hfad.cs426_final_project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.hfad.cs426_final_project.ProfileScreen.ProfileScreenActivity;
 import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
 import com.hfad.cs426_final_project.StoreScreen.StoreScreenActivity;
 import com.hfad.cs426_final_project.TimelineScreen.TimelineScreenActivity;
+import com.hfad.cs426_final_project.ToDoScreen.ToDoScreenActivity;
 
 import java.util.Objects;
 
@@ -47,6 +50,12 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
         setupToolbar();
         setupNavigationDrawer();
         setupCustomToggle();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)  {
+        super.onSaveInstanceState(outState);
+        AppContext.getInstance().saveUserInfo();
     }
 
     private void loadChildActivityLayout(int layoutId) {
@@ -94,6 +103,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             navigationView.getMenu().findItem(R.id.nav_statistic_screen).setChecked(true);
         } else if (curLayoutId == R.layout.activity_timeline_screen) {
             navigationView.getMenu().findItem(R.id.nav_timeline_screen).setChecked(true);
+        } else if (curLayoutId == R.layout.activity_to_do_screen) {
+            navigationView.getMenu().findItem(R.id.nav_to_do_screen).setChecked(true);
         }
     }
 
@@ -136,6 +147,8 @@ public abstract class BaseScreenActivity extends AppCompatActivity implements Na
             intent = new Intent(this, StatisticScreenActivity.class);
         } else if (id == R.id.nav_timeline_screen) {
             intent = new Intent(this, TimelineScreenActivity.class);
+        } else if (id == R.id.nav_to_do_screen) {
+            intent = new Intent(this, ToDoScreenActivity.class);
         }
 
         // If an intent is created, start the new activity

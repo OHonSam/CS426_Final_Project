@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:layout_marginHorizontal="5dp" >
+
+    <!-- Task Title -->
+
+    <TextView
+        android:id="@+id/tvTaskTitle"
+        style="@style/Headline"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Doing Something"
+        android:layout_toStartOf="@+id/btnCheckComplete"
+        android:layout_alignParentStart="true"/>
+
+    <CheckBox
+        android:id="@+id/btnCheckComplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnEditTask"
+        android:layout_alignTop="@+id/tvTaskTitle"
+        android:layout_alignBottom="@+id/tvTaskTitle"/>
+
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/btnEditTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit_favourite"
+        android:paddingHorizontal="8dp"
+        android:layout_toStartOf="@id/btnDeleteTask"
+        android:layout_alignTop="@id/tvTaskTitle"
+        android:layout_alignBottom="@id/tvTaskTitle" />
+
+    <com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView
+        android:id="@+id/btnDeleteTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_garbage"
+        android:paddingHorizontal="8dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/tvTaskTitle"
+        android:layout_alignBottom="@+id/tvTaskTitle"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/rounded_white_bar_16dp_radius"
+        app:cardCornerRadius="16dp"
+        android:layout_below="@+id/tvTaskTitle"
+        android:layout_alignStart="@+id/tvTaskTitle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp">
+                <!-- Start Date -->
+
+                <TextView
+                    android:id="@+id/tvTaskStartDateLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Start Date: "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTaskStartDate"
+                    style="@style/Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="12/09/2024"
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskStartDateLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskStartDateLabel" />
+
+                <!-- End Date -->
+                <TextView
+                    android:id="@+id/tvTaskEndDateLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:text="End Date: "
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTaskEndDate"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="14/09/2024"
+                    app:layout_constraintStart_toStartOf="@id/tvTaskEndDateLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskEndDateLabel" />
+
+                <!-- Start Time -->
+                <TextView
+                    android:id="@+id/tvTaskStartTimeLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Start Time: "
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskStartDate"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartDate" />
+
+                <TextView
+                    android:id="@+id/tvTaskStartTime"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="12:00"
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskStartTimeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskStartTimeLabel" />
+
+                <!-- End Time -->
+                <TextView
+                    android:id="@+id/tvTaskEndTimeLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="End Time: "
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskEndDate"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskEndDate" />
+
+                <TextView
+                    android:id="@+id/tvTaskEndTime"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="17:00"
+                    app:layout_constraintStart_toStartOf="@+id/tvTaskEndTimeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/tvTaskEndTimeLabel" />
+
+
+                <!-- Location -->
+                <TextView
+                    android:id="@+id/tvTaskLocationLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:text="Location: "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvTaskLocation"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="15dp"
+                    android:text="None"
+                    app:layout_constraintStart_toEndOf="@+id/tvTaskLocationLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvTaskDescriptionLabel"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:text="Description: "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskLocation"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvTaskDescription"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    app:layout_constraintBottom_toTopOf="@+id/tvShowDetails"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskDescriptionLabel"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvShowDetails"
+                    style="@style/Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="---------More Details---------"
+                    android:layout_marginVertical="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTaskStartTime"
+                    app:layout_constraintVertical_bias="1"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary_30"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp">
+
+                <ImageView
+                    android:id="@+id/tagLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tag"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Tag -->
+
+                <TextView
+                    android:id="@+id/tvTaskTag"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="None"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tagLabel"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</RelativeLayout>

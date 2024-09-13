@@ -34,7 +34,7 @@ public class User {
     private List<Tree> ownTrees = new ArrayList<>();
     private List<BlockData> ownBlock = new ArrayList<>();
     private List<Tag> ownTags = new ArrayList<>();
-    private List<UserTask> ownUserTasks = new ArrayList<>();
+    private List<UserTask> ownUserTasksList = new ArrayList<>();
     private ClockSetting clockSetting;
 
     public User() {}
@@ -208,12 +208,15 @@ public class User {
         this.ownTags = ownTags;
     }
 
-    public List<UserTask> getOwnUserTasks() {
-        return ownUserTasks;
+    public List<UserTask> getOwnUserTasksList() {
+        return ownUserTasksList;
+    }
+    public void setOwnUserTasksList(List<UserTask> ownUserTasksList) {
+        this.ownUserTasksList = ownUserTasksList;
     }
 
-    public void setOwnUserTasks(List<UserTask> ownUserTasks) {
-        this.ownUserTasks = ownUserTasks;
+    public void addUserTask (UserTask userTask) {
+        ownUserTasksList.add(userTask);
     }
 
     public boolean hasTree(Tree tree) {

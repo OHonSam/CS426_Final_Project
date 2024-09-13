@@ -2,7 +2,7 @@
 <resources>
     <style name="Headline">
         <item name="android:fontFamily">@font/playfairdisplay_bold</item>
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">28sp</item>
     </style>
     <style name="BodyText">
         <item name="android:fontFamily">@font/poppins_regular</item>
