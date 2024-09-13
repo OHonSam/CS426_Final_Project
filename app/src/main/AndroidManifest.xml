@@ -30,7 +30,7 @@
             android:name=".ToDoScreen.ToDoScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".BreakScreenActivity"
+            android:name=".MainScreen.DoneSessionActivities.BreakScreenActivity"
             android:exported="false" />
 
         <service
@@ -42,10 +42,10 @@
             android:name=".TimelineScreen.TimelineScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".CongratulationScreenActivity"
+            android:name=".MainScreen.DoneSessionActivities.CongratulationScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".WelcomeScreenActivity"
+            android:name=".WelcomeScreenActivities.WelcomeScreenActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileScreen.ChangePasswordActivity"
@@ -63,16 +63,16 @@
             android:name=".MainScreen.MainScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginScreenActivity"
+            android:name=".WelcomeScreenActivities.LoginScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUpScreenActivity"
+            android:name=".WelcomeScreenActivities.SignUpScreenActivity"
             android:exported="false" />
         <activity
             android:name=".MainScreen.Tag.AddNewTagActivity"
             android:exported="false" />
         <activity
-            android:name=".FailScreenActivity"
+            android:name=".MainScreen.DoneSessionActivities.FailScreenActivity"
             android:exported="false" />
         <activity
             android:name=".StoreScreen.StoreScreenActivity"
@@ -84,7 +84,7 @@
             android:name=".RankingScreen.RankingScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".WelcomeScreenActivities.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -12,7 +12,7 @@ import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 public class RankingScreenActivity extends BaseScreenActivity {
     private ListView listView;

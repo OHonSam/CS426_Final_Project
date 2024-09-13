@@ -16,13 +16,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.AppContext;
-import com.hfad.cs426_final_project.CongratulationScreenActivity;
+import com.hfad.cs426_final_project.MainScreen.DoneSessionActivities.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
-
-import org.w3c.dom.Text;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 import java.util.Locale;
 
@@ -472,7 +470,10 @@ public class Clock {
 
     private void saveSession(boolean isComplete) {
         User user = AppContext.getInstance().getCurrentUser();
-
+        if(isComplete) {
+            // Reward
+            user.addSelectedBlock();
+        }
         Session session = new Session();
         session.setId(user.getSessions().size());
         session.setStatus(isComplete);
@@ -483,7 +484,6 @@ public class Clock {
         } else if(clockSetting.getType() == ClockMode.TIMER && clockSetting.getIsCountExceedTime() && isEndSession) {
             duration = clockSetting.getTargetTime() - seconds;
         }
-
 
         session.setDuration(duration);
         session.setTimestamp(System.currentTimeMillis());

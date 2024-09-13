@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen.DoneSessionActivities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -6,14 +6,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
+import com.hfad.cs426_final_project.R;
 
 public class BreakScreenActivity extends AppCompatActivity {
 

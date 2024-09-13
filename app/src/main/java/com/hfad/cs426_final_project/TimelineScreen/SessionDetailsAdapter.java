@@ -52,19 +52,19 @@ public class SessionDetailsAdapter extends RecyclerView.Adapter<SessionDetailsAd
         if (session.isStatus()) {
 //            holder.tvMessage.setText("Success! You grew a " + session.getTree().getName() + ".");
             holder.tvMessage.setText("Success! You grew a tree.");
+            // Set the tree image
+            Glide.with(holder.itemView.getContext())
+                    .load(session.getTree().getImgUri())
+                    .into(holder.ivTreeDisplay);
         } else {
             holder.tvMessage.setText("You gave up and failed to grow a tree.");
+            holder.ivTreeDisplay.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.withered_tree, null));
         }
 
         // Format and set the session duration
         long durationInSeconds = session.getDuration();
         String formattedDuration = String.format(Locale.getDefault(), "%02d:%02d", durationInSeconds / 3600, (durationInSeconds % 3600) / 60);
         holder.tvDuration.setText(startTime + " - " + session.getDateTimeFromTimestamp().plusSeconds(durationInSeconds).format(timeFormatter));
-
-        // Set the tree image
-        Glide.with(holder.itemView.getContext())
-                .load(session.getTree().getImgUri())
-                .into(holder.ivTreeDisplay);
 
         // Set the tag
         holder.icTag.setColorFilter(session.getTag().getColor());

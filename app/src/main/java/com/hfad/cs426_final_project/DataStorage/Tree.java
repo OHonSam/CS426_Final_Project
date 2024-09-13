@@ -19,9 +19,9 @@ public class Tree {
 
     public Tree() {
         // default
-        id = 0;
-        cost = 120;
-        fetchUri();
+        this.id = 0;
+        this.cost = 120;
+        this.imgUri = "https://firebasestorage.googleapis.com/v0/b/focus-da00f.appspot.com/o/Trees%2Ftree0.png?alt=media&token=7d72dc39-0005-4f8a-a80b-7123274b5ede";
     }
 
     public int getId() {
@@ -46,17 +46,6 @@ public class Tree {
 
     public void setCost(int cost) {
         this.cost = cost;
-    }
-
-    public Task<Void> fetchUri() {
-        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("Trees/tree" + id + ".png");
-
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            setImgUri(String.valueOf(uri));
-            taskCompletionSource.setResult(null);
-        }).addOnFailureListener(taskCompletionSource::setException);
-        return taskCompletionSource.getTask();
     }
 
     public boolean sameID(Tree tree) {

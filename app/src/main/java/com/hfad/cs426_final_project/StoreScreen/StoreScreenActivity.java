@@ -1,7 +1,6 @@
 package com.hfad.cs426_final_project.StoreScreen;
 
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -16,7 +15,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 import java.util.ArrayList;
 import java.util.List;

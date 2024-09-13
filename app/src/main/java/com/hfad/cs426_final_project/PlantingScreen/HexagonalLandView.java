@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
@@ -17,18 +16,12 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.DataStorage.BlockData;
 import com.hfad.cs426_final_project.DataStorage.LandState;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,23 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class HexagonalLandView extends View {
     private static final float MIN_SCALE = 0.5f;

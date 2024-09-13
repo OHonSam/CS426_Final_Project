@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FailScreenActivity">
+    tools:context=".MainScreen.DoneSessionActivities.FailScreenActivity">
 
     <com.hfad.cs426_final_project.CustomUIComponent.MyButton
         android:id="@+id/clockMode"

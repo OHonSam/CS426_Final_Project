@@ -19,9 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
