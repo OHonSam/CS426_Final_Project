@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.WelcomeScreenActivities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,7 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
+import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {

@@ -3,13 +3,11 @@ package com.hfad.cs426_final_project.StatisticScreen;
 import android.view.MenuItem;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -23,11 +21,6 @@ import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +31,6 @@ import java.util.Comparator;
 import java.util.Map;
 
 import com.hfad.cs426_final_project.DataStorage.Session;
-import com.hfad.cs426_final_project.User;
 
 public class StatisticScreenActivity extends BaseScreenActivity {
 

@@ -1,7 +1,6 @@
 package com.hfad.cs426_final_project.StoreScreen;
 
 import android.content.Context;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.DataStorage.BlockData;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 import java.util.List;
 

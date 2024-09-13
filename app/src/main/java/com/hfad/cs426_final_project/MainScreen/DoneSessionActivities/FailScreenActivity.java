@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen.DoneSessionActivities;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -26,6 +26,7 @@ import 	android.view.animation.AnimationUtils;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
+import com.hfad.cs426_final_project.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

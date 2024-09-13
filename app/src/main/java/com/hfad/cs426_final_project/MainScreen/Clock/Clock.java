@@ -16,13 +16,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.hfad.cs426_final_project.AppContext;
-import com.hfad.cs426_final_project.CongratulationScreenActivity;
+import com.hfad.cs426_final_project.MainScreen.DoneSessionActivities.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.User;
-
-import org.w3c.dom.Text;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 import java.util.Locale;
 

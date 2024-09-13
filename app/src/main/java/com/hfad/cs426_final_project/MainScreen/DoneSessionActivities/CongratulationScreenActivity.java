@@ -1,16 +1,13 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.MainScreen.DoneSessionActivities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,12 +17,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
 import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
+import com.hfad.cs426_final_project.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

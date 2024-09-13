@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.hfad.cs426_final_project.BaseScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.WelcomeScreenActivity;
+import com.hfad.cs426_final_project.WelcomeScreenActivities.WelcomeScreenActivity;
 
 public class ProfileScreenActivity extends BaseScreenActivity {
     private ImageView ivProfileImg;

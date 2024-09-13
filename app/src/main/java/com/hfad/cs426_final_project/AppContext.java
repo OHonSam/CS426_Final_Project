@@ -3,11 +3,11 @@ package com.hfad.cs426_final_project;
 import android.app.Activity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.hfad.cs426_final_project.DataStorage.Block;
+import com.hfad.cs426_final_project.DataStorage.User;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 
 import com.google.android.gms.tasks.OnCompleteListener;

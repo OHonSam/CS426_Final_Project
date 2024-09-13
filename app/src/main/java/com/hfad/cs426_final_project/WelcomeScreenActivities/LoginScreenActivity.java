@@ -1,4 +1,4 @@
-package com.hfad.cs426_final_project;
+package com.hfad.cs426_final_project.WelcomeScreenActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,11 +19,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
+import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.SmartEditText.EmailEditText;
 import com.hfad.cs426_final_project.SmartEditText.PasswordEditText;
+import com.hfad.cs426_final_project.DataStorage.User;
 
 public class LoginScreenActivity extends AppCompatActivity {
     private AppContext appContext;
