@@ -73,7 +73,8 @@ public class User {
         this.focusTag = new Tag();
         this.selectedBlock = new Block();
         this.favouriteList = new ArrayList<>();
-        this.streak = 1;
+        this.streakDays = 0;
+        this.hasCompletedASessionToday = false;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
 

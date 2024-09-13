@@ -31,7 +31,7 @@ public class StreakManager {
     // Private constructor to prevent instantiation
     private StreakManager() {
         // Initialize the attributes
-        this.streakDays = 0;
+        this.streakDays = AppContext.getInstance().getCurrentUser().getStreakDays();
         this.hasCompletedASessionToday = AppContext.getInstance().getCurrentUser().isHasCompletedASessionToday();
     }
 
