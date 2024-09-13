@@ -9,12 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="8dp">
 
         <ImageView
             android:id="@+id/user_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_margin="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/default_avatar"
             android:layout_centerVertical="true"
@@ -26,7 +28,8 @@
             android:layout_height="wrap_content"
             android:text="User Name"
             style="@style/Headline"
-            android:layout_marginStart="16dp"
+            android:paddingHorizontal="24dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/user_image" />
 
