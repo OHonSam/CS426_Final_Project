@@ -149,6 +149,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         // Disable deep mode count (if applicable)
         clock.disableDeepModeCount();
         updateTagDisplay();
+        enableOnResume();
     }
 
 
@@ -497,4 +498,28 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         }
     }
 
+
+    public void disableWhenFocus() {
+        imgTree.setOnClickListener(null);
+
+        newTagContainer.setOnClickListener(null);
+        newTagImage.setOnClickListener(null);
+        newTagButton.setOnClickListener(null);
+
+        todoContainer.setOnClickListener(null);
+        todoButton.setOnClickListener(null);
+        todoImage.setOnClickListener(null);
+
+        searchTagSpinner.setEnabled(false);
+    }
+
+    private void enableOnResume() {
+        setupSearchTag();
+        setupMusicListener();
+        setupTodoListener();
+        setupNewTagListener();
+
+        setupTree();
+        setupBottomSheet();
+    }
 }

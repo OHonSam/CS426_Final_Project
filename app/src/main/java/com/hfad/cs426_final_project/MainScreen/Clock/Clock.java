@@ -19,6 +19,7 @@ import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.MainScreen.DoneSessionActivities.CongratulationScreenActivity;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Session;
+import com.hfad.cs426_final_project.MainScreen.MainScreenActivity;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.DataStorage.User;
 import com.hfad.cs426_final_project.StreakManager;
@@ -77,13 +78,15 @@ public class Clock {
     private TextView timeView;
     private MyButton startButton;
     private Context context;
+    private MainScreenActivity mainScreenActivity;
 
     private ClockSetting clockSetting;
     private CircularSeekBar progressBar;
     private ImageView toggleIcon;
 
-    public Clock(Context context, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, ImageView toggleIcon, OnClockListener onClockListener) {
-        this.context = context;
+    public Clock(MainScreenActivity mainScreenActivity, TextView timeView, MyButton startButton, ClockSetting clockSetting, CircularSeekBar progressBar, ImageView toggleIcon, OnClockListener onClockListener) {
+        this.context = mainScreenActivity;
+        this.mainScreenActivity = mainScreenActivity;
         this.timeView = timeView;
         this.startButton = startButton;
         this.clockSetting = clockSetting;
@@ -119,6 +122,7 @@ public class Clock {
                     // Start the clock and disable interaction
                     start();
                     clockSetting.setModePickerDialogEnabled(false); // DISABLE the clock
+                    mainScreenActivity.disableWhenFocus();
                 } else {
                     giveUp();
                 }
