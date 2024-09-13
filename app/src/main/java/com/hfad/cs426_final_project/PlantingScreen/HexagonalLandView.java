@@ -5,8 +5,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathEffect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -45,8 +48,7 @@ public class HexagonalLandView extends View {
     private static final float VERTICAL_SPACING = TILE_SIZE * 0.41f;
     private static final float LAND_SPACING = 0.84f;
     private static final float CLICK_TOLERANCE = 10f;
-    private static final long ANIMATION_DURATION = 1000;
-    private static final float MAX_BORDER_WIDTH = 8f;
+    private float dashPhase = 0f;
 
     private Map<Coordinate, TileType> tiles = new HashMap<>();
     private Map<Coordinate, Block> blockTiles = new HashMap<>();
@@ -61,7 +63,7 @@ public class HexagonalLandView extends View {
     private OnBlockRestoredListener onBlockRestoredListener;
     private OnBlockUsedListener onBlockUsedListener;
     private ScaleGestureDetector scaleDetector;
-    private Paint borderPaint;
+    private Paint dashedBorderPaint;
     private Path hexagonPath;
 
     private float lastTouchX, lastTouchY;
@@ -76,7 +78,6 @@ public class HexagonalLandView extends View {
     public HexagonalLandView(Context context, AttributeSet attrs) {
         super(context, attrs);
         scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-        borderPaint = new Paint();
         hexagonPath = new Path();
         blockDataList = new ArrayList<>();
         init(context);
@@ -87,9 +88,11 @@ public class HexagonalLandView extends View {
         plusTile = loadAndScaleBitmap(R.drawable.plus_btn);
         offsetX = offsetY = 0f;
 
-        borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setColor(ContextCompat.getColor(context, R.color.primary_20));
-        animationStartTime = System.currentTimeMillis();
+        dashedBorderPaint = new Paint();
+        dashedBorderPaint.setStyle(Paint.Style.STROKE);
+        dashedBorderPaint.setColor(ContextCompat.getColor(getContext(), R.color.primary_20));
+        dashedBorderPaint.setStrokeWidth(4f); // Adjust as needed
+        hexagonPath = new Path();
 
         preloadBitmaps();
         postInvalidateOnAnimation();
@@ -105,6 +108,21 @@ public class HexagonalLandView extends View {
     public void setCurrentUser(User user) {
         this.currentUser = user;
         loadLandState();
+    }
+
+    public void resetGarden() {
+        for (Map.Entry<Coordinate, Block> entry : blockTiles.entrySet()) {
+            if (onBlockRestoredListener != null) {
+                BlockData restoredBlockData = new BlockData(entry.getValue(), 1);
+                onBlockRestoredListener.onBlockRestored(restoredBlockData);
+            }
+        }
+        tiles.clear();
+        blockTiles.clear();
+        tiles.put(new Coordinate(0, 0), TileType.PLUS);
+        markUnsavedChanges();
+        resetZoom();
+        invalidate();
     }
 
     private void loadLandState() {
@@ -249,9 +267,12 @@ public class HexagonalLandView extends View {
         float centerX = getWidth() / 2f / scaleFactor;
         float centerY = getHeight() / 2f / scaleFactor;
 
-        float animationProgress = (System.currentTimeMillis() - animationStartTime) % ANIMATION_DURATION / (float) ANIMATION_DURATION;
-        float currentBorderWidth = MAX_BORDER_WIDTH * Math.abs(animationProgress - 0.5f) * 2;
-        borderPaint.setStrokeWidth(currentBorderWidth / scaleFactor);
+        dashPhase += 0.5f; // Adjust speed as needed
+        if (dashPhase >= 18f) dashPhase = 0f;
+
+        // Set the dash effect with updated phase
+        PathEffect dashEffect = new DashPathEffect(new float[]{10f, 8f}, dashPhase);
+        dashedBorderPaint.setPathEffect(dashEffect);
 
         // Sort coordinates from top-left to bottom-right
         List<Map.Entry<Coordinate, TileType>> sortedTiles = new ArrayList<>(tiles.entrySet());
@@ -283,7 +304,7 @@ public class HexagonalLandView extends View {
         canvas.drawBitmap(tileToDraw, matrix, null);
 
         if (type == TileType.PLUS && isPlantingMode) {
-            drawHexagonBorder(canvas, x, y - 6f, 50f, borderPaint);
+            drawDashedHexagonBorder(canvas, x, y - 6f, 50f);
         }
     }
 
@@ -300,7 +321,7 @@ public class HexagonalLandView extends View {
         return defaultTile;
     }
 
-    private void drawHexagonBorder(Canvas canvas, float centerX, float centerY, float size, Paint paint) {
+    private void drawDashedHexagonBorder(Canvas canvas, float centerX, float centerY, float size) {
         hexagonPath.reset();
         for (int i = 0; i < 6; i++) {
             float angle_deg = 60 * i;
@@ -314,7 +335,7 @@ public class HexagonalLandView extends View {
             }
         }
         hexagonPath.close();
-        canvas.drawPath(hexagonPath, paint);
+        canvas.drawPath(hexagonPath, dashedBorderPaint);
     }
 
     private void markUnsavedChanges() {
