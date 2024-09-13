@@ -130,14 +130,18 @@ public class RankingHelper extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.ranking_card, null);
         }
 
-        TextView rankingTextView = convertView.findViewById(R.id.ranking);
+        TextView rankingOutTextView = convertView.findViewById(R.id.rankingOutTop);
+        TextView rankingTextView = convertView.findViewById(R.id.rankingTop);
         ImageView medalImageView = convertView.findViewById(R.id.medal);
         TextView usernameTextView = convertView.findViewById(R.id.username);
         TextView streakTextView = convertView.findViewById(R.id.streak);
 
         User user = users.get(position);
         rankingTextView.setText(String.valueOf(position + 1));
+        rankingOutTextView.setText(String.valueOf(position + 1));
         medalImageView.setVisibility(position < 3 ? View.VISIBLE : View.GONE);
+        rankingTextView.setVisibility(position < 3 ? View.VISIBLE : View.GONE);
+        rankingOutTextView.setVisibility(position >= 3 ? View.VISIBLE : View.GONE);
         usernameTextView.setText(user.getName());
 
         if (isStreak) {
