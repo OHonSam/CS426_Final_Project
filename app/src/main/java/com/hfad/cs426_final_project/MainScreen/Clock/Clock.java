@@ -468,8 +468,17 @@ public class Clock {
     public void enableBreakSessionCount(){
         Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
         running = true;
-        breakSessionHandler.removeCallbacks(runnableBreakSession);
+        if(runnableBreakSession != null) {
+            breakSessionHandler.removeCallbacks(runnableBreakSession);
+        }
         breakSessionHandler.post(runnableBreakSession);
+    }
+
+    public void disableBreakSessionCount(){
+        Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
+        if(runnableBreakSession != null) {
+            breakSessionHandler.removeCallbacks(runnableBreakSession);
+        }
     }
 
     // Define the listener interface

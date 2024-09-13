@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider;
 
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
 import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
@@ -37,7 +38,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
     private TimePickerDialog timePickerDialog;
 
     private ActivityResultLauncher<Intent> breakScreenLauncher;
-
+    private AppContext appContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +130,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         timePickerDialog = new TimePickerDialog();
         btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
+        appContext = AppContext.getInstance();
     }
 
     private void shareFocusSession() {
@@ -239,7 +241,14 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
 
         // Handle the button click to focus again
         Button buttonFocus = dialogView.findViewById(R.id.buttonFocus);
-        buttonFocus.setOnClickListener(v -> focusAgain());
+        buttonFocus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Clock clock = appContext.getCurrentClock();
+                clock.disableBreakSessionCount();
+                focusAgain();
+            }
+        });
 
         // Show the dialog
         dialog.show();

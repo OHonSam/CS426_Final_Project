@@ -55,6 +55,7 @@ public class BreakScreenActivity extends AppCompatActivity {
         focusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clock.disableBreakSessionCount();
                 focusAgain();
             }
         });
@@ -67,6 +68,7 @@ public class BreakScreenActivity extends AppCompatActivity {
             public void onBreakSessionComplete() {
                 boolean isAutoStartEnable = extras.getBoolean(AUTO_START);
                 if(isAutoStartEnable){
+                    clock.disableBreakSessionCount();
                     focusAgain();
                 }
                 else{
