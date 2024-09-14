@@ -163,4 +163,11 @@ public class FavoriteItemListAdapter extends BaseAdapter {
             return occurrence;
         }
     }
+
+    public String getTopItemImageUri() {
+        if (items.isEmpty()) {
+            return null;
+        }
+        return items.get(0).getImgUri();
+    }
 }

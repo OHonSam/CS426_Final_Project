@@ -348,6 +348,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/statistic_card">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp">
+
                     <com.hfad.cs426_final_project.CustomUIComponent.MyButton
                         android:id="@+id/item_type_btn"
                         android:layout_width="wrap_content"
@@ -360,20 +367,16 @@
                         android:elegantTextHeight="true"
                         android:drawableEnd="@drawable/dropdown"
                         android:drawablePadding="6dp"
-                        android:layout_gravity="start|top"
-                        android:layout_marginStart="120dp"
-                        android:layout_marginTop="15dp"
-                        style="@style/SubTitle"/>
+                        style="@style/SubTitle"
+                        android:layout_marginEnd="10dp"/>
 
                     <ImageView
                         android:id="@+id/item_type_image"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/favorite_tree"
-                        android:scaleType="fitCenter"
-                        android:layout_marginEnd="120dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="end|top"/>
+                        android:scaleType="fitCenter"/>
+                </LinearLayout>
                 <ListView
                     android:id="@+id/statistic_list"
                     android:layout_width="match_parent"
