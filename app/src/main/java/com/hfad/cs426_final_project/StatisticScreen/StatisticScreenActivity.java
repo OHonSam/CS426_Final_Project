@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -171,14 +172,6 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         viewByButton = findViewById(R.id.view_by_button);
 
         favoriteListView = findViewById(R.id.statistic_list);
-        FrameLayout frameLayout = findViewById(R.id.favorite_item_card);
-        frameLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
     }
 
     private void initializeCharts() {
@@ -296,6 +289,18 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         filteredSessions = new ArrayList<>();
         favoriteAdapter = new FavoriteItemListAdapter(this, filteredSessions, isTreeMode);
         favoriteListView.setAdapter(favoriteAdapter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            favoriteListView.setNestedScrollingEnabled(true);
+        }
+
+        favoriteListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
     }
 
     private void updateChartsForPeriod(String period, List<Session> sessions) {

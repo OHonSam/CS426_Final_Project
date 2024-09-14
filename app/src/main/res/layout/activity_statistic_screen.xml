@@ -377,10 +377,12 @@
                 <ListView
                     android:id="@+id/statistic_list"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="200dp"
                     android:layout_marginTop="60dp"
+                    android:paddingTop="10dp"
                     android:divider="@drawable/ranking_divider"
-                    android:scrollbars="none"/>
+                    android:scrollbars="vertical"
+                    android:nestedScrollingEnabled="true"/>
             </FrameLayout>
 
         </LinearLayout>

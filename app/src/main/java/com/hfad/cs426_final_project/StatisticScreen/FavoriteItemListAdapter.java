@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
@@ -39,8 +41,8 @@ public class FavoriteItemListAdapter extends BaseAdapter {
                 imgUri = session.getTree().getImgUri();
                 id = session.getTree().getId();
             } else {
-                imgUri = session.getTree().getImgUri();
-                id = session.getTree().getId();
+                imgUri = session.getBlock().getImgUri();
+                id = session.getBlock().getId();
             }
 
             ItemStatistic item = itemMap.get(imgUri);
@@ -53,6 +55,7 @@ public class FavoriteItemListAdapter extends BaseAdapter {
 
         List<ItemStatistic> sortedItems = new ArrayList<>(itemMap.values());
         sortedItems.sort((a, b) -> b.getOccurrence() - a.getOccurrence());
+        Log.d("FavoriteItemListAdapter", "calculateItemStatistics: " + sortedItems.size());
         return sortedItems;
     }
 
@@ -85,6 +88,21 @@ public class FavoriteItemListAdapter extends BaseAdapter {
         ImageView itemImage = convertView.findViewById(R.id.item_image);
         TextView occurrence = convertView.findViewById(R.id.occurrence);
 
+        switch (position) {
+            case 0:
+                convertView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Gold));
+                break;
+            case 1:
+                convertView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Silver));
+                break;
+            case 2:
+                convertView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Bronze));
+                break;
+            default:
+                convertView.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.Accent2));
+                break;
+        }
+
         // Set ranking
         int ranking = position + 1;
         if (ranking <= 3) {
@@ -98,6 +116,8 @@ public class FavoriteItemListAdapter extends BaseAdapter {
             favoriteRankingTop.setVisibility(View.GONE);
             favoriteMedal.setVisibility(View.GONE);
         }
+
+
 
         // Load item image
         Glide.with(context)
