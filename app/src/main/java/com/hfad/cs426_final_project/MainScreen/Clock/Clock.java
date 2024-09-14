@@ -489,6 +489,7 @@ public class Clock {
         session.setTimestamp(System.currentTimeMillis());
         session.setTree(user.getUserSetting().getSelectedTree());
         session.setTag(user.getFocusTag());
+        session.setBlock(user.getSelectedBlock()); // ồn quá có j nói to lên nha
         user.getSessions().add(session);
     }
 
