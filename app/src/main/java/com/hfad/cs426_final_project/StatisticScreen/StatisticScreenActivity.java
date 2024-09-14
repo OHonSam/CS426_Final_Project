@@ -140,6 +140,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         isTreeMode = !isTreeMode;
         updateItemTypeButtonAndImage();
         updateFavoriteList();
+        updateItemTypeImage();
     }
 
     private void updateItemTypeButtonAndImage() {
@@ -150,7 +151,6 @@ public class StatisticScreenActivity extends BaseScreenActivity {
             itemTypeBtn.setText("Block");
             itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_90));
         }
-        updateItemTypeImage();
     }
 
     private void updateItemTypeImage() {

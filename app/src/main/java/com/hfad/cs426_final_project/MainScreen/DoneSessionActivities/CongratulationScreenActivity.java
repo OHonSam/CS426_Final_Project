@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
@@ -29,6 +31,7 @@ import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
 import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -92,6 +95,9 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         int rewards = getIntent().getIntExtra(REWARDS, 0);
         rewardsTextView.setText(String.valueOf(rewards)); // Ensure rewards is set as a String
 
+        ImageView tree = dialogView.findViewById(R.id.tree);
+        Glide.with(dialogView).load(AppContext.getInstance().getCurrentUser().getUserSetting().getSelectedTree().getImgUri()).error(R.drawable.tree).into(tree);
+
         // Create a dialog using the AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
@@ -140,6 +146,14 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
                         shareFocusSession();
                     }
                 }, 200); // 200ms delay
+            }
+        });
+
+        forest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CongratulationScreenActivity.this, StatisticScreenActivity.class);
+                startActivity(intent);
             }
         });
 

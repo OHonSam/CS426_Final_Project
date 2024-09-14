@@ -31,6 +31,7 @@ import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.StatisticScreen.StatisticScreenActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -127,6 +128,14 @@ public class FailScreenActivity extends AppCompatActivity {
                         shareFocusSession();
                     }
                 }, 200); // 200ms delay
+            }
+        });
+
+        forest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FailScreenActivity.this, StatisticScreenActivity.class);
+                startActivity(intent);
             }
         });
 
