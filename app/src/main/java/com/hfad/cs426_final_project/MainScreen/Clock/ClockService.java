@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
 import java.util.Locale;
 
@@ -22,6 +24,8 @@ public class ClockService extends Service {
     private int seconds = 0;
     private boolean isTimer; // true for timer, false for stopwatch
     private int targetTime; // Used when isTimer is true
+
+    private ClockSetting clockSetting;
 
     @Override
     public void onCreate() {
@@ -37,6 +41,8 @@ public class ClockService extends Service {
         targetTime = intent.getIntExtra("timeLimit", 0);
         seconds = isTimer ? targetTime : 0;
 
+        clockSetting = AppContext.getInstance().getCurrentClock().getClockSetting();
+
         startForeground(NOTIFICATION_ID, buildNotification(getFormattedTimeString()));
         startClock();
 
@@ -51,9 +57,17 @@ public class ClockService extends Service {
 
                 if (isTimer) {
                     if (seconds <= 0) {
-                        stopSelf();
+                        // Check if we should stop when time is exceeded
+                        if (!clockSetting.getIsCountExceedTime()) {
+                            stopSelf(); // Stop the service when not in exceed mode
+                        } else {
+                            // Continue in exceed mode without stopping
+                            seconds = 0; // Maintain at 0 (or handle differently if needed)
+//                            handler.postDelayed(this, 1000); // Keep running each second
+//                            Clock.notifyOrVibrate(getApplicationContext());
+                        }
                     } else {
-                        seconds--;
+                        seconds-=60;
                         handler.postDelayed(this, 1000);
                     }
                 } else {
