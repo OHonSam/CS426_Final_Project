@@ -1,23 +1,24 @@
 package com.hfad.cs426_final_project;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 public class StreakManager {
+    private int streakAllTime;
+    private int streakDays;
+    private boolean hasCompletedASessionToday;
 
-    private SharedPreferences sharedPreferences;
-    // Singleton instance
-    private static StreakManager instance;
-
-    public SharedPreferences getSharedPreferences() {
-        return sharedPreferences;
+    public StreakManager() {
+        // Initialize the attributes
+        this.streakAllTime = 0; // default
+        this.streakDays = 0; // default
+        this.hasCompletedASessionToday = false; // default
     }
 
-    // Attributes
-    private int streakDays;
+    // Getters and setters for the attributes
+    public int getStreakDays() {
+        return streakDays;
+    }
 
-    public static void setInstance(StreakManager instance) {
-        StreakManager.instance = instance;
+    public void setStreakDays(int streakDays) {
+        this.streakDays = streakDays;
     }
 
     public boolean isHasCompletedASessionToday() {
@@ -28,34 +29,12 @@ public class StreakManager {
         this.hasCompletedASessionToday = hasCompletedASessionToday;
     }
 
-    private boolean hasCompletedASessionToday;
-
-    private StreakManager(Context context) {
-        sharedPreferences = context.getSharedPreferences("StreakManagerPrefs", Context.MODE_PRIVATE);
-        this.hasCompletedASessionToday = sharedPreferences.getBoolean("hasCompletedASessionToday", false);
-        this.streakDays = 0;
+    public int getStreakAllTime() {
+        return streakAllTime;
     }
 
-    // Private constructor to prevent instantiation
-    private StreakManager() {
-        // Initialize the attributes
-        this.streakDays = 0; // default
-        this.hasCompletedASessionToday = false; // default
-    }
-
-    // Method to get the singleton instance
-    public static synchronized StreakManager getInstance() {
-        if (instance == null) {
-            instance = new StreakManager();
-        }
-        return instance;
-    }
-
-    public static synchronized StreakManager getInstance(Context context) {
-        if (instance == null) {
-            instance = new StreakManager(context);
-        }
-        return instance;
+    public void setStreakAllTime(int streakAllTime) {
+        this.streakAllTime = streakAllTime;
     }
 
     // Method to mark session completion and update streak
@@ -70,27 +49,12 @@ public class StreakManager {
 
         // Increase streakDays if session was completed
         streakDays++;
+        streakAllTime = Math.max(streakDays, streakAllTime);
     }
 
     // Method to reset the completion status for the next day
     public void resetCompletionStatusForNextDay() {
         hasCompletedASessionToday = false;
-    }
-
-    // Getters and setters for the attributes
-    public int getStreakDays() {
-        return streakDays;
-    }
-
-    public void setStreakDays(int streakDays) {
-        this.streakDays = streakDays;
-    }
-
-    // Save the boolean hasCompletedASessionToday to SharedPreferences
-    private void saveSessionCompletionToLocal() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("hasCompletedASessionToday", hasCompletedASessionToday);
-        editor.apply(); // Use apply for asynchronous saving
     }
 }
 

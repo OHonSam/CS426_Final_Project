@@ -21,7 +21,7 @@
     <string name="dialog_start_game">dialog_start_game</string>
     <string name="cancel">cancel</string>
     <string name="deep_focus">Deep focus</string>
-    <string name="deep_focus_description">You will  be guided back if you leave the app.</string>
+    <string name="deep_focus_description">You will fail the session if you leave the app for 10 seconds</string>
     <string name="count_exceed_time">Count exceeded time</string>
     <string name="count_exceed_time_description">Count up after Timer Mode ends</string>
     <string name="congratulation">Congratulations!</string>
