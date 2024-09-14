@@ -57,7 +57,7 @@ import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.MyAlarmReceiver;
 import com.hfad.cs426_final_project.NotificationReceiver;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.SplashScreenActivity;
+import com.hfad.cs426_final_project.WelcomeScreenActivities.SplashScreenActivity;
 import com.hfad.cs426_final_project.ToDoScreen.ToDoScreenActivity;
 
 import java.util.Calendar;
@@ -462,7 +462,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         // Set alarm for 10:00 PM
         Calendar tenPM = Calendar.getInstance();
         tenPM.set(Calendar.HOUR_OF_DAY, 13); // 22:00 or 10:00 PM
-        tenPM.set(Calendar.MINUTE, 49);
+        tenPM.set(Calendar.MINUTE, 59);
         tenPM.set(Calendar.SECOND, 40);
         if (tenPM.getTime().compareTo(new Date()) < 0) {
             tenPM.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today
@@ -481,7 +481,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         // Set alarm for Midnight
         Calendar midnight = Calendar.getInstance();
         midnight.set(Calendar.HOUR_OF_DAY, 13);
-        midnight.set(Calendar.MINUTE, 49);
+        midnight.set(Calendar.MINUTE, 59);
         midnight.set(Calendar.SECOND, 50);
         if (midnight.getTime().compareTo(new Date()) < 0) {
             midnight.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today

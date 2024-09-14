@@ -10,6 +10,8 @@ import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
 
+import com.hfad.cs426_final_project.WelcomeScreenActivities.SplashScreenActivity;
+
 class NotificationHelper {
 
     private Context mContext;

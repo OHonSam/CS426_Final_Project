@@ -3,6 +3,7 @@ package com.hfad.cs426_final_project.DataStorage;
 import android.graphics.Color;
 
 import com.google.android.material.circularreveal.CircularRevealHelper;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.DataStorage.Block;
 import com.hfad.cs426_final_project.DataStorage.BlockData;
 import com.hfad.cs426_final_project.DataStorage.Favourite;
@@ -14,6 +15,7 @@ import com.hfad.cs426_final_project.DataStorage.Tree;
 import com.hfad.cs426_final_project.DataStorage.UserSetting;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ClockSetting;
+import com.hfad.cs426_final_project.StreakManager;
 
 import java.util.ArrayList;
 import java.util.List;
