@@ -60,7 +60,7 @@ public class FailScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fail_screen);
         setupUIReference();
         setupTextDisplay();
-        setupSearchTag();
+//        setupSearchTag();
         showFailureDialog();
         modePickerDialog = new ModePickerDialog();
         setupOnClickListener();

@@ -525,6 +525,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();
+        searchTagSpinner.setEnabled(true);
 
         setupTree();
         setupBottomSheet();

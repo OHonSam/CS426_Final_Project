@@ -147,7 +147,7 @@ public class Clock {
             onClockListener.redirectToFailScreenActivity(message,rewards);
         }
 
-        reset();
+        resetTimeText();
     }
 
     private void redirectToCongratulationScreen() {
@@ -233,7 +233,7 @@ public class Clock {
             public void run() {
                 updateTimeDisplay();
                 if (running) {
-                    seconds -= 60;
+                    seconds -= 1;
                     Log.d("BreakScreenActivity",""+seconds);
                     if (seconds < 0) {
                         running = false;
@@ -249,7 +249,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 60;
+        seconds -= 1;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
@@ -432,7 +432,22 @@ public class Clock {
 
     public void setTargetTime(int targetTime) {
         clockSetting.setTargetTime(targetTime);
-        reset();
+        resetTimeText();
+    }
+
+    private void resetTimeText() {
+        seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? 0 : clockSetting.getTargetTime();
+        progressBar.setDisablePointer(false);
+
+        int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / PROGRESS_INTERVAL_LEN;
+        progressBar.setProgress(progressIntervalIndex);
+        updateTimeTextFromProgressBar(progressIntervalIndex);
+
+
+        toggleIcon.setVisibility(View.VISIBLE);
+
+        // Ensure the clock is enabled after reset
+        clockSetting.setModePickerDialogEnabled(true);
     }
 
     private void notifyOrVibrate(Context context) {

@@ -60,6 +60,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_congratulation_screen);
         setupUIReference();
+        appContext = AppContext.getInstance();
         setupOnClickListener();
         breakScreenLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -172,7 +173,6 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
                 }
                 else {
                     redirectToBreakScreenActivity(breakTime,autoStartSession);
-                    Log.d("CongratulationScreenActivity","redirectToBreakScreenActivity triggered");
                 }
             }
         });
@@ -193,7 +193,6 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         timePickerDialog = new TimePickerDialog();
         btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
-        appContext = AppContext.getInstance();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
         tvSunDisplay = findViewById(R.id.tvSunDisplay);
     }
@@ -320,7 +319,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
     }
 
     private void setupSearchTag() {
-        List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
+        List<Tag> tagList = AppContext.getInstance().getCurrentUser().getOwnTags();
         if (tagList.isEmpty()) {
             tagList.add(new Tag());
         }

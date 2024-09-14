@@ -67,14 +67,14 @@ public class ClockService extends Service {
 //                            Clock.notifyOrVibrate(getApplicationContext());
                         }
                     } else {
-                        seconds-=60;
+                        seconds-=1;
                         handler.postDelayed(this, 1000);
                     }
                 } else {
                     if (seconds >= targetTime) {
                         stopSelf();
                     } else {
-                        seconds++;
+                        seconds+=1;
                         handler.postDelayed(this, 1000);
                     }
                 }
