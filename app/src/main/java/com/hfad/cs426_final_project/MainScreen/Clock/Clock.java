@@ -131,7 +131,9 @@ public class Clock {
         if(status == SessionStatus.COMPLETE){
             rewards = (int) ((double) targetTime / 60 * COEFFICIENT_SUN);
             AppContext.getInstance().getCurrentUser().updateSun(rewards);
-            StreakManager.getInstance().markSessionComplete();
+            AppContext.getInstance().getCurrentUser().getStreakManager().markSessionComplete();
+            Log.d("StreakManager",""+AppContext.getInstance().getCurrentUser().isHasCompletedASessionToday());
+            Log.d("StreakManager",""+StreakManager.getInstance().isHasCompletedASessionToday());
             onClockListener.redirectToCongratulationScreenActivity(rewards);
         }
         else if (status == SessionStatus.GIVE_UP){

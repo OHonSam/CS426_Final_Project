@@ -9,6 +9,10 @@ public class StreakManager {
     // Singleton instance
     private static StreakManager instance;
 
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
     // Attributes
     private int streakDays;
 
@@ -18,6 +22,10 @@ public class StreakManager {
 
     public boolean isHasCompletedASessionToday() {
         return hasCompletedASessionToday;
+    }
+
+    public void setHasCompletedASessionToday(boolean hasCompletedASessionToday) {
+        this.hasCompletedASessionToday = hasCompletedASessionToday;
     }
 
     private boolean hasCompletedASessionToday;
@@ -31,8 +39,8 @@ public class StreakManager {
     // Private constructor to prevent instantiation
     private StreakManager() {
         // Initialize the attributes
-        this.streakDays = AppContext.getInstance().getCurrentUser().getStreakDays();
-        this.hasCompletedASessionToday = AppContext.getInstance().getCurrentUser().isHasCompletedASessionToday();
+        this.streakDays = 0; // default
+        this.hasCompletedASessionToday = false; // default
     }
 
     // Method to get the singleton instance
