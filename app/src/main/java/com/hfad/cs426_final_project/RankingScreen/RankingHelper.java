@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.DataStorage.User;
 
@@ -47,7 +48,11 @@ public class RankingHelper extends BaseAdapter {
         this.isStreak = isStreak;
         this.focusTimeMap = new HashMap<>();
         this.onDataFetchedCallback = onDataFetchedCallback;
-        fetchUsers();
+        AppContext.getInstance().saveUserInfo().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                fetchUsers();
+            }
+        });
     }
 
     private void fetchUsers() {
@@ -106,7 +111,11 @@ public class RankingHelper extends BaseAdapter {
 
     private void sortUsers() {
         if (isStreak) {
-            users.sort((user1, user2) -> user2.getStreak() - user1.getStreak());
+            users.sort((user1, user2) -> {
+                int streak1 = isToday ? user1.getStreakManager().getStreakDays() : user1.getStreakManager().getStreakAllTime();
+                int streak2 = isToday ? user2.getStreakManager().getStreakDays() : user2.getStreakManager().getStreakAllTime();
+                return Integer.compare(streak2, streak1);
+            });
         } else {
             users.sort((user1, user2) -> Long.compare(
                     focusTimeMap.getOrDefault(user2.getId(), 0L),
@@ -151,7 +160,8 @@ public class RankingHelper extends BaseAdapter {
         usernameTextView.setText(user.getName());
 
         if (isStreak) {
-            streakTextView.setText(String.valueOf(user.getStreak()));
+            int streak = isToday ? user.getStreakManager().getStreakDays() : user.getStreakManager().getStreakAllTime();
+            streakTextView.setText(String.valueOf(streak));
         } else {
             long focusTime = focusTimeMap.getOrDefault(user.getId(), 0L);
             long hours = focusTime / 3600;
@@ -198,7 +208,7 @@ public class RankingHelper extends BaseAdapter {
 
                 // If focus time or streak is required, format it appropriately
                 if (isStreak) {
-                    userFocusTimeTextView.setText("Streak: " + user.getStreak() + " days");
+                    userFocusTimeTextView.setText("Streak today: " + user.getStreakManager().getStreakDays() + " days");
                 } else {
                     long focusTime = focusTimeMap.getOrDefault(user.getId(), 0L);
                     long hours = focusTime / 3600;

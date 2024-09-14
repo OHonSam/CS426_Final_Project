@@ -103,11 +103,14 @@ public class AppContext {
         return taskCompletionSource.getTask();
     }
 
-    public void saveUserInfo() {
+    public Task<Void> saveUserInfo() {
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
         if (currentUser != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child("User" + currentUser.getId());
             userRef.setValue(currentUser);
+            taskCompletionSource.setResult(null);
         }
+        return taskCompletionSource.getTask();
     }
 
     public List<Block> getGrassList() {
