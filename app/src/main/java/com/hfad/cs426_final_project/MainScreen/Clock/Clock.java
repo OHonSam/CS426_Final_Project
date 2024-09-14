@@ -233,7 +233,7 @@ public class Clock {
             public void run() {
                 updateTimeDisplay();
                 if (running) {
-                    seconds -= 60;
+                    seconds -= 1;
                     Log.d("BreakScreenActivity",""+seconds);
                     if (seconds < 0) {
                         running = false;
@@ -249,7 +249,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 60;
+        seconds -= 1;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
@@ -269,7 +269,7 @@ public class Clock {
     }
 
     private void handleStopwatchTick() {
-        seconds += 60;
+        seconds += 1;
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
             saveSession(true);
@@ -277,7 +277,6 @@ public class Clock {
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
             completeSession(getTargetTime(),SessionStatus.COMPLETE);
-//            onClockListener.redirectToCongratulationScreenActivity();
         }
     }
 
@@ -317,9 +316,6 @@ public class Clock {
                         //reset();
 
                         completeSession(getTargetTime(),SessionStatus.NON_FOCUS);
-//                        // Retrieve the string from strings.xml using the context
-//                        String message = context.getString(R.string.reason_why_tree_withered_non_focus);
-//                        onClockListener.redirectToFailScreenActivity(message);
                     }
                 }
                 deepModeHandler.postDelayed(this, 1000);
@@ -398,9 +394,6 @@ public class Clock {
         //reset();
 
         completeSession(getTargetTime(),SessionStatus.GIVE_UP);
-//        // Retrieve the string from strings.xml using the context
-//        String message = context.getString(R.string.reason_why_tree_withered_give_up);
-//        onClockListener.redirectToFailScreenActivity(message);
     }
 
     public void setClockMode(ClockMode mClockMode) {
