@@ -1,13 +1,20 @@
 package com.hfad.cs426_final_project.MainScreen;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,9 +54,14 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Tag.AddNewTagActivity;
 import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
+import com.hfad.cs426_final_project.MyAlarmReceiver;
+import com.hfad.cs426_final_project.NotificationReceiver;
 import com.hfad.cs426_final_project.R;
+import com.hfad.cs426_final_project.WelcomeScreenActivities.SplashScreenActivity;
 import com.hfad.cs426_final_project.ToDoScreen.ToDoScreenActivity;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
@@ -118,6 +130,9 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
                     }
                 }
         );
+
+        myAlarm();
+
     }
 
     @Override
@@ -420,4 +435,66 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         intent.putExtra(CongratulationScreenActivity.REWARDS,rewards);
         congratulationScreenLauncher.launch(intent);
     }
+
+    public void myAlarm() {
+
+        Intent intent1 = new Intent();
+        String packageName = getPackageName();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            intent1.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent1.setData(Uri.parse("package:" + packageName));
+            startActivity(intent1);
+        }
+
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        // Check for exact alarm scheduling permission on Android 12+ (API level 31+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            // If the permission is not granted, request the user to allow exact alarms
+            Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+            startActivity(intent);
+            return;  // Exit the method until the permission is granted
+        }
+
+        // Set alarm for 10:00 PM
+        Calendar tenPM = Calendar.getInstance();
+        tenPM.set(Calendar.HOUR_OF_DAY, 13); // 22:00 or 10:00 PM
+        tenPM.set(Calendar.MINUTE, 59);
+        tenPM.set(Calendar.SECOND, 40);
+        if (tenPM.getTime().compareTo(new Date()) < 0) {
+            tenPM.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today
+        }
+
+        // Intent for 10:00 PM Notification
+        Intent intent10PM = new Intent(getApplicationContext(), NotificationReceiver.class);
+        intent10PM.putExtra("notificationType", "NonFocusNotification");
+        PendingIntent pendingIntent10PM = PendingIntent.getBroadcast(getApplicationContext(), 0, intent10PM, PendingIntent.FLAG_IMMUTABLE);
+
+        if (alarmManager != null) {
+            // Use setExactAndAllowWhileIdle to ensure the alarm fires even in Doze mode
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, tenPM.getTimeInMillis(), pendingIntent10PM);
+        }
+
+        // Set alarm for Midnight
+        Calendar midnight = Calendar.getInstance();
+        midnight.set(Calendar.HOUR_OF_DAY, 13);
+        midnight.set(Calendar.MINUTE, 59);
+        midnight.set(Calendar.SECOND, 50);
+        if (midnight.getTime().compareTo(new Date()) < 0) {
+            midnight.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today
+        }
+
+        Intent intentMidnight = new Intent(getApplicationContext(), NotificationReceiver.class);
+        intentMidnight.putExtra("notificationType", "MidnightReset");
+        PendingIntent pendingIntentMidnight = PendingIntent.getBroadcast(getApplicationContext(), 1, intentMidnight, PendingIntent.FLAG_IMMUTABLE);
+
+        if (alarmManager != null) {
+            // Use setExactAndAllowWhileIdle to ensure the alarm fires even in Doze mode
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), pendingIntentMidnight);
+        }
+    }
+
 }

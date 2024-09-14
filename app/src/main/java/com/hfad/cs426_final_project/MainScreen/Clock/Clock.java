@@ -21,6 +21,7 @@ import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
 import com.hfad.cs426_final_project.DataStorage.User;
+import com.hfad.cs426_final_project.StreakManager;
 
 import java.util.Locale;
 
@@ -130,6 +131,9 @@ public class Clock {
         if(status == SessionStatus.COMPLETE){
             rewards = (int) ((double) targetTime / 60 * COEFFICIENT_SUN);
             AppContext.getInstance().getCurrentUser().updateSun(rewards);
+            AppContext.getInstance().getCurrentUser().getStreakManager().markSessionComplete();
+            Log.d("StreakManager",""+AppContext.getInstance().getCurrentUser().isHasCompletedASessionToday());
+            Log.d("StreakManager",""+StreakManager.getInstance().isHasCompletedASessionToday());
             onClockListener.redirectToCongratulationScreenActivity(rewards);
         }
         else if (status == SessionStatus.GIVE_UP){

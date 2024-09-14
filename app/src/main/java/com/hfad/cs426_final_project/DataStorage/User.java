@@ -2,11 +2,20 @@ package com.hfad.cs426_final_project.DataStorage;
 
 import android.graphics.Color;
 
-import androidx.core.content.res.ResourcesCompat;
-
+import com.google.android.material.circularreveal.CircularRevealHelper;
 import com.hfad.cs426_final_project.AppContext;
+import com.hfad.cs426_final_project.DataStorage.Block;
+import com.hfad.cs426_final_project.DataStorage.BlockData;
+import com.hfad.cs426_final_project.DataStorage.Favourite;
+import com.hfad.cs426_final_project.DataStorage.LandState;
+import com.hfad.cs426_final_project.DataStorage.Session;
+import com.hfad.cs426_final_project.DataStorage.Tag;
+import com.hfad.cs426_final_project.DataStorage.UserTask;
+import com.hfad.cs426_final_project.DataStorage.Tree;
+import com.hfad.cs426_final_project.DataStorage.UserSetting;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ClockSetting;
+import com.hfad.cs426_final_project.StreakManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +33,40 @@ public class User {
     private Block selectedBlock;
     private List<Favourite> favouriteList = new ArrayList<>();
     private int streak;
+
+    public void setHasCompletedASessionToday(boolean hasCompletedASessionToday) {
+        this.hasCompletedASessionToday = hasCompletedASessionToday;
+    }
+
+    public StreakManager getStreakManager() {
+        return streakManager;
+    }
+
+    public void setStreakManager(StreakManager streakManager) {
+        this.streakManager = streakManager;
+    }
+
+    private StreakManager streakManager;
+
+    public void setStreakDays(int streakDays) {
+        this.streakDays = streakDays;
+    }
+
+    public boolean isHasCompletedASessionToday() {
+        return hasCompletedASessionToday;
+    }
+
+    public int getStreakDays() {
+        return streakDays;
+    }
+
+    private boolean hasCompletedASessionToday;
+    private int streakDays;
+
+    public void setSun(int sun) {
+        this.sun = sun;
+    }
+
     private int sun; // money
     private UserSetting userSetting;
     private List<Tree> ownTrees = new ArrayList<>();
@@ -49,10 +92,11 @@ public class User {
         this.focusTag = new Tag();
         this.selectedBlock = new Block();
         this.favouriteList = new ArrayList<>();
-        this.streak = 1;
+        this.streakDays = 0;
+        this.hasCompletedASessionToday = false;
         this.sun = 0;
         this.userSetting = new UserSetting(); // get default settings
-
+        this.streakManager = StreakManager.getInstance();
         Tree tree = new Tree(); // default tree
         ownTrees.add(tree);
 
