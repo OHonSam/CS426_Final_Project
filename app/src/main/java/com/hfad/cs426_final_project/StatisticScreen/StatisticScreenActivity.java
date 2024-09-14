@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -103,8 +105,8 @@ public class StatisticScreenActivity extends BaseScreenActivity {
 
     private void initializeComponents() {
         initializeViews();
-        initializeTimeSelection();
         initializePeriodSelection();
+        initializeTimeSelection();
         initializeCharts();
         initializeFavoriteItemList();
         fetchDataForChart(new OnDataFetchedCallback() {
@@ -112,7 +114,6 @@ public class StatisticScreenActivity extends BaseScreenActivity {
             public void onDataFetched() {
                 initializeChart();
                 setupViewByButton();
-                updateTimeSelection();
                 sessionModeBtn.setOnClickListener(v -> showSessionModePopup());
                 shareBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -120,9 +121,12 @@ public class StatisticScreenActivity extends BaseScreenActivity {
                         shareStatistics();
                     }
                 });
+                setupItemTypeButton();
+                updateTimeSelection();
+                updateItemTypeImage();
             }
         });
-        setupItemTypeButton();
+
     }
 
     private void setupItemTypeButton() {
@@ -134,20 +138,37 @@ public class StatisticScreenActivity extends BaseScreenActivity {
 
     private void toggleItemType() {
         isTreeMode = !isTreeMode;
-
-        if (isTreeMode) {
-            itemTypeBtn.setText("Tree");
-            itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_40));
-            itemTypeImage.setImageResource(R.drawable.favorite_tree);
-        } else {
-            itemTypeBtn.setText("Block");
-            itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_90));
-            itemTypeImage.setImageResource(R.drawable.piece);
-        }
-
+        updateItemTypeButtonAndImage();
         updateFavoriteList();
     }
 
+    private void updateItemTypeButtonAndImage() {
+        if (isTreeMode) {
+            itemTypeBtn.setText("Tree");
+            itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_40));
+        } else {
+            itemTypeBtn.setText("Block");
+            itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_90));
+        }
+        updateItemTypeImage();
+    }
+
+    private void updateItemTypeImage() {
+        if (favoriteAdapter == null || favoriteAdapter.getCount() == 0) {
+            // Set default image if no data
+            itemTypeImage.setImageResource(isTreeMode ? R.drawable.favorite_tree : R.drawable.piece);
+            return;
+        }
+
+        String topItemImageUri = favoriteAdapter.getTopItemImageUri();
+        if (topItemImageUri != null) {
+            Glide.with(this)
+                    .load(topItemImageUri)
+                    .into(itemTypeImage);
+        } else {
+            itemTypeImage.setImageResource(isTreeMode ? R.drawable.favorite_tree : R.drawable.piece);
+        }
+    }
 
     private void updateFavoriteList() {
         if (favoriteAdapter != null) {
@@ -259,6 +280,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         updateFocusTimeChart();
         updateTagDistributionChart();
         updateFavoriteItemList();
+        updateItemTypeImage();
     }
 
     private List<Session> filterSessions(List<Session> sessions) {
@@ -378,6 +400,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     private void updatePeriodSelection(String period) {
         timeManager.updatePeriodSelection(period);
         updateTimeSelection();
+        updateCharts();
     }
 
     private void navigateTime(int direction) {
