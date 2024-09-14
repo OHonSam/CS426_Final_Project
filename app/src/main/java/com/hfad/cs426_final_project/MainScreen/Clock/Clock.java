@@ -121,8 +121,6 @@ public class Clock {
                 if (!isRunning()) {
                     // Start the clock and disable interaction
                     start();
-                    clockSetting.setModePickerDialogEnabled(false); // DISABLE the clock
-                    mainScreenActivity.disableWhenFocus();
                 } else {
                     giveUp();
                 }
@@ -148,6 +146,8 @@ public class Clock {
             String message = context.getString(R.string.reason_why_tree_withered_non_focus);
             onClockListener.redirectToFailScreenActivity(message,rewards);
         }
+
+        reset();
     }
 
     private void redirectToCongratulationScreen() {
@@ -233,7 +233,7 @@ public class Clock {
             public void run() {
                 updateTimeDisplay();
                 if (running) {
-                    seconds -= 1;
+                    seconds -= 60;
                     Log.d("BreakScreenActivity",""+seconds);
                     if (seconds < 0) {
                         running = false;
@@ -249,7 +249,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 1;
+        seconds -= 60;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
@@ -336,6 +336,8 @@ public class Clock {
     }
 
     public void start() {
+        clockSetting.setModePickerDialogEnabled(false); // DISABLE the clock
+        mainScreenActivity.disableWhenFocus();
         // Ensure no previous running clock
         countTimeHandler.removeCallbacks(runnableClock);
         running = true;
@@ -345,7 +347,7 @@ public class Clock {
 
         updateStartButton("Give Up", R.color.secondary_50);
         progressBar.setDisablePointer(true);
-        //startForegroundService();
+        startForegroundService();
     }
 
     public void stop() {
@@ -385,6 +387,7 @@ public class Clock {
 
         // Ensure the clock is enabled after reset
         clockSetting.setModePickerDialogEnabled(true);
+        mainScreenActivity.enableOnResume();
     }
 
 

@@ -85,7 +85,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     private CircularSeekBar progressBar;
     private ActivityResultLauncher<Intent> failScreenLauncher;
     private ActivityResultLauncher<Intent> congratulationScreenLauncher;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
@@ -116,6 +115,8 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
+                        // Disable deep mode count (if applicable)
+                        clock.disableDeepModeCount();
                         // Start the clock for a new session
                         clock.start();
                     }
@@ -126,6 +127,8 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
+                        // Disable deep mode count (if applicable)
+                        clock.disableDeepModeCount();
                         // Start the clock for a new session
                         clock.start();
                     }
@@ -142,18 +145,12 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
 
         // Reset timeView
         clock.setTimeView(timeView);
-        // Reset clock
-        clock.reset();
-        // Re-enable clock interaction when the user returns to this activity
-        clock.getClockSetting().setModePickerDialogEnabled(true);
 
         // Disable deep mode count (if applicable)
         clock.disableDeepModeCount();
         updateTagDisplay();
         setupInfo();
-        enableOnResume();
     }
-
 
     @Override
     protected void onPause() {
@@ -459,7 +456,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     public void myAlarm() {
-        
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // Check for exact alarm scheduling permission on Android 12+ (API level 31+)
@@ -523,7 +520,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         searchTagSpinner.setEnabled(false);
     }
 
-    private void enableOnResume() {
+    public void enableOnResume() {
         setupSearchTag();
         setupMusicListener();
         setupTodoListener();
