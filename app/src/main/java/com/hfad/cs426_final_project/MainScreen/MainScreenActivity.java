@@ -459,18 +459,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     public void myAlarm() {
-
-        Intent intent1 = new Intent();
-        String packageName = getPackageName();
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
-        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-            intent1.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            intent1.setData(Uri.parse("package:" + packageName));
-            startActivity(intent1);
-        }
-
-
+        
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // Check for exact alarm scheduling permission on Android 12+ (API level 31+)
