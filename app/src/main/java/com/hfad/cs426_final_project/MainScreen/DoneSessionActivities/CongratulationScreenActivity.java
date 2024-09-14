@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,15 +22,18 @@ import androidx.core.content.FileProvider;
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Clock.OnClockListener;
+import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.MainScreen.TimePickerDialog;
 import com.hfad.cs426_final_project.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class CongratulationScreenActivity extends AppCompatActivity implements OnClockListener {
 
@@ -41,6 +46,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
     private MyButton btnClockModePicker;
     private ModePickerDialog modePickerDialog;
     private TimePickerDialog timePickerDialog;
+    private Spinner searchTagSpinner;
 
     private ActivityResultLauncher<Intent> breakScreenLauncher;
     private AppContext appContext;
@@ -66,6 +72,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
                 }
         );
 
+        setupSearchTag();
         showCongratulationDialog();
     }
 
@@ -174,6 +181,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
         appContext = AppContext.getInstance();
+        searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
     private void shareFocusSession() {
@@ -295,5 +303,23 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
 
         // Show the dialog
         dialog.show();
+    }
+
+    private void setupSearchTag() {
+        List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
+        if (tagList.isEmpty()) {
+            tagList.add(new Tag());
+        }
+        TagAdapterSpinner tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
+        searchTagSpinner.setEnabled(false);
+        searchTagSpinner.setClickable(false);
+        searchTagSpinner.setAdapter(tagAdapterSpinner);
+        updateTagDisplay();
+    }
+
+    private void updateTagDisplay() {
+        TagAdapterSpinner tagAdapterSpinner = (TagAdapterSpinner) searchTagSpinner.getAdapter();
+        int position = tagAdapterSpinner.getPosition(appContext.getCurrentUser().getFocusTag());
+        searchTagSpinner.setSelection(position);
     }
 }

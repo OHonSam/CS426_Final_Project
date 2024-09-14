@@ -4,14 +4,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
+import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
+import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.R;
+
+import java.util.List;
 
 public class BreakScreenActivity extends AppCompatActivity {
 
@@ -21,6 +26,7 @@ public class BreakScreenActivity extends AppCompatActivity {
     private AppContext appContext;
     private Bundle extras;
 
+    private Spinner searchTagSpinner;
     private ClickableImageView backButton;
     private Button cancelButton, focusButton;
     private TextView timeView;
@@ -31,6 +37,7 @@ public class BreakScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_break_screen);
         init();
         setupOnClickListener();
+        setupSearchTag();
         startBreak();
         stopBreak();
     }
@@ -46,6 +53,7 @@ public class BreakScreenActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clock.disableBreakSessionCount();
                 finish();
             }
         });
@@ -93,10 +101,29 @@ public class BreakScreenActivity extends AppCompatActivity {
         clock.setTimeView(timeView);
         cancelButton = findViewById(R.id.buttonCancel);
         focusButton = findViewById(R.id.buttonFocus);
+        searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
     private void focusAgain(){
         setResult(RESULT_OK);
         finish();
+    }
+
+    private void setupSearchTag() {
+        List<Tag> tagList = appContext.getCurrentUser().getOwnTags();
+        if (tagList.isEmpty()) {
+            tagList.add(new Tag());
+        }
+        TagAdapterSpinner tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
+        searchTagSpinner.setEnabled(false);
+        searchTagSpinner.setClickable(false);
+        searchTagSpinner.setAdapter(tagAdapterSpinner);
+        updateTagDisplay();
+    }
+
+    private void updateTagDisplay() {
+        TagAdapterSpinner tagAdapterSpinner = (TagAdapterSpinner) searchTagSpinner.getAdapter();
+        int position = tagAdapterSpinner.getPosition(appContext.getCurrentUser().getFocusTag());
+        searchTagSpinner.setSelection(position);
     }
 }
