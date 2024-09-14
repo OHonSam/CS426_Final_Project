@@ -43,7 +43,7 @@ public class FailScreenActivity extends AppCompatActivity {
     public static final String TAG_WHY_TREE_WITHERED = "WHY_TREE_WITHERED_MESSAGE";
 
     private ClickableImageView backButton;
-    private TextView whyTreeWitheredTextView;
+    private TextView whyTreeWitheredTextView, tvSunDisplay;
     private ClickableImageView focusAgain;
     private ClickableImageView forest;
     private ClickableImageView shareSession;
@@ -58,10 +58,15 @@ public class FailScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fail_screen);
         setupUIReference();
+        setupTextDisplay();
         setupSearchTag();
         showFailureDialog();
         modePickerDialog = new ModePickerDialog();
         setupOnClickListener();
+    }
+
+    private void setupTextDisplay() {
+        tvSunDisplay.setText(String.valueOf(AppContext.getInstance().getCurrentUser().getSun()));
     }
 
     private void showFailureDialog() {
@@ -149,6 +154,7 @@ public class FailScreenActivity extends AppCompatActivity {
         shareSession = findViewById(R.id.share);
         btnClockMode = findViewById(R.id.clockMode);
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
+        tvSunDisplay = findViewById(R.id.tvSunDisplay);
     }
 
     private void showDialogWhyTreeWhithered() {

@@ -29,17 +29,22 @@ public class BreakScreenActivity extends AppCompatActivity {
     private Spinner searchTagSpinner;
     private ClickableImageView backButton;
     private Button cancelButton, focusButton;
-    private TextView timeView;
+    private TextView timeView, tvSunDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_break_screen);
         init();
+        setupTextDisplay();
         setupOnClickListener();
         setupSearchTag();
         startBreak();
         stopBreak();
+    }
+
+    private void setupTextDisplay() {
+        tvSunDisplay.setText(String.valueOf(AppContext.getInstance().getCurrentUser().getSun()));
     }
 
     private void setupOnClickListener() {
@@ -102,6 +107,7 @@ public class BreakScreenActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.buttonCancel);
         focusButton = findViewById(R.id.buttonFocus);
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
+        tvSunDisplay = findViewById(R.id.tvSunDisplay);
     }
 
     private void focusAgain(){

@@ -403,7 +403,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     // update streak and sun
     private void setupInfo() {
         int streak = appContext.getCurrentUser().getStreakManager().getStreakDays();
-        tvStreakDisplay.setText(String.valueOf(streak));
+        tvStreakDisplay.setText(String.valueOf(streak) + " " + "streak(s)");
         if(streak < 1) {
             fireImg.setVisibility(View.GONE);
             tvStreakDisplay.setText("and get a streak");

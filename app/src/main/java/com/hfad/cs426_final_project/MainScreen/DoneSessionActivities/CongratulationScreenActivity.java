@@ -48,6 +48,8 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
     private TimePickerDialog timePickerDialog;
     private Spinner searchTagSpinner;
 
+    private TextView tvSunDisplay;
+
     private ActivityResultLauncher<Intent> breakScreenLauncher;
     private AppContext appContext;
     @Override
@@ -73,7 +75,12 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         );
 
         setupSearchTag();
+        setupTextDisplay();
         showCongratulationDialog();
+    }
+
+    private void setupTextDisplay() {
+        tvSunDisplay.setText(String.valueOf(AppContext.getInstance().getCurrentUser().getSun()));
     }
 
     private void showCongratulationDialog() {
@@ -136,14 +143,6 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
             }
         });
 
-//        focusAgain.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setResult(RESULT_OK);
-//                finish();
-//            }
-//        });
-
         breakSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,6 +181,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         modePickerDialog = new ModePickerDialog();
         appContext = AppContext.getInstance();
         searchTagSpinner = findViewById(R.id.search_tag_spinner);
+        tvSunDisplay = findViewById(R.id.tvSunDisplay);
     }
 
     private void shareFocusSession() {
