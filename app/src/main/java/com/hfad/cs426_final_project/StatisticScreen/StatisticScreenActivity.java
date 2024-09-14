@@ -13,9 +13,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,10 +67,13 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     private TagDistributionChart tagDistributionChart;
     private FocusTimeChart focusTimeChart;
     private List<Session> sessions = new ArrayList<>();
+    private List<Session> filteredSessions;
     private SessionMode currentSessionMode = SessionMode.FOCUS_COMPLETED;
     private MyButton itemTypeBtn;
     private ImageView itemTypeImage;
     private boolean isTreeMode = true;
+    private ListView favoriteListView;
+    private FavoriteItemListAdapter favoriteAdapter;
 
     private enum SessionMode {
         ALL("All"),
@@ -102,6 +108,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         initializeCharts();
         initializePeriodSelection();
         initializeTimeSelection();
+        initializeFavoriteItemList();
         fetchDataForChart(new OnDataFetchedCallback() {
             @Override
             public void onDataFetched() {
@@ -139,6 +146,15 @@ public class StatisticScreenActivity extends BaseScreenActivity {
             itemTypeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.secondary_90));
             itemTypeImage.setImageResource(R.drawable.piece);
         }
+
+        updateFavoriteList();
+    }
+
+
+    private void updateFavoriteList() {
+        if (favoriteAdapter != null) {
+            favoriteAdapter.updateData(filteredSessions, isTreeMode);
+        }
     }
 
     private void initializeViews() {
@@ -153,6 +169,16 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         numLiveTree = findViewById(R.id.num_live_tree);
         numDeadTree = findViewById(R.id.num_dead_tree);
         viewByButton = findViewById(R.id.view_by_button);
+
+        favoriteListView = findViewById(R.id.statistic_list);
+        FrameLayout frameLayout = findViewById(R.id.favorite_item_card);
+        frameLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
     }
 
     private void initializeCharts() {
@@ -239,7 +265,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     }
 
     private void updateCharts(List<Session> sessions) {
-        List<Session> filteredSessions = new ArrayList<>();
+        filteredSessions = new ArrayList<>();
 
         for (Session session : sessions) {
             switch (currentSessionMode) {
@@ -259,9 +285,17 @@ public class StatisticScreenActivity extends BaseScreenActivity {
             }
         }
 
+
         String currentPeriod = timeManager.getCurrentPeriod();
         filteredSessions.sort(Comparator.comparing(Session::getTimestamp));
         updateChartsForPeriod(currentPeriod, filteredSessions);
+        updateFavoriteList();
+    }
+
+    private void initializeFavoriteItemList() {
+        filteredSessions = new ArrayList<>();
+        favoriteAdapter = new FavoriteItemListAdapter(this, filteredSessions, isTreeMode);
+        favoriteListView.setAdapter(favoriteAdapter);
     }
 
     private void updateChartsForPeriod(String period, List<Session> sessions) {

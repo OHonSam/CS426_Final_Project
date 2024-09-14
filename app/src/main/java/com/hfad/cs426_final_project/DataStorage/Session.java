@@ -14,6 +14,7 @@ public class Session {
     private long duration;
     private long timestamp;  // Store timestamp as milliseconds since epoch
     private Tree tree;
+    private Block block;
     private Tag tag;
 
     // No-argument constructor (required by Firebase)
@@ -26,6 +27,7 @@ public class Session {
         this.status = random() > 0.5;
         this.duration = (long) (random() * 3600);
         this.tree = new Tree();
+        this.block = new Block();
         this.tag = new Tag((int) (random() * 5) + 1);
 
         Random random = new Random();
@@ -78,6 +80,14 @@ public class Session {
 
     public void setTree(Tree tree) {
         this.tree = tree;
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
     public Tag getTag() {

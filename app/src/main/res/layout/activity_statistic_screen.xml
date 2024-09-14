@@ -344,6 +344,7 @@
                 style="@style/SubTitle"/>
 
             <FrameLayout
+                android:id="@+id/favorite_item_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/statistic_card">
@@ -373,6 +374,13 @@
                         android:layout_marginEnd="120dp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="end|top"/>
+                <ListView
+                    android:id="@+id/statistic_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="60dp"
+                    android:divider="@drawable/ranking_divider"
+                    android:scrollbars="none"/>
             </FrameLayout>
 
         </LinearLayout>
