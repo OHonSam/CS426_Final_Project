@@ -16,7 +16,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.hfad.cs426_final_project.DataStorage.Session;
 import com.hfad.cs426_final_project.R;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +24,11 @@ public class TagDistributionChart {
     private Context context;
     private PieChart pieChart;
     private LinearLayout tagListLayout;
-    private ChartUtils chartUtils;
 
     public TagDistributionChart(Context context, PieChart pieChart, LinearLayout tagListLayout) {
         this.context = context;
         this.pieChart = pieChart;
         this.tagListLayout = tagListLayout;
-        this.chartUtils = new ChartUtils();
         initializeChart();
     }
 
@@ -44,26 +41,7 @@ public class TagDistributionChart {
         pieChart.getLegend().setEnabled(false);
     }
 
-    public void updateTagDistributionChart(List<Session> sessions, String period, Map<String, Long> tagDurations, Map<String, Integer> tagColors) {
-        List<Session> filteredSessions = calculateTagDistributionData(period, sessions);
-        updateChart(filteredSessions, tagDurations, tagColors);
-    }
-
-    private List<Session> calculateTagDistributionData(String period, List<Session> sessions) {
-        List<Session> filteredSessions = new ArrayList<>();
-        LocalDateTime startTime = chartUtils.getStartOfPeriod(period);
-        LocalDateTime endTime = chartUtils.getEndOfPeriod(period, startTime);
-
-        for (Session session : sessions) {
-            LocalDateTime sessionDateTime = LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(session.getTimestamp()), java.time.ZoneId.systemDefault());
-            if (chartUtils.isWithinPeriod(sessionDateTime, startTime, endTime)) {
-                filteredSessions.add(session);
-            }
-        }
-        return filteredSessions;
-    }
-
-    private void updateChart(List<Session> sessions, Map<String, Long> tagDurations, Map<String, Integer> tagColors) {
+    public void updateTagDistributionChart(List<Session> sessions, Map<String, Long> tagDurations, Map<String, Integer> tagColors) {
         long totalDuration = 0;
 
         for (Session session : sessions) {
@@ -90,6 +68,10 @@ public class TagDistributionChart {
             addTagItem(tagListLayout, entry.getKey(), color, entry.getValue(), totalDuration);
         }
 
+        updatePieChart(entries, colors);
+    }
+
+    private void updatePieChart(List<PieEntry> entries, List<Integer> colors) {
         PieDataSet dataSet = new PieDataSet(entries, "Tag Distribution");
         dataSet.setColors(colors);
         dataSet.setValueTextSize(12f);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import com.github.mikephil.charting.charts.LineChart;
@@ -29,19 +28,14 @@ import java.util.HashMap;
 import java.time.LocalDateTime;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Map;
 
 public class FocusTimeChart {
 
     private Context context;
     private LineChart lineChart;
     private BarChart barChart;
-    private TextView numLiveTree;
-    private TextView numDeadTree;
-    private TextView totalFocusTimeText;
     private ChartUtils chartUtils;
-    private long liveTree = 0;
-    private long deadTree = 0;
-    private long totalDuration = 0;
 
     public FocusTimeChart(Context context, LineChart lineChart, BarChart barChart) {
         this.context = context;
@@ -53,9 +47,6 @@ public class FocusTimeChart {
 
     private void initializeComponents() {
         View textView = LayoutInflater.from(context).inflate(R.layout.activity_statistic_screen, null);
-        numLiveTree = textView.findViewById(R.id.num_live_tree);
-        numDeadTree = textView.findViewById(R.id.num_dead_tree);
-        totalFocusTimeText = textView.findViewById(R.id.total_focused_time);
         initializeLineChart();
         initializeBarChart();
     }
@@ -138,48 +129,39 @@ public class FocusTimeChart {
         List<BarEntry> barEntries = new ArrayList<>();
         List<String> xAxisLabels = new ArrayList<>();
 
-        liveTree = 0;
-        deadTree = 0;
-        totalDuration = 0;
+        long liveTree = 0;
+        long deadTree = 0;
+        long totalDuration = 0;
 
-        calculateFocusTimeData(currentPeriod, sessions, lineEntries, barEntries, xAxisLabels);
-        updateCharts(lineEntries, barEntries, xAxisLabels);
+        int intervalDuration = chartUtils.getIntervalDuration(currentPeriod);
+        int numIntervals = chartUtils.getNumInterval(currentPeriod);
 
-        return new long[]{liveTree, deadTree, totalDuration};
-    }
-
-    public void calculateFocusTimeData(String period, List<Session> sessions, List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {
-        HashMap<Integer, Float> intervalFocusTime = new HashMap<>();
-        LocalDateTime startTime = chartUtils.getStartOfPeriod(period);
-        LocalDateTime endTime = chartUtils.getEndOfPeriod(period, startTime);
-        int intervalDuration = chartUtils.getIntervalDuration(period);
+        Map<Integer, Float> intervalFocusTime = new HashMap<>();
 
         for (Session session : sessions) {
             LocalDateTime sessionDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(session.getTimestamp()), ZoneId.systemDefault());
-            if (chartUtils.isWithinPeriod(sessionDateTime, startTime, endTime)) {
-                int intervalIndex = chartUtils.getIntervalIndex(sessionDateTime, period, intervalDuration);
-                float focusTimeMinutes = session.getDuration() / 60f;
-                intervalFocusTime.put(intervalIndex, intervalFocusTime.getOrDefault(intervalIndex, 0f) + focusTimeMinutes);
-                totalDuration += session.getDuration();
+            int intervalIndex = chartUtils.getIntervalIndex(sessionDateTime, currentPeriod, intervalDuration);
+            float focusTimeMinutes = session.getDuration() / 60f;
+            intervalFocusTime.put(intervalIndex, intervalFocusTime.getOrDefault(intervalIndex, 0f) + focusTimeMinutes);
+            totalDuration += session.getDuration();
 
-                if (session.isStatus()) {
-                    ++liveTree;
-                } else {
-                    ++deadTree;
-                }
+            if (session.isStatus()) {
+                ++liveTree;
+            } else {
+                ++deadTree;
             }
         }
 
-        numLiveTree.setText(String.valueOf(liveTree));
-        numDeadTree.setText(String.valueOf(deadTree));
-        totalFocusTimeText.setText(String.format("%d hours %d min", totalDuration / 3600, (totalDuration % 3600) / 60));
-
-        for (int i = 0; i < chartUtils.getNumInterval(period); i++) {
+        for (int i = 0; i < numIntervals; i++) {
             float focusTime = intervalFocusTime.getOrDefault(i, 0f);
             lineEntries.add(new Entry(i, focusTime));
             barEntries.add(new BarEntry(i, focusTime));
-            xAxisLabels.add(chartUtils.formatIntervalLabel(i, period, intervalDuration));
+            xAxisLabels.add(chartUtils.formatIntervalLabel(i, currentPeriod, intervalDuration));
         }
+
+        updateCharts(lineEntries, barEntries, xAxisLabels);
+
+        return new long[]{liveTree, deadTree, totalDuration};
     }
 
     private void updateCharts(List<Entry> lineEntries, List<BarEntry> barEntries, List<String> xAxisLabels) {

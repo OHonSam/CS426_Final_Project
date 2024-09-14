@@ -4,28 +4,22 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -39,10 +33,11 @@ import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.R;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -67,14 +62,15 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     private boolean isLineChartVisible = true;
     private TagDistributionChart tagDistributionChart;
     private FocusTimeChart focusTimeChart;
-    private List<Session> sessions = new ArrayList<>();
-    private List<Session> filteredSessions;
+    private List<Session> allSessions = new ArrayList<>();
+    private List<Session> filteredSessions = new ArrayList<>();
     private SessionMode currentSessionMode = SessionMode.FOCUS_COMPLETED;
     private MyButton itemTypeBtn;
     private ImageView itemTypeImage;
     private boolean isTreeMode = true;
     private ListView favoriteListView;
     private FavoriteItemListAdapter favoriteAdapter;
+    private ChartUtils chartUtils;
 
     private enum SessionMode {
         ALL("All"),
@@ -95,6 +91,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        chartUtils = new ChartUtils();
         initializeComponents();
         setToggleColor(Color.WHITE);
     }
@@ -106,9 +103,9 @@ public class StatisticScreenActivity extends BaseScreenActivity {
 
     private void initializeComponents() {
         initializeViews();
-        initializeCharts();
-        initializePeriodSelection();
         initializeTimeSelection();
+        initializePeriodSelection();
+        initializeCharts();
         initializeFavoriteItemList();
         fetchDataForChart(new OnDataFetchedCallback() {
             @Override
@@ -189,7 +186,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
     }
 
     private void fetchDataForChart(OnDataFetchedCallback callback) {
-        sessions = AppContext.getInstance().getCurrentUser().getSessions();
+        allSessions = AppContext.getInstance().getCurrentUser().getSessions();
         if(callback != null) {
             callback.onDataFetched();
         }
@@ -239,7 +236,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         currentSessionMode = newMode;
         sessionModeBtn.setText(currentSessionMode.getDisplayName());
         updateSessionModeButtonAppearance();
-        updateCharts(sessions);
+        updateCharts();
     }
 
     private void updateSessionModeButtonAppearance() {
@@ -257,32 +254,42 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         sessionModeBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, colorResId));
     }
 
-    private void updateCharts(List<Session> sessions) {
-        filteredSessions = new ArrayList<>();
+    private void updateCharts() {
+        filteredSessions = filterSessions(allSessions);
+        updateFocusTimeChart();
+        updateTagDistributionChart();
+        updateFavoriteItemList();
+    }
+
+    private List<Session> filterSessions(List<Session> sessions) {
+        List<Session> filtered = new ArrayList<>();
+        String currentPeriod = timeManager.getCurrentPeriod();
+        LocalDateTime startTime = chartUtils.getStartOfPeriod(currentPeriod);
+        LocalDateTime endTime = chartUtils.getEndOfPeriod(currentPeriod, startTime);
 
         for (Session session : sessions) {
-            switch (currentSessionMode) {
-                case ALL:
-                    filteredSessions.add(session);
-                    break;
-                case FOCUS_COMPLETED:
-                    if (session.isStatus()) {
-                        filteredSessions.add(session);
-                    }
-                    break;
-                case FOCUS_INCOMPLETED:
-                    if (!session.isStatus()) {
-                        filteredSessions.add(session);
-                    }
-                    break;
+            LocalDateTime sessionDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(session.getTimestamp()), ZoneId.systemDefault());
+            if (chartUtils.isWithinPeriod(sessionDateTime, startTime, endTime)) {
+                switch (currentSessionMode) {
+                    case ALL:
+                        filtered.add(session);
+                        break;
+                    case FOCUS_COMPLETED:
+                        if (session.isStatus()) {
+                            filtered.add(session);
+                        }
+                        break;
+                    case FOCUS_INCOMPLETED:
+                        if (!session.isStatus()) {
+                            filtered.add(session);
+                        }
+                        break;
+                }
             }
         }
 
-
-        String currentPeriod = timeManager.getCurrentPeriod();
-        filteredSessions.sort(Comparator.comparing(Session::getTimestamp));
-        updateChartsForPeriod(currentPeriod, filteredSessions);
-        updateFavoriteList();
+        filtered.sort(Comparator.comparing(Session::getTimestamp));
+        return filtered;
     }
 
     private void initializeFavoriteItemList() {
@@ -303,8 +310,9 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         });
     }
 
-    private void updateChartsForPeriod(String period, List<Session> sessions) {
-        long[] results = focusTimeChart.updateFocusTimeCharts(sessions, period);
+    private void updateFocusTimeChart() {
+        String currentPeriod = timeManager.getCurrentPeriod();
+        long[] results = focusTimeChart.updateFocusTimeCharts(filteredSessions, currentPeriod);
         int liveTree = (int)results[0];
         int deadTree = (int)results[1];
         long totalDuration = results[2];
@@ -312,32 +320,29 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         numLiveTree.setText(String.valueOf(liveTree));
         numDeadTree.setText(String.valueOf(deadTree));
         totalFocusTimeText.setText(String.format("%d hours %d min", totalDuration / 3600, (totalDuration % 3600) / 60));
-
-        updateTagDistributionChart(sessions, period);
     }
 
-    private void updateTagDistributionChart(List<Session> sessions, String period) {
+    private void updateTagDistributionChart() {
         Map<String, Long> tagDurations = new HashMap<>();
         Map<String, Integer> tagColors = new HashMap<>();
-        tagDistributionChart.updateTagDistributionChart(sessions, period, tagDurations, tagColors);
+        tagDistributionChart.updateTagDistributionChart(filteredSessions, tagDurations, tagColors);
 
-        String mostFocusedTag;
-        if (!tagDurations.isEmpty()) {
-            mostFocusedTag = Collections.max(tagDurations.entrySet(), Map.Entry.comparingByValue()).getKey();
-        } else {
-            mostFocusedTag = "Let's try to focus!!!";
-        }
+        String mostFocusedTag = tagDurations.isEmpty() ? "Let's try to focus!!!" :
+                Collections.max(tagDurations.entrySet(), Map.Entry.comparingByValue()).getKey();
 
-        int mostFocusedTagColor = 0;
-
-        if (tagColors.containsKey(mostFocusedTag)) {
-            mostFocusedTagColor = tagColors.get(mostFocusedTag);
-        }
+        int mostFocusedTagColor = tagColors.getOrDefault(mostFocusedTag, 0);
 
         TextView tagDistributionText = findViewById(R.id.tag_distribution);
         tagDistributionText.setText(mostFocusedTag);
         tagDistributionText.setTextColor(mostFocusedTagColor);
     }
+
+    private void updateFavoriteItemList() {
+        if (favoriteAdapter != null) {
+            favoriteAdapter.updateData(filteredSessions, isTreeMode);
+        }
+    }
+
 
     // Time selection methods
     private void initializePeriodSelection() {
@@ -390,8 +395,7 @@ public class StatisticScreenActivity extends BaseScreenActivity {
         } else {
             timeSelectionText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.return_btn, 0);
         }
-
-        updateCharts(sessions);
+        updateCharts();
     }
 
     // Chart view methods
