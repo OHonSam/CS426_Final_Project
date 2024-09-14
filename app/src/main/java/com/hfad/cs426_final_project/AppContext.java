@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppContext {
-    private static final TaskCompletionSource<AppContext> taskCompletionSource = new TaskCompletionSource<>();
     private static AppContext instance;
     private User currentUser;
     private List<Tree> treeList;

@@ -68,8 +68,8 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 public class MainScreenActivity extends BaseScreenActivity implements OnClockListener {
     private AppContext appContext;
-    private ImageView imgTree;
-    private TextView timeView;
+    private ImageView imgTree, fireImg;
+    private TextView timeView, tvStreakDisplay, tvSunDisplay;
     private MyButton startButton, todoButton, musicButton, newTagButton, btnClockModePicker;
     private ClickableImageView todoImage, musicImage, newTagImage;
     private LinearLayout todoContainer, musicContainer, newTagContainer;
@@ -80,7 +80,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     private MusicManager musicManager;
     private Spinner searchTagSpinner;
 
-    BottomSheetMainScreen bottomSheet;
+    private BottomSheetMainScreen bottomSheet;
 
     private CircularSeekBar progressBar;
     private ActivityResultLauncher<Intent> failScreenLauncher;
@@ -108,6 +108,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         setupClockModePickerDialog();
         setupClock();
 
+        setupInfo();
         setupTree();
         setupBottomSheet();
 
@@ -149,6 +150,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         // Disable deep mode count (if applicable)
         clock.disableDeepModeCount();
         updateTagDisplay();
+        setupInfo();
         enableOnResume();
     }
 
@@ -167,7 +169,10 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     private void getUIReferences() {
         imgTree = findViewById(R.id.tree);
         imgTree.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        fireImg = findViewById(R.id.fireIcon);
         timeView = findViewById(R.id.time_view);
+        tvStreakDisplay = findViewById(R.id.streakDisplay);
+        tvSunDisplay = findViewById(R.id.sunTotalText);
         startButton = findViewById(R.id.plant_button);
 
         todoImage = findViewById(R.id.todo_image);
@@ -393,6 +398,22 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         newTagContainer.setOnClickListener(tagClickListener);
         newTagImage.setOnClickListener(tagClickListener);
         newTagButton.setOnClickListener(tagClickListener);
+    }
+
+    // update streak and sun
+    private void setupInfo() {
+        int streak = appContext.getCurrentUser().getStreakManager().getStreakDays();
+        tvStreakDisplay.setText(String.valueOf(streak));
+        if(streak < 1) {
+            fireImg.setVisibility(View.GONE);
+            tvStreakDisplay.setText("and get a streak");
+        }
+        else {
+            fireImg.setVisibility(View.VISIBLE);
+        }
+
+        int sun = appContext.getCurrentUser().getSun();
+        tvSunDisplay.setText(String.valueOf(sun));
     }
 
     public void setupTree() {
