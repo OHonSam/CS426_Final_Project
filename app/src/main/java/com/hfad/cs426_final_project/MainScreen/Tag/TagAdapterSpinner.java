@@ -62,4 +62,8 @@ public class TagAdapterSpinner extends ArrayAdapter<Tag> {
     public Tag getSelectedTag() {
         return this.getItem(curPosition);
     }
+
+    public int getCurPosition() {
+        return curPosition;
+    }
 }

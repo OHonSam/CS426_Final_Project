@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,15 +24,19 @@ import androidx.core.content.FileProvider;
 import 	android.view.animation.AnimationUtils;
 
 
+import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
+import com.hfad.cs426_final_project.DataStorage.Tag;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
+import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 public class FailScreenActivity extends AppCompatActivity {
 
@@ -42,6 +47,7 @@ public class FailScreenActivity extends AppCompatActivity {
     private ClickableImageView focusAgain;
     private ClickableImageView forest;
     private ClickableImageView shareSession;
+    private Spinner searchTagSpinner;
 
     private MyButton btnClockMode;
 
@@ -51,8 +57,9 @@ public class FailScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fail_screen);
-        showFailureDialog();
         setupUIReference();
+        setupSearchTag();
+        showFailureDialog();
         modePickerDialog = new ModePickerDialog();
         setupOnClickListener();
     }
@@ -141,6 +148,7 @@ public class FailScreenActivity extends AppCompatActivity {
         forest = findViewById(R.id.forest);
         shareSession = findViewById(R.id.share);
         btnClockMode = findViewById(R.id.clockMode);
+        searchTagSpinner = findViewById(R.id.search_tag_spinner);
     }
 
     private void showDialogWhyTreeWhithered() {
@@ -266,5 +274,22 @@ public class FailScreenActivity extends AppCompatActivity {
     private void showModePickerDialog() {
         if (getSupportFragmentManager().findFragmentByTag(ModePickerDialog.TAG) == null)
             modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
+    }
+
+    private void setupSearchTag() {
+        List<Tag> tagList = AppContext.getInstance().getCurrentUser().getOwnTags();
+        if (tagList.isEmpty()) {
+            tagList.add(new Tag());
+        }
+        TagAdapterSpinner tagAdapterSpinner = new TagAdapterSpinner(this, R.layout.item_tag_selected, tagList);
+        searchTagSpinner.setEnabled(false);
+        searchTagSpinner.setClickable(false);
+        searchTagSpinner.setAdapter(tagAdapterSpinner);
+        updateTagDisplay();
+    }
+    private void updateTagDisplay() {
+        TagAdapterSpinner tagAdapterSpinner = (TagAdapterSpinner) searchTagSpinner.getAdapter();
+        int position = tagAdapterSpinner.getPosition(AppContext.getInstance().getCurrentUser().getFocusTag());
+        searchTagSpinner.setSelection(position);
     }
 }
