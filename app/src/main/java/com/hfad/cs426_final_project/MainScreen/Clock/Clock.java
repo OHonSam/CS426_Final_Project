@@ -37,7 +37,7 @@ public class Clock {
     public static enum SessionStatus{
         COMPLETE,
         GIVE_UP,
-        NON_FOCUS;
+        NON_FOCUS
     }
 
     private static final double COEFFICIENT_SUN = 0.3;
@@ -52,28 +52,20 @@ public class Clock {
     private final int PROGRESS_MINUTES_MAX = 120;
 
 
-    public void setSeconds(int seconds) {
-        this.seconds = seconds;
-    }
-
-    //Number of seconds displayed on the stopwatch.
+    //Number of seconds displayed on the clock.
     private int seconds;
     //Is the stopwatch running?
     private boolean running;
     private boolean isEndSession;
     private int secondsOutside;
     private boolean runningOutside = false;
-
     private final Handler countTimeHandler;
+
     private Runnable runnableClock;
     private final Handler deepModeHandler;
     private Runnable runnableDeepMode;
     private final Handler breakSessionHandler;
     private Runnable runnableBreakSession;
-
-    public TextView setTimeView(TextView timeView) {
-        return this.timeView = timeView;
-    }
 
     private TextView timeView;
     private MyButton startButton;
@@ -114,7 +106,6 @@ public class Clock {
                     stop();
                     saveSession(true);
                     completeSession(getTargetTime(),SessionStatus.COMPLETE);
-                    //onClockListener.redirectToCongratulationScreenActivity();
                     return;
                 }
 
@@ -149,18 +140,6 @@ public class Clock {
 
         resetTimeText();
     }
-
-    private void redirectToCongratulationScreen() {
-        Intent intent = new Intent(context, CongratulationScreenActivity.class);
-        context.startActivity(intent);
-    }
-
-//    private void redirectToFailScreenActivity() {
-//        ActivityResultLauncher<Intent> failScreenLauncher
-//        // TODO: Redirect to FailScreenActivity
-//        Intent intent = new Intent(context, FailScreenActivity.class);
-//
-//    }
 
     private void initProgressBar() {
         progressBar.setMax(TOTAL_PROGRESS_INTERVAL);
@@ -249,7 +228,7 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 1;
+        seconds -= 60;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
@@ -259,7 +238,6 @@ public class Clock {
                 notifyOrVibrate(context);
 
                 completeSession(getTargetTime(),SessionStatus.COMPLETE);
-//                onClockListener.redirectToCongratulationScreenActivity();
             }
             else {
                 isEndSession = true;
@@ -524,6 +502,14 @@ public class Clock {
         if(runnableBreakSession != null) {
             breakSessionHandler.removeCallbacks(runnableBreakSession);
         }
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public TextView setTimeView(TextView timeView) {
+        return this.timeView = timeView;
     }
 
     // Define the listener interface

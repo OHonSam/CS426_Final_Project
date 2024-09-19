@@ -11,10 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,10 +52,8 @@ import com.hfad.cs426_final_project.MainScreen.Music.MusicManager;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Tag.AddNewTagActivity;
 import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
-import com.hfad.cs426_final_project.MyAlarmReceiver;
 import com.hfad.cs426_final_project.NotificationReceiver;
 import com.hfad.cs426_final_project.R;
-import com.hfad.cs426_final_project.WelcomeScreenActivities.SplashScreenActivity;
 import com.hfad.cs426_final_project.ToDoScreen.ToDoScreenActivity;
 
 import java.util.Calendar;
@@ -81,10 +77,11 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     private Spinner searchTagSpinner;
 
     private BottomSheetMainScreen bottomSheet;
-
     private CircularSeekBar progressBar;
+
     private ActivityResultLauncher<Intent> failScreenLauncher;
     private ActivityResultLauncher<Intent> congratulationScreenLauncher;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main_screen;
@@ -107,17 +104,19 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         setupClockModePickerDialog();
         setupClock();
 
-        setupInfo();
+        setupStreakAndSunInfo();
         setupTree();
         setupBottomSheet();
 
+        setupActivityResultLaunchers();
+        myAlarm();
+    }
+
+    private void setupActivityResultLaunchers() {
         failScreenLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
-                        // Disable deep mode count (if applicable)
-                        clock.disableDeepModeCount();
-                        // Start the clock for a new session
                         clock.start();
                     }
                 }
@@ -127,40 +126,23 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
-                        // Disable deep mode count (if applicable)
-                        clock.disableDeepModeCount();
-                        // Start the clock for a new session
                         clock.start();
                     }
                 }
         );
-
-        myAlarm();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Reset timeView
-        clock.setTimeView(timeView);
-
-        // Disable deep mode count (if applicable)
         clock.disableDeepModeCount();
-        updateTagDisplay();
-        setupInfo();
+        setupStreakAndSunInfo();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         clock.enableDeepModeCount();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     private void getUIReferences() {
@@ -278,10 +260,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         int height = (int) (displayMetrics.heightPixels / 2);
 
         // Create the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                width,
-                height,
-                true);
+        PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
 
         // Dim the background for the rest except the popup window
         applyDim(popupMusicContainer, 0.5f);
@@ -328,9 +307,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -349,7 +326,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
             }
         };
 
-        // Set the listener to the views
         todoContainer.setOnTouchListener(todoTouchListener);
         todoButton.setOnTouchListener(todoTouchListener);
         todoImage.setOnTouchListener(todoTouchListener);
@@ -362,11 +338,13 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
                 finish();
             }
         };
+
         todoContainer.setOnClickListener(todoClickListener);
         todoButton.setOnClickListener(todoClickListener);
         todoImage.setOnClickListener(todoClickListener);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupNewTagListener() {
         View.OnTouchListener newTagTouchListener = new View.OnTouchListener() {
             @Override
@@ -397,13 +375,12 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         newTagButton.setOnClickListener(tagClickListener);
     }
 
-    // update streak and sun
-    private void setupInfo() {
+    private void setupStreakAndSunInfo() {
         int streak = appContext.getCurrentUser().getStreakManager().getStreakDays();
         tvStreakDisplay.setText(String.valueOf(streak) + " " + "streak(s)");
         if(streak < 1) {
             fireImg.setVisibility(View.GONE);
-            tvStreakDisplay.setText("and get a streak");
+            tvStreakDisplay.setText("& Get a streak!");
         }
         else {
             fireImg.setVisibility(View.VISIBLE);
@@ -456,7 +433,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     public void myAlarm() {
-
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // Check for exact alarm scheduling permission on Android 12+ (API level 31+)
@@ -466,45 +442,31 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
             startActivity(intent);
             return;  // Exit the method until the permission is granted
         }
-
-        // Set alarm for 10:00 PM
-        Calendar tenPM = Calendar.getInstance();
-        tenPM.set(Calendar.HOUR_OF_DAY, 13); // 22:00 or 10:00 PM
-        tenPM.set(Calendar.MINUTE, 59);
-        tenPM.set(Calendar.SECOND, 40);
-        if (tenPM.getTime().compareTo(new Date()) < 0) {
-            tenPM.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today
-        }
-
-        // Intent for 10:00 PM Notification
-        Intent intent10PM = new Intent(getApplicationContext(), NotificationReceiver.class);
-        intent10PM.putExtra("notificationType", "NonFocusNotification");
-        PendingIntent pendingIntent10PM = PendingIntent.getBroadcast(getApplicationContext(), 0, intent10PM, PendingIntent.FLAG_IMMUTABLE);
-
-        if (alarmManager != null) {
-            // Use setExactAndAllowWhileIdle to ensure the alarm fires even in Doze mode
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, tenPM.getTimeInMillis(), pendingIntent10PM);
-        }
-
-        // Set alarm for Midnight
-        Calendar midnight = Calendar.getInstance();
-        midnight.set(Calendar.HOUR_OF_DAY, 13);
-        midnight.set(Calendar.MINUTE, 59);
-        midnight.set(Calendar.SECOND, 50);
-        if (midnight.getTime().compareTo(new Date()) < 0) {
-            midnight.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today
-        }
-
-        Intent intentMidnight = new Intent(getApplicationContext(), NotificationReceiver.class);
-        intentMidnight.putExtra("notificationType", "MidnightReset");
-        PendingIntent pendingIntentMidnight = PendingIntent.getBroadcast(getApplicationContext(), 1, intentMidnight, PendingIntent.FLAG_IMMUTABLE);
-
-        if (alarmManager != null) {
-            // Use setExactAndAllowWhileIdle to ensure the alarm fires even in Doze mode
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), pendingIntentMidnight);
-        }
+        setupAlarm(alarmManager, 22, 0, 0, "NonFocusNotification", 0);
+        setupAlarm(alarmManager, 0, 0, 0, "MidnightReset", 1);
     }
 
+    private void setupAlarm(AlarmManager alarmManager, int hour, int minute, int second, String notificationType, int requestCode) {
+        // Set the alarm for the specified time
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+
+        if (calendar.getTime().before(new Date())) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);  // Set for the next day if the time has passed today
+        }
+
+        // Intent for the notification
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        intent.putExtra("notificationType", notificationType);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        if (alarmManager != null) {
+            // Use setExactAndAllowWhileIdle to ensure the alarm fires even in Doze mode
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
 
     public void disableWhenFocus() {
         imgTree.setOnClickListener(null);
