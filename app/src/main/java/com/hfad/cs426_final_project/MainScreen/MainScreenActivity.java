@@ -521,7 +521,6 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     }
 
     public void enableOnResume() {
-        setupSearchTag();
         setupMusicListener();
         setupTodoListener();
         setupNewTagListener();

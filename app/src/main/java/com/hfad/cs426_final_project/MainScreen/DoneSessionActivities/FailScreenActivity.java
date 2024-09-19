@@ -28,6 +28,7 @@ import com.hfad.cs426_final_project.AppContext;
 import com.hfad.cs426_final_project.CustomUIComponent.ClickableImageView;
 import com.hfad.cs426_final_project.CustomUIComponent.MyButton;
 import com.hfad.cs426_final_project.DataStorage.Tag;
+import com.hfad.cs426_final_project.MainScreen.Clock.Clock;
 import com.hfad.cs426_final_project.MainScreen.Clock.ModePickerDialog;
 import com.hfad.cs426_final_project.MainScreen.Tag.TagAdapterSpinner;
 import com.hfad.cs426_final_project.R;
@@ -53,14 +54,18 @@ public class FailScreenActivity extends AppCompatActivity {
     private MyButton btnClockMode;
 
     private ModePickerDialog modePickerDialog;
+    private AppContext appContext;
+    private Clock clock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fail_screen);
         setupUIReference();
+        appContext = AppContext.getInstance();
+        clock = appContext.getCurrentClock();
         setupTextDisplay();
-//        setupSearchTag();
+        setupSearchTag();
         showFailureDialog();
         modePickerDialog = new ModePickerDialog();
         setupOnClickListener();
@@ -111,6 +116,7 @@ public class FailScreenActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clock.reset();
                 finish();
             }
         });
@@ -136,6 +142,7 @@ public class FailScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FailScreenActivity.this, StatisticScreenActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -143,6 +150,7 @@ public class FailScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK);
+                clock.reset();
                 finish();
             }
         });

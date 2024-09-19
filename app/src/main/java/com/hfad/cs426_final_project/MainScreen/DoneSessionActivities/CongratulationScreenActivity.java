@@ -55,12 +55,15 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
 
     private ActivityResultLauncher<Intent> breakScreenLauncher;
     private AppContext appContext;
+
+    private Clock clock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_congratulation_screen);
         setupUIReference();
         appContext = AppContext.getInstance();
+        clock = appContext.getCurrentClock();
         setupOnClickListener();
         breakScreenLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -130,6 +133,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clock.reset();
                 finish();
             }
         });
@@ -155,6 +159,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
             public void onClick(View v) {
                 Intent intent = new Intent(CongratulationScreenActivity.this, StatisticScreenActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -274,6 +279,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
 
     private void focusAgain(){
         setResult(RESULT_OK);
+        clock.reset();
         finish();
     }
 

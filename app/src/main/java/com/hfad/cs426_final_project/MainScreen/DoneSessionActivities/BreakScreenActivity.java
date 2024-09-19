@@ -36,6 +36,8 @@ public class BreakScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_break_screen);
         init();
+        appContext = AppContext.getInstance();
+        clock = appContext.getCurrentClock();
         setupTextDisplay();
         setupOnClickListener();
         setupSearchTag();
@@ -51,6 +53,7 @@ public class BreakScreenActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clock.reset();
                 finish();
             }
         });
@@ -59,6 +62,7 @@ public class BreakScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clock.disableBreakSessionCount();
+                clock.reset();
                 finish();
             }
         });
@@ -84,6 +88,7 @@ public class BreakScreenActivity extends AppCompatActivity {
                 }
                 else{
                     setResult(RESULT_CANCELED);
+                    clock.reset();
                     finish();
                 }
             }
@@ -98,8 +103,6 @@ public class BreakScreenActivity extends AppCompatActivity {
     }
 
     private void init(){
-        appContext = AppContext.getInstance();
-        clock = appContext.getCurrentClock();
         extras = getIntent().getExtras();
         timeView = findViewById(R.id.time_view);
         backButton = findViewById(R.id.back_button);
@@ -112,6 +115,7 @@ public class BreakScreenActivity extends AppCompatActivity {
 
     private void focusAgain(){
         setResult(RESULT_OK);
+        clock.reset();
         finish();
     }
 
