@@ -502,7 +502,6 @@ public class Clock {
         return this.timeView = timeView;
     }
 
-    // Define the listener interface
     public interface OnBreakSessionCompleteListener {
         void onBreakSessionComplete();
     }

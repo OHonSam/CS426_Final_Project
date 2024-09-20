@@ -108,11 +108,11 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
         setupTree();
         setupBottomSheet();
 
-        setupActivityResultLaunchers();
+        registerActivityResultLaunchers();
         myAlarm();
     }
 
-    private void setupActivityResultLaunchers() {
+    private void registerActivityResultLaunchers() {
         failScreenLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {

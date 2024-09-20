@@ -4,11 +4,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -37,53 +35,53 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
-public class CongratulationScreenActivity extends AppCompatActivity implements OnClockListener {
-
+public class CongratulationScreenActivity extends AppCompatActivity {
     public static final String REWARDS = "REWARDS";
-    ClickableImageView backButton;
-    ClickableImageView breakSession;
-    ClickableImageView forest;
-    ClickableImageView shareSession;
+    private ClickableImageView btnBack;
+    private ClickableImageView btnBreakSession;
+    private ClickableImageView btnStatistics;
+    private ClickableImageView btnShareSession;
 
     private MyButton btnClockModePicker;
     private ModePickerDialog modePickerDialog;
     private TimePickerDialog timePickerDialog;
     private Spinner searchTagSpinner;
-
     private TextView tvSunDisplay;
 
-    private ActivityResultLauncher<Intent> breakScreenLauncher;
     private AppContext appContext;
-
     private Clock clock;
+
+    private ActivityResultLauncher<Intent> breakScreenLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_congratulation_screen);
-        setupUIReference();
         appContext = AppContext.getInstance();
         clock = appContext.getCurrentClock();
+        clock.disableDeepModeCount();
+        setupUIReference();
         setupOnClickListener();
+        setupSearchTag();
+        setupTextDisplay();
+        registerBreakScreenLauncher();
+        showCongratulationDialog();
+    }
+
+    private void registerBreakScreenLauncher() {
         breakScreenLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
-                        // Start the clock for a new session
-                        Log.d("CongratulationScreenActivity","focusAgain triggered");
                         focusAgain();
                     }
                     else if (result.getResultCode() == RESULT_CANCELED) {
-                        // Start the clock for a new session
-                        Log.d("CongratulationScreenActivity","focusAgain triggered");
                         finish();
                     }
                 }
         );
-
-        setupSearchTag();
-        setupTextDisplay();
-        showCongratulationDialog();
     }
 
     private void setupTextDisplay() {
@@ -95,29 +93,18 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_congratulation, null);
 
-        TextView rewardsTextView = dialogView.findViewById(R.id.rewards);
-        int rewards = getIntent().getIntExtra(REWARDS, 0);
-        rewardsTextView.setText(String.valueOf(rewards)); // Ensure rewards is set as a String
-
-        ImageView tree = dialogView.findViewById(R.id.tree);
-        Glide.with(dialogView).load(AppContext.getInstance().getCurrentUser().getUserSetting().getSelectedTree().getImgUri()).error(R.drawable.tree).into(tree);
+        setupCongratulationDialogContent(dialogView);
 
         // Create a dialog using the AlertDialog.Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(dialogView);
-
-        // Create and show the dialog
-        final AlertDialog dialog = builder.create();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
 
         // Ensure the dialog is dismissible when tapping outside
         dialog.setCanceledOnTouchOutside(true);
 
-        // Resize the dialog programmatically if needed
-        dialog.setOnShowListener(dialogInterface -> {
-            // You can adjust the width and height as needed
-            int dialogWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
-            dialog.getWindow().setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        });
+        adjustDialogSizeOnShow(dialog);
 
         // Handle the button click to dismiss the dialog
         Button buttonOK = dialogView.findViewById(R.id.buttonOK);
@@ -127,10 +114,29 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         dialog.show();
     }
 
+    private void adjustDialogSizeOnShow(AlertDialog dialog) {
+        // Resize the dialog programmatically if needed
+        dialog.setOnShowListener(dialogInterface -> {
+            // You can adjust the width and height as needed
+            int dialogWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
+            Objects.requireNonNull(dialog.getWindow()).setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        });
+    }
 
+    private void setupCongratulationDialogContent(View dialogView) {
+        int rewards = getIntent().getIntExtra(REWARDS, 0);
+        TextView rewardsTextView = dialogView.findViewById(R.id.rewards);
+        rewardsTextView.setText(String.valueOf(rewards));
+
+        ImageView tree = dialogView.findViewById(R.id.tree);
+        Glide.with(dialogView)
+                .load(appContext.getCurrentUser().getUserSetting().getSelectedTree().getImgUri())
+                .error(R.drawable.tree)
+                .into(tree);
+    }
 
     private void setupOnClickListener() {
-        backButton.setOnClickListener(new View.OnClickListener() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clock.reset();
@@ -138,7 +144,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
             }
         });
 
-        shareSession.setOnClickListener(new View.OnClickListener() {
+        btnShareSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Use a Handler to delay the screenshot by 200ms
@@ -154,7 +160,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
             }
         });
 
-        forest.setOnClickListener(new View.OnClickListener() {
+        btnStatistics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CongratulationScreenActivity.this, StatisticScreenActivity.class);
@@ -163,7 +169,7 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
             }
         });
 
-        breakSession.setOnClickListener(new View.OnClickListener() {
+        btnBreakSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTimePickerDialog();
@@ -191,10 +197,10 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
     }
 
     private void setupUIReference() {
-        backButton = findViewById(R.id.back_button);
-        breakSession = findViewById(R.id.coffee);
-        forest = findViewById(R.id.forest);
-        shareSession = findViewById(R.id.share);
+        btnBack = findViewById(R.id.back_button);
+        btnBreakSession = findViewById(R.id.coffee);
+        btnStatistics = findViewById(R.id.forest);
+        btnShareSession = findViewById(R.id.share);
         timePickerDialog = new TimePickerDialog();
         btnClockModePicker = findViewById(R.id.clockMode);
         modePickerDialog = new ModePickerDialog();
@@ -260,16 +266,6 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
             modePickerDialog.show(getSupportFragmentManager(), ModePickerDialog.TAG);
     }
 
-    @Override
-    public void redirectToFailScreenActivity(String message, int rewards) {
-        return;
-    }
-
-    @Override
-    public void redirectToCongratulationScreenActivity(int rewards) {
-        return;
-    }
-
     private void redirectToBreakScreenActivity(int breakTime, boolean isAutoStart) {
         Intent intent = new Intent(this,BreakScreenActivity.class);
         intent.putExtra(BreakScreenActivity.TIME_BREAK,breakTime);
@@ -289,21 +285,15 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         View dialogView = inflater.inflate(R.layout.dialog_reassert_cancel_break_session, null);
 
         // Create a dialog using the AlertDialog.Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(dialogView);
-
-        // Create and show the dialog
-        final AlertDialog dialog = builder.create();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
 
         // Ensure the dialog is dismissible when tapping outside
         dialog.setCanceledOnTouchOutside(true);
 
-        // Resize the dialog programmatically if needed
-        dialog.setOnShowListener(dialogInterface -> {
-            // You can adjust the width and height as needed
-            int dialogWidth = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
-            dialog.getWindow().setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        });
+        adjustDialogSizeOnShow(dialog);
 
         // Handle the button click to dismiss the dialog
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
@@ -314,7 +304,6 @@ public class CongratulationScreenActivity extends AppCompatActivity implements O
         buttonFocus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Clock clock = appContext.getCurrentClock();
                 clock.disableBreakSessionCount();
                 focusAgain();
             }
