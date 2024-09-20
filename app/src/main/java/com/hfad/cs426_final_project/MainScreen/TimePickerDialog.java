@@ -31,7 +31,7 @@ public class TimePickerDialog extends DialogFragment {
     private TimePickerDialog.onDismissListener onDismissListener;
     private SwitchCompat autoStartSessionSwitch;
 
-    private int breakTime;
+    private int breakTime = 60;
 
     @Nullable
     @Override

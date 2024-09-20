@@ -53,17 +53,14 @@ public class BreakScreenActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clock.reset();
-                finish();
+                finishBreakSession();
             }
         });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clock.disableBreakSessionCount();
-                clock.reset();
-                finish();
+                finishBreakSession();
             }
         });
 
@@ -82,14 +79,13 @@ public class BreakScreenActivity extends AppCompatActivity {
             @Override
             public void onBreakSessionComplete() {
                 boolean isAutoStartEnable = extras.getBoolean(AUTO_START);
-                if(isAutoStartEnable){
-                    clock.disableBreakSessionCount();
+                clock.disableBreakSessionCount();
+                if (isAutoStartEnable){
                     focusAgain();
                 }
-                else{
+                else {
                     setResult(RESULT_CANCELED);
-                    clock.reset();
-                    finish();
+                    finishBreakSession();
                 }
             }
         });
@@ -97,14 +93,13 @@ public class BreakScreenActivity extends AppCompatActivity {
 
     private void startBreak() {
         int breakTime = extras.getInt(TIME_BREAK);
-        Log.d("BreakScreenActivity",""+breakTime);
         clock.setSeconds(breakTime);
         clock.enableBreakSessionCount();
     }
 
     private void getUIReferences(){
         extras = getIntent().getExtras();
-        timeView = findViewById(R.id.time_view);
+        timeView = findViewById(R.id.break_time_view);
         backButton = findViewById(R.id.back_button);
         clock.setTimeView(timeView);
         cancelButton = findViewById(R.id.buttonCancel);
@@ -115,6 +110,11 @@ public class BreakScreenActivity extends AppCompatActivity {
 
     private void focusAgain(){
         setResult(RESULT_OK);
+        finishBreakSession();
+    }
+
+    private void finishBreakSession() {
+        clock.disableBreakSessionCount();
         clock.reset();
         finish();
     }

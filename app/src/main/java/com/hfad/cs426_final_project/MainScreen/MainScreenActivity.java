@@ -135,6 +135,7 @@ public class MainScreenActivity extends BaseScreenActivity implements OnClockLis
     @Override
     protected void onResume() {
         super.onResume();
+        clock.setTimeView(timeView);
         clock.disableDeepModeCount();
         setupStreakAndSunInfo();
     }

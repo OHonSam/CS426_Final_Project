@@ -366,8 +366,6 @@ public class Clock {
     public void giveUp() {
         stop();
         saveSession(false);
-        //reset();
-
         completeSession(getTargetTime(),SessionStatus.GIVE_UP);
     }
 
@@ -479,7 +477,6 @@ public class Clock {
     }
 
     public void enableBreakSessionCount(){
-        Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
         running = true;
         if(runnableBreakSession != null) {
             breakSessionHandler.removeCallbacks(runnableBreakSession);
@@ -488,18 +485,21 @@ public class Clock {
     }
 
     public void disableBreakSessionCount(){
-        Log.d("BreakScreenActivity","enableBreakSessionCount triggered");
+        running = false;
         if(runnableBreakSession != null) {
             breakSessionHandler.removeCallbacks(runnableBreakSession);
         }
     }
 
+    public int getSeconds() {
+        return seconds;
+    }
     public void setSeconds(int seconds) {
         this.seconds = seconds;
     }
 
-    public TextView setTimeView(TextView timeView) {
-        return this.timeView = timeView;
+    public void setTimeView(TextView timeView) {
+        this.timeView = timeView;
     }
 
     public interface OnBreakSessionCompleteListener {
