@@ -40,17 +40,16 @@ public class Clock {
         NON_FOCUS
     }
 
-    private static final double COEFFICIENT_SUN = 0.3;
     private OnClockListener onClockListener;
 
     private static final String CHANNEL_ID = "clock_channel_id";
     private static final int NOTIFICATION_ID = 1;
+    private static final double COEFFICIENT_SUN = 0.3;
     private final int TIME_LIMIT_OUTSIDE = 10;
     private final int TOTAL_PROGRESS_INTERVAL = 24;
     private final int PROGRESS_INTERVAL_LEN = 5;
     private final int PROGRESS_MINUTES_MIN = 10;
     private final int PROGRESS_MINUTES_MAX = 120;
-
 
     //Number of seconds displayed on the clock.
     private int seconds;
@@ -59,8 +58,8 @@ public class Clock {
     private boolean isEndSession;
     private int secondsOutside;
     private boolean runningOutside = false;
-    private final Handler countTimeHandler;
 
+    private final Handler countTimeHandler;
     private Runnable runnableClock;
     private final Handler deepModeHandler;
     private Runnable runnableDeepMode;
@@ -110,7 +109,6 @@ public class Clock {
                 }
 
                 if (!isRunning()) {
-                    // Start the clock and disable interaction
                     start();
                 } else {
                     giveUp();
@@ -228,12 +226,12 @@ public class Clock {
     }
 
     private void handleTimerTick() {
-        seconds -= 60;
+        seconds -= 1;
         if (seconds < 0) {
             if (!clockSetting.getIsCountExceedTime()) {
                 stop();
                 saveSession(true);
-                //reset();
+
                 // Notify or vibrate when the timer reaches the limit
                 notifyOrVibrate(context);
 
@@ -251,7 +249,7 @@ public class Clock {
         if (clockSetting.getTargetTime() > 0 && seconds > clockSetting.getTargetTime()) {
             stop();
             saveSession(true);
-            //reset();
+
             // Notify or vibrate when the timer reaches the limit
             notifyOrVibrate(context);
             completeSession(getTargetTime(),SessionStatus.COMPLETE);
@@ -291,7 +289,6 @@ public class Clock {
                         runningOutside = false;
                         stop();
                         saveSession(false);
-                        //reset();
 
                         completeSession(getTargetTime(),SessionStatus.NON_FOCUS);
                     }
@@ -314,23 +311,27 @@ public class Clock {
     }
 
     public void start() {
+        // Disable interaction
         clockSetting.setModePickerDialogEnabled(false); // DISABLE the clock
         mainScreenActivity.disableWhenFocus();
+        toggleIcon.setVisibility(View.GONE);
+        progressBar.setDisablePointer(true);
+
         // Ensure no previous running clock
         countTimeHandler.removeCallbacks(runnableClock);
+
+        // Start the clock
         running = true;
+        isEndSession = false;
         countTimeHandler.post(runnableClock);
 
-        toggleIcon.setVisibility(View.GONE);
-
         updateStartButton("Give Up", R.color.secondary_50);
-        progressBar.setDisablePointer(true);
         startForegroundService();
     }
 
     public void stop() {
-        running = false;
         countTimeHandler.removeCallbacks(runnableClock);
+        running = false;
         updateStartButton("Plant", R.color.primary_20);
         stopForegroundService();
     }
@@ -346,28 +347,21 @@ public class Clock {
         }
     }
 
-
     private void stopForegroundService() {
         Intent serviceIntent = new Intent(context, ClockService.class);
         context.stopService(serviceIntent);
     }
 
     public void reset() {
-        seconds = (clockSetting.getType() == ClockMode.STOPWATCH) ? 0 : clockSetting.getTargetTime();
+        resetTimeText();
+
+        // UI enabled after resetting clock
         progressBar.setDisablePointer(false);
-
-        int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / PROGRESS_INTERVAL_LEN;
-        progressBar.setProgress(progressIntervalIndex);
-        updateTimeTextFromProgressBar(progressIntervalIndex);
-
-
         toggleIcon.setVisibility(View.VISIBLE);
 
-        // Ensure the clock is enabled after reset
         clockSetting.setModePickerDialogEnabled(true);
         mainScreenActivity.enableOnResume();
     }
-
 
     public void giveUp() {
         stop();
@@ -420,12 +414,6 @@ public class Clock {
         int progressIntervalIndex = (clockSetting.getTargetTime() / 60) / PROGRESS_INTERVAL_LEN;
         progressBar.setProgress(progressIntervalIndex);
         updateTimeTextFromProgressBar(progressIntervalIndex);
-
-
-        toggleIcon.setVisibility(View.VISIBLE);
-
-        // Ensure the clock is enabled after reset
-        clockSetting.setModePickerDialogEnabled(true);
     }
 
     private void notifyOrVibrate(Context context) {
@@ -465,10 +453,12 @@ public class Clock {
 
     private void saveSession(boolean isComplete) {
         User user = AppContext.getInstance().getCurrentUser();
+
         if(isComplete) {
             // Reward
             user.addSelectedBlock();
         }
+
         Session session = new Session();
         session.setId(user.getSessions().size());
         session.setStatus(isComplete);
@@ -484,7 +474,7 @@ public class Clock {
         session.setTimestamp(System.currentTimeMillis());
         session.setTree(user.getUserSetting().getSelectedTree());
         session.setTag(user.getFocusTag());
-        session.setBlock(user.getSelectedBlock()); // ồn quá có j nói to lên nha
+        session.setBlock(user.getSelectedBlock());
         user.getSessions().add(session);
     }
 
@@ -512,7 +502,6 @@ public class Clock {
         return this.timeView = timeView;
     }
 
-    // Define the listener interface
     public interface OnBreakSessionCompleteListener {
         void onBreakSessionComplete();
     }
@@ -523,5 +512,4 @@ public class Clock {
     public void setOnBreakSessionCompleteListener(OnBreakSessionCompleteListener listener) {
         this.breakSessionCompleteListener = listener;
     }
-
 }

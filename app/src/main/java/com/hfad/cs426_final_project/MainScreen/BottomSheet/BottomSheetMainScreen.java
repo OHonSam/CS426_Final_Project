@@ -103,12 +103,14 @@ public class BottomSheetMainScreen extends BottomSheetDialogFragment {
     }
 
     public void navigateSelectionFragment() {
+        modePicker.check(R.id.btnSelection);
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.selectionContainer, new BottomSheetSelectionFragment());
         fragmentTransaction.commit();
     }
 
     public void navigateFavouriteFragment() {
+        modePicker.check(R.id.btnFavourite);
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.selectionContainer, new BottomSheetFavouriteFragment());
         fragmentTransaction.commit();

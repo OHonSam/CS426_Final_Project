@@ -21,12 +21,12 @@ import com.hfad.cs426_final_project.R;
 
 public class TimePickerDialog extends DialogFragment {
     public static final String TAG = "TimePickerDialog";
+
     public interface onDismissListener {
         void onDismiss(TimePickerDialog timePickerDialog, int breakTime, boolean isBreak, boolean autoStartSession);
     }
 
     private NumberPicker numberPicker;
-    private AppContext appContext;
     private Button btnCancel, btnBreak;
     private TimePickerDialog.onDismissListener onDismissListener;
     private SwitchCompat autoStartSessionSwitch;
@@ -69,11 +69,9 @@ public class TimePickerDialog extends DialogFragment {
     }
 
     private void setupUIReferences(View view) {
-        appContext = AppContext.getInstance();
         numberPicker = view.findViewById(R.id.numberPicker);
         numberPicker.setMinValue(1);
-        int targetTime = appContext.getCurrentClock().getClockSetting().getTargetTime();
-        //numberPicker.setMaxValue((int)(targetTime/360));
+
         numberPicker.setMaxValue(20);
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -90,8 +88,6 @@ public class TimePickerDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //int width = getResources().getDisplayMetrics().widthPixels;
-        //int height = getResources().getDisplayMetrics().heightPixels;
         Dialog dialog = getDialog();
         if (dialog != null) {
             Window window = dialog.getWindow();

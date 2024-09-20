@@ -19,7 +19,6 @@ import com.hfad.cs426_final_project.R;
 import java.util.List;
 
 public class BreakScreenActivity extends AppCompatActivity {
-
     public static final String TIME_BREAK = "TIME_BREAK";
     public static final String AUTO_START = "AUTO_START";
     private Clock clock;
@@ -35,9 +34,10 @@ public class BreakScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_break_screen);
-        init();
         appContext = AppContext.getInstance();
         clock = appContext.getCurrentClock();
+        clock.disableDeepModeCount();
+        getUIReferences();
         setupTextDisplay();
         setupOnClickListener();
         setupSearchTag();
@@ -102,7 +102,7 @@ public class BreakScreenActivity extends AppCompatActivity {
         clock.enableBreakSessionCount();
     }
 
-    private void init(){
+    private void getUIReferences(){
         extras = getIntent().getExtras();
         timeView = findViewById(R.id.time_view);
         backButton = findViewById(R.id.back_button);

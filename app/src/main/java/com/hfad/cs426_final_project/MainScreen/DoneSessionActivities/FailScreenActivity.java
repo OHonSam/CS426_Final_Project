@@ -61,9 +61,10 @@ public class FailScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fail_screen);
-        setupUIReference();
         appContext = AppContext.getInstance();
         clock = appContext.getCurrentClock();
+        clock.disableDeepModeCount();
+        setupUIReference();
         setupTextDisplay();
         setupSearchTag();
         showFailureDialog();
